@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Services\" />
-    <Folder Include="Persistence\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +20,11 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BackendProyectoFinal.Application\BackendProyectoFinal.Application.csproj" />
+    <ProjectReference Include="..\BackendProyectoFinal.Domain\BackendProyectoFinal.Domain.csproj" />
   </ItemGroup>
 
 </Project>

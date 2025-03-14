@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35806.99 d17.13
+VisualStudioVersion = 17.13.35806.99
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendProyectoFinal.Domain", "BackendProyectoFinal.Domain\BackendProyectoFinal.Domain.csproj", "{5EC984E3-93D5-4089-A602-E788B8DDFD08}"
 EndProject
@@ -12,6 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendProyectoFinal.Applic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendProyectoFinal.Infrastructure", "BackendProyectoFinal.Infrastructure\BackendProyectoFinal.Infrastructure.csproj", "{EA2F8EA7-5170-4609-BB9E-3F86C2D4E1FB}"
 	ProjectSection(ProjectDependencies) = postProject
+		{5EC984E3-93D5-4089-A602-E788B8DDFD08} = {5EC984E3-93D5-4089-A602-E788B8DDFD08}
 		{F6FA05DF-B7F8-40DF-B8A9-377BB8C52409} = {F6FA05DF-B7F8-40DF-B8A9-377BB8C52409}
 	EndProjectSection
 EndProject
