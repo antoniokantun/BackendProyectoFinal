@@ -40,6 +40,23 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.HasKey("IdCategoria");
 
                     b.ToTable("categorias");
+
+                    b.HasData(
+                        new
+                        {
+                            IdCategoria = 1,
+                            Nombre = "Electrónica"
+                        },
+                        new
+                        {
+                            IdCategoria = 2,
+                            Nombre = "Ropa"
+                        },
+                        new
+                        {
+                            IdCategoria = 3,
+                            Nombre = "Hogar"
+                        });
                 });
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.CategoriaProducto", b =>
@@ -66,6 +83,20 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("categorias_producto");
+
+                    b.HasData(
+                        new
+                        {
+                            IdCategoriaProducto = 1,
+                            CategoriaId = 1,
+                            UsuarioId = 1
+                        },
+                        new
+                        {
+                            IdCategoriaProducto = 2,
+                            CategoriaId = 2,
+                            UsuarioId = 2
+                        });
                 });
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Comentario", b =>
@@ -108,6 +139,25 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("comentarios");
+
+                    b.HasData(
+                        new
+                        {
+                            IdComentario = 1,
+                            Contenido = "¡Me encanta este producto!",
+                            FechaCreacion = new DateTime(2025, 3, 15, 7, 43, 55, 420, DateTimeKind.Utc).AddTicks(9974),
+                            ProductoId = 2,
+                            UsuarioId = 1
+                        },
+                        new
+                        {
+                            IdComentario = 2,
+                            ComentarioPadreId = 1,
+                            Contenido = "¿Todavía está disponible?",
+                            FechaCreacion = new DateTime(2025, 3, 15, 7, 43, 55, 420, DateTimeKind.Utc).AddTicks(9983),
+                            ProductoId = 1,
+                            UsuarioId = 2
+                        });
                 });
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Evaluacion", b =>
@@ -147,6 +197,26 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("evaluaciones");
+
+                    b.HasData(
+                        new
+                        {
+                            IdEvaluacion = 1,
+                            Comentario = "Excelente producto, muy recomendado.",
+                            FechaCreacion = new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(25),
+                            ProductoId = 2,
+                            Puntuacion = 5,
+                            UsuarioId = 1
+                        },
+                        new
+                        {
+                            IdEvaluacion = 2,
+                            Comentario = "Buen producto, pero podría mejorar.",
+                            FechaCreacion = new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(29),
+                            ProductoId = 1,
+                            Puntuacion = 4,
+                            UsuarioId = 2
+                        });
                 });
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.ImagenProducto", b =>
@@ -158,20 +228,72 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IdImagenProducto"));
 
+                    b.Property<int>("ImagenId")
+                        .HasColumnType("int")
+                        .HasColumnName("imagen_id");
+
                     b.Property<int>("ProductoId")
                         .HasColumnType("int")
                         .HasColumnName("producto_id");
 
-                    b.Property<string>("UrlImagen")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("url_image");
-
                     b.HasKey("IdImagenProducto");
+
+                    b.HasIndex("ImagenId");
 
                     b.HasIndex("ProductoId");
 
                     b.ToTable("imagenes_producto");
+
+                    b.HasData(
+                        new
+                        {
+                            IdImagenProducto = 1,
+                            ImagenId = 1,
+                            ProductoId = 1
+                        },
+                        new
+                        {
+                            IdImagenProducto = 2,
+                            ImagenId = 2,
+                            ProductoId = 2
+                        });
+                });
+
+            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Imagenes", b =>
+                {
+                    b.Property<int>("IdImagen")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id_imagen");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IdImagen"));
+
+                    b.Property<string>("UrlImagen")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)")
+                        .HasColumnName("url_image");
+
+                    b.HasKey("IdImagen");
+
+                    b.ToTable("imagenes");
+
+                    b.HasData(
+                        new
+                        {
+                            IdImagen = 1,
+                            UrlImagen = "https://example.com/imagen1.jpg"
+                        },
+                        new
+                        {
+                            IdImagen = 2,
+                            UrlImagen = "https://example.com/imagen2.jpg"
+                        },
+                        new
+                        {
+                            IdImagen = 3,
+                            UrlImagen = "https://example.com/imagen3.jpg"
+                        });
                 });
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Intercambio", b =>
@@ -208,6 +330,16 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.HasIndex("UsuarioSolicitanteId");
 
                     b.ToTable("intercambios");
+
+                    b.HasData(
+                        new
+                        {
+                            IdIntercambio = 1,
+                            FechaRegistro = new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(111),
+                            ProductoId = 1,
+                            UsuarioOfertanteId = 2,
+                            UsuarioSolicitanteId = 1
+                        });
                 });
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.LogError", b =>
@@ -289,6 +421,24 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("perfiles");
+
+                    b.HasData(
+                        new
+                        {
+                            IdPerfil = 1,
+                            Descripcion = "Amante de la tecnología.",
+                            ImagenPerfil = "https://images.unsplash.com/flagged/photo-1595514191830-3e96a518989b?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            NombrePerfil = "JuanP",
+                            UsuarioId = 1
+                        },
+                        new
+                        {
+                            IdPerfil = 2,
+                            Descripcion = "Fashionista y amante de la moda.",
+                            ImagenPerfil = "https://images.unsplash.com/photo-1579591919791-0e3737ae3808?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            NombrePerfil = "MariaG",
+                            UsuarioId = 2
+                        });
                 });
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Producto", b =>
@@ -332,6 +482,28 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("productos");
+
+                    b.HasData(
+                        new
+                        {
+                            IdProducto = 1,
+                            Descripcion = "Un smartphone de última generación.",
+                            FechaCreacion = new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(197),
+                            Intercambio = true,
+                            Nombre = "Smartphone XYZ",
+                            ProcesoNegociacion = false,
+                            UsuarioId = 1
+                        },
+                        new
+                        {
+                            IdProducto = 2,
+                            Descripcion = "Una laptop potente para trabajo y juegos.",
+                            FechaCreacion = new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(201),
+                            Intercambio = false,
+                            Nombre = "Laptop ABC",
+                            ProcesoNegociacion = true,
+                            UsuarioId = 2
+                        });
                 });
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Usuario", b =>
@@ -378,6 +550,28 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.HasKey("IdUsuario");
 
                     b.ToTable("usuarios");
+
+                    b.HasData(
+                        new
+                        {
+                            IdUsuario = 1,
+                            Apellido = "Pérez",
+                            Contrasenia = "juan123456",
+                            CorreoElectronico = "juan.perez@example.com",
+                            FechaRegistro = new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(249),
+                            Nombre = "Juan",
+                            Telefono = "123456789"
+                        },
+                        new
+                        {
+                            IdUsuario = 2,
+                            Apellido = "Gómez",
+                            Contrasenia = "maria123456",
+                            CorreoElectronico = "maria.gomez@example.com",
+                            FechaRegistro = new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(251),
+                            Nombre = "María",
+                            Telefono = "987654321"
+                        });
                 });
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.CategoriaProducto", b =>
@@ -445,11 +639,19 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.ImagenProducto", b =>
                 {
+                    b.HasOne("BackendProyectoFinal.Domain.Entities.Imagenes", "Imagen")
+                        .WithMany()
+                        .HasForeignKey("ImagenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BackendProyectoFinal.Domain.Entities.Producto", "Producto")
                         .WithMany()
                         .HasForeignKey("ProductoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Imagen");
 
                     b.Navigation("Producto");
                 });

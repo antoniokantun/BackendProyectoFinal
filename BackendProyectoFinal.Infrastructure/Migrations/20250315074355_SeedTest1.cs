@@ -4,10 +4,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace BackendProyectoFinal.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Inicial : Migration
+    public partial class SeedTest1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,6 +29,21 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_categorias", x => x.id_categoria);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "imagenes",
+                columns: table => new
+                {
+                    id_imagen = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    url_image = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_imagenes", x => x.id_imagen);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -236,12 +253,17 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     id_imagen_producto = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     producto_id = table.Column<int>(type: "int", nullable: false),
-                    url_image = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    imagen_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_imagenes_producto", x => x.id_imagen_producto);
+                    table.ForeignKey(
+                        name: "FK_imagenes_producto_imagenes_imagen_id",
+                        column: x => x.imagen_id,
+                        principalTable: "imagenes",
+                        principalColumn: "id_imagen",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_imagenes_producto_productos_producto_id",
                         column: x => x.producto_id,
@@ -286,6 +308,95 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.InsertData(
+                table: "categorias",
+                columns: new[] { "id_categoria", "nombre_categoria" },
+                values: new object[,]
+                {
+                    { 1, "Electrónica" },
+                    { 2, "Ropa" },
+                    { 3, "Hogar" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "imagenes",
+                columns: new[] { "id_imagen", "url_image" },
+                values: new object[,]
+                {
+                    { 1, "https://example.com/imagen1.jpg" },
+                    { 2, "https://example.com/imagen2.jpg" },
+                    { 3, "https://example.com/imagen3.jpg" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "usuarios",
+                columns: new[] { "id_usuario", "apellido_usuario", "contrasenia", "correo_electronico", "fecha_registro", "nombre_usuario", "telefono" },
+                values: new object[,]
+                {
+                    { 1, "Pérez", "juan123456", "juan.perez@example.com", new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(249), "Juan", "123456789" },
+                    { 2, "Gómez", "maria123456", "maria.gomez@example.com", new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(251), "María", "987654321" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "categorias_producto",
+                columns: new[] { "id_categoria_producto", "categoria_id", "usuario_id" },
+                values: new object[,]
+                {
+                    { 1, 1, 1 },
+                    { 2, 2, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "perfiles",
+                columns: new[] { "id_perfil", "descripcion", "imagen_perfil", "nombre_perfil", "usuario_id" },
+                values: new object[,]
+                {
+                    { 1, "Amante de la tecnología.", "https://images.unsplash.com/flagged/photo-1595514191830-3e96a518989b?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "JuanP", 1 },
+                    { 2, "Fashionista y amante de la moda.", "https://images.unsplash.com/photo-1579591919791-0e3737ae3808?q=80&w=2030&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "MariaG", 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "productos",
+                columns: new[] { "id_producto", "descripcion_producto", "fecha_creacion", "intercambio", "nombre_producto", "proceso_negociacion", "usuario_id" },
+                values: new object[,]
+                {
+                    { 1, "Un smartphone de última generación.", new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(197), true, "Smartphone XYZ", false, 1 },
+                    { 2, "Una laptop potente para trabajo y juegos.", new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(201), false, "Laptop ABC", true, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "comentarios",
+                columns: new[] { "id_comentario", "comentario_padre_id", "contenido_comentario", "fecha_creacion", "producto_id", "usuario_id" },
+                values: new object[] { 1, null, "¡Me encanta este producto!", new DateTime(2025, 3, 15, 7, 43, 55, 420, DateTimeKind.Utc).AddTicks(9974), 2, 1 });
+
+            migrationBuilder.InsertData(
+                table: "evaluaciones",
+                columns: new[] { "id_evaluacion", "comentario", "fecha_creacion", "producto_id", "puntacion", "usuario_id" },
+                values: new object[,]
+                {
+                    { 1, "Excelente producto, muy recomendado.", new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(25), 2, 5, 1 },
+                    { 2, "Buen producto, pero podría mejorar.", new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(29), 1, 4, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "imagenes_producto",
+                columns: new[] { "id_imagen_producto", "imagen_id", "producto_id" },
+                values: new object[,]
+                {
+                    { 1, 1, 1 },
+                    { 2, 2, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "intercambios",
+                columns: new[] { "id_intercambio", "fecha_registro", "producto_id", "usuario_ofertante_id", "usuario_solicitante_id" },
+                values: new object[] { 1, new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(111), 1, 2, 1 });
+
+            migrationBuilder.InsertData(
+                table: "comentarios",
+                columns: new[] { "id_comentario", "comentario_padre_id", "contenido_comentario", "fecha_creacion", "producto_id", "usuario_id" },
+                values: new object[] { 2, 1, "¿Todavía está disponible?", new DateTime(2025, 3, 15, 7, 43, 55, 420, DateTimeKind.Utc).AddTicks(9983), 1, 2 });
+
             migrationBuilder.CreateIndex(
                 name: "IX_categorias_producto_categoria_id",
                 table: "categorias_producto",
@@ -320,6 +431,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 name: "IX_evaluaciones_usuario_id",
                 table: "evaluaciones",
                 column: "usuario_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_imagenes_producto_imagen_id",
+                table: "imagenes_producto",
+                column: "imagen_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_imagenes_producto_producto_id",
@@ -383,6 +499,9 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "categorias");
+
+            migrationBuilder.DropTable(
+                name: "imagenes");
 
             migrationBuilder.DropTable(
                 name: "productos");
