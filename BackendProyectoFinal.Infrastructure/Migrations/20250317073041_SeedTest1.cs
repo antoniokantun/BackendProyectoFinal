@@ -48,6 +48,21 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "roles",
+                columns: table => new
+                {
+                    id_rol = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    nombre_rol = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_roles", x => x.id_rol);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "usuarios",
                 columns: table => new
                 {
@@ -63,11 +78,18 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     contrasenia = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    fecha_registro = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    fecha_registro = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    rol_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_usuarios", x => x.id_usuario);
+                    table.ForeignKey(
+                        name: "FK_usuarios_roles_rol_id",
+                        column: x => x.rol_id,
+                        principalTable: "roles",
+                        principalColumn: "id_rol",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -329,12 +351,21 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "usuarios",
-                columns: new[] { "id_usuario", "apellido_usuario", "contrasenia", "correo_electronico", "fecha_registro", "nombre_usuario", "telefono" },
+                table: "roles",
+                columns: new[] { "id_rol", "nombre_rol" },
                 values: new object[,]
                 {
-                    { 1, "Pérez", "juan123456", "juan.perez@example.com", new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(249), "Juan", "123456789" },
-                    { 2, "Gómez", "maria123456", "maria.gomez@example.com", new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(251), "María", "987654321" }
+                    { 1, "Administrador" },
+                    { 2, "Usuario" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "usuarios",
+                columns: new[] { "id_usuario", "apellido_usuario", "contrasenia", "correo_electronico", "fecha_registro", "nombre_usuario", "rol_id", "telefono" },
+                values: new object[,]
+                {
+                    { 1, "Pérez", "juan123456", "juan.perez@example.com", new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9442), "Juan", 1, "123456789" },
+                    { 2, "Gómez", "maria123456", "maria.gomez@example.com", new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9445), "María", 2, "987654321" }
                 });
 
             migrationBuilder.InsertData(
@@ -360,22 +391,22 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 columns: new[] { "id_producto", "descripcion_producto", "fecha_creacion", "intercambio", "nombre_producto", "proceso_negociacion", "usuario_id" },
                 values: new object[,]
                 {
-                    { 1, "Un smartphone de última generación.", new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(197), true, "Smartphone XYZ", false, 1 },
-                    { 2, "Una laptop potente para trabajo y juegos.", new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(201), false, "Laptop ABC", true, 2 }
+                    { 1, "Un smartphone de última generación.", new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9395), true, "Smartphone XYZ", false, 1 },
+                    { 2, "Una laptop potente para trabajo y juegos.", new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9401), false, "Laptop ABC", true, 2 }
                 });
 
             migrationBuilder.InsertData(
                 table: "comentarios",
                 columns: new[] { "id_comentario", "comentario_padre_id", "contenido_comentario", "fecha_creacion", "producto_id", "usuario_id" },
-                values: new object[] { 1, null, "¡Me encanta este producto!", new DateTime(2025, 3, 15, 7, 43, 55, 420, DateTimeKind.Utc).AddTicks(9974), 2, 1 });
+                values: new object[] { 1, null, "¡Me encanta este producto!", new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9181), 2, 1 });
 
             migrationBuilder.InsertData(
                 table: "evaluaciones",
                 columns: new[] { "id_evaluacion", "comentario", "fecha_creacion", "producto_id", "puntacion", "usuario_id" },
                 values: new object[,]
                 {
-                    { 1, "Excelente producto, muy recomendado.", new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(25), 2, 5, 1 },
-                    { 2, "Buen producto, pero podría mejorar.", new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(29), 1, 4, 2 }
+                    { 1, "Excelente producto, muy recomendado.", new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9222), 2, 5, 1 },
+                    { 2, "Buen producto, pero podría mejorar.", new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9224), 1, 4, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -390,12 +421,12 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "intercambios",
                 columns: new[] { "id_intercambio", "fecha_registro", "producto_id", "usuario_ofertante_id", "usuario_solicitante_id" },
-                values: new object[] { 1, new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(111), 1, 2, 1 });
+                values: new object[] { 1, new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9315), 1, 2, 1 });
 
             migrationBuilder.InsertData(
                 table: "comentarios",
                 columns: new[] { "id_comentario", "comentario_padre_id", "contenido_comentario", "fecha_creacion", "producto_id", "usuario_id" },
-                values: new object[] { 2, 1, "¿Todavía está disponible?", new DateTime(2025, 3, 15, 7, 43, 55, 420, DateTimeKind.Utc).AddTicks(9983), 1, 2 });
+                values: new object[] { 2, 1, "¿Todavía está disponible?", new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9186), 1, 2 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_categorias_producto_categoria_id",
@@ -471,6 +502,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 name: "IX_productos_usuario_id",
                 table: "productos",
                 column: "usuario_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_usuarios_rol_id",
+                table: "usuarios",
+                column: "rol_id");
         }
 
         /// <inheritdoc />
@@ -508,6 +544,9 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "usuarios");
+
+            migrationBuilder.DropTable(
+                name: "roles");
         }
     }
 }

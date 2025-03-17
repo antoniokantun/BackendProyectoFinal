@@ -145,7 +145,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         {
                             IdComentario = 1,
                             Contenido = "¡Me encanta este producto!",
-                            FechaCreacion = new DateTime(2025, 3, 15, 7, 43, 55, 420, DateTimeKind.Utc).AddTicks(9974),
+                            FechaCreacion = new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9181),
                             ProductoId = 2,
                             UsuarioId = 1
                         },
@@ -154,7 +154,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             IdComentario = 2,
                             ComentarioPadreId = 1,
                             Contenido = "¿Todavía está disponible?",
-                            FechaCreacion = new DateTime(2025, 3, 15, 7, 43, 55, 420, DateTimeKind.Utc).AddTicks(9983),
+                            FechaCreacion = new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9186),
                             ProductoId = 1,
                             UsuarioId = 2
                         });
@@ -203,7 +203,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         {
                             IdEvaluacion = 1,
                             Comentario = "Excelente producto, muy recomendado.",
-                            FechaCreacion = new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(25),
+                            FechaCreacion = new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9222),
                             ProductoId = 2,
                             Puntuacion = 5,
                             UsuarioId = 1
@@ -212,7 +212,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         {
                             IdEvaluacion = 2,
                             Comentario = "Buen producto, pero podría mejorar.",
-                            FechaCreacion = new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(29),
+                            FechaCreacion = new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9224),
                             ProductoId = 1,
                             Puntuacion = 4,
                             UsuarioId = 2
@@ -335,7 +335,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         new
                         {
                             IdIntercambio = 1,
-                            FechaRegistro = new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(111),
+                            FechaRegistro = new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9315),
                             ProductoId = 1,
                             UsuarioOfertanteId = 2,
                             UsuarioSolicitanteId = 1
@@ -488,7 +488,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         {
                             IdProducto = 1,
                             Descripcion = "Un smartphone de última generación.",
-                            FechaCreacion = new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(197),
+                            FechaCreacion = new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9395),
                             Intercambio = true,
                             Nombre = "Smartphone XYZ",
                             ProcesoNegociacion = false,
@@ -498,11 +498,43 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         {
                             IdProducto = 2,
                             Descripcion = "Una laptop potente para trabajo y juegos.",
-                            FechaCreacion = new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(201),
+                            FechaCreacion = new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9401),
                             Intercambio = false,
                             Nombre = "Laptop ABC",
                             ProcesoNegociacion = true,
                             UsuarioId = 2
+                        });
+                });
+
+            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Roles", b =>
+                {
+                    b.Property<int>("IdRol")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id_rol");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IdRol"));
+
+                    b.Property<string>("NombreRol")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("nombre_rol");
+
+                    b.HasKey("IdRol");
+
+                    b.ToTable("roles");
+
+                    b.HasData(
+                        new
+                        {
+                            IdRol = 1,
+                            NombreRol = "Administrador"
+                        },
+                        new
+                        {
+                            IdRol = 2,
+                            NombreRol = "Usuario"
                         });
                 });
 
@@ -542,12 +574,18 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("nombre_usuario");
 
+                    b.Property<int>("RolId")
+                        .HasColumnType("int")
+                        .HasColumnName("rol_id");
+
                     b.Property<string>("Telefono")
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("telefono");
 
                     b.HasKey("IdUsuario");
+
+                    b.HasIndex("RolId");
 
                     b.ToTable("usuarios");
 
@@ -558,8 +596,9 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             Apellido = "Pérez",
                             Contrasenia = "juan123456",
                             CorreoElectronico = "juan.perez@example.com",
-                            FechaRegistro = new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(249),
+                            FechaRegistro = new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9442),
                             Nombre = "Juan",
+                            RolId = 1,
                             Telefono = "123456789"
                         },
                         new
@@ -568,8 +607,9 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             Apellido = "Gómez",
                             Contrasenia = "maria123456",
                             CorreoElectronico = "maria.gomez@example.com",
-                            FechaRegistro = new DateTime(2025, 3, 15, 7, 43, 55, 421, DateTimeKind.Utc).AddTicks(251),
+                            FechaRegistro = new DateTime(2025, 3, 17, 7, 30, 40, 756, DateTimeKind.Utc).AddTicks(9445),
                             Nombre = "María",
+                            RolId = 2,
                             Telefono = "987654321"
                         });
                 });
@@ -712,6 +752,17 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Usuario", b =>
+                {
+                    b.HasOne("BackendProyectoFinal.Domain.Entities.Roles", "Rol")
+                        .WithMany()
+                        .HasForeignKey("RolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rol");
                 });
 #pragma warning restore 612, 618
         }

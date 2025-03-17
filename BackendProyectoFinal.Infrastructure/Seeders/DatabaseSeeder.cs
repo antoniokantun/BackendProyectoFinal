@@ -17,7 +17,9 @@ namespace BackendProyectoFinal.Infrastructure.Seeders
             SeedProductos(modelBuilder);
             SeedUsuarios(modelBuilder);
             SeedImagenes(modelBuilder);
+            SeedRoles(modelBuilder);
         }
+
 
         private static void SeedCategorias(ModelBuilder modelBuilder)
         {
@@ -25,6 +27,13 @@ namespace BackendProyectoFinal.Infrastructure.Seeders
             new Categoria { IdCategoria = 1, Nombre = "Electrónica" },
             new Categoria { IdCategoria = 2, Nombre = "Ropa" },
             new Categoria { IdCategoria = 3, Nombre = "Hogar" }
+            );
+        }
+        private static void SeedRoles(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Roles>().HasData(
+            new Roles { IdRol = 1, NombreRol = "Administrador" },
+            new Roles { IdRol = 2, NombreRol = "Usuario" }
             );
         }
 
@@ -206,7 +215,9 @@ namespace BackendProyectoFinal.Infrastructure.Seeders
                 CorreoElectronico = "juan.perez@example.com",
                 Telefono = "123456789",
                 Contrasenia = "juan123456", // Asegúrate de hashear las contraseñas
-                FechaRegistro = DateTime.UtcNow
+                FechaRegistro = DateTime.UtcNow,
+                RolId = 1,
+
             },
             new Usuario
             {
@@ -216,7 +227,9 @@ namespace BackendProyectoFinal.Infrastructure.Seeders
                 CorreoElectronico = "maria.gomez@example.com",
                 Telefono = "987654321",
                 Contrasenia = "maria123456", // Asegúrate de hashear las contraseñas
-                FechaRegistro = DateTime.UtcNow
+                FechaRegistro = DateTime.UtcNow,
+                RolId = 2,
+
             }
             );
         }
