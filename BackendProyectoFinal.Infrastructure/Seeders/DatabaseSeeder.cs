@@ -109,7 +109,7 @@ namespace BackendProyectoFinal.Infrastructure.Seeders
                 new Imagenes
                 {
                     IdImagen = 1,
-                    UrlImagen = "https://example.com/imagen1.jpg"
+                    UrlImagen = "https://images.unsplash.com/photo-1585060544812-6b45742d762f?q=80&w=1181&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 },
                 new Imagenes
                 {
@@ -119,7 +119,7 @@ namespace BackendProyectoFinal.Infrastructure.Seeders
                 new Imagenes
                 {
                     IdImagen = 3,
-                    UrlImagen = "https://example.com/imagen3.jpg"
+                    UrlImagen = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 }
             );
         }

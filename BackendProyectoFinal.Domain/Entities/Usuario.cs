@@ -42,5 +42,11 @@ namespace BackendProyectoFinal.Domain.Entities
         [Required]
         [Column("fecha_registro")]
         public DateTime FechaRegistro { get; set; }
+
+        [Required]
+        [ForeignKey("Rol")]
+        [Column("rol_id")]
+        public int RolId { get; set; } 
+        public Roles Rol { get; set; } = null!; 
     }
 }

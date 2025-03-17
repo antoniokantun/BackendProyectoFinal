@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BackendProyectoFinal.Domain.Entities
 {
@@ -18,11 +14,13 @@ namespace BackendProyectoFinal.Domain.Entities
         [Required]
         [ForeignKey("Producto")]
         [Column("producto_id")]
-        public int ProductoId { get; set; }
-        public Producto Producto { get; set; } = null!;
+        public int ProductoId { get; set; } 
+        public Producto Producto { get; set; } = null!; 
 
         [Required]
-        [Column("url_image")]
-        public string UrlImagen { get; set; } = string.Empty;
+        [ForeignKey("Imagen")]
+        [Column("imagen_id")]
+        public int ImagenId { get; set; } 
+        public Imagenes Imagen { get; set; } = null!; 
     }
 }
