@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BackendProyectoFinal.Application\BackendProyectoFinal.Application.csproj" />
     <ProjectReference Include="..\BackendProyectoFinal.Domain\BackendProyectoFinal.Domain.csproj" />
     <ProjectReference Include="..\BackendProyectoFinal.Infrastructure\BackendProyectoFinal.Infrastructure.csproj" />
