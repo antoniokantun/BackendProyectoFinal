@@ -22,9 +22,9 @@ namespace BackendProyectoFinal.Domain.Entities
         public Categoria Categoria { get; set; } = null!;
 
         [Required]
-        [ForeignKey("Usuario")]
-        [Column("usuario_id")]
-        public int UsuarioId { get; set; }
-        public Usuario Usuario { get; set; } = null!;
+        [ForeignKey("Producto")]
+        [Column("producto_id")]
+        public int ProductoId { get; set; }
+        public Producto Producto { get; set; } = null!;
     }
 }

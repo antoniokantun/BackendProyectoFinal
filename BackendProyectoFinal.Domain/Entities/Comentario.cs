@@ -40,5 +40,15 @@ namespace BackendProyectoFinal.Domain.Entities
         [Column("comentario_padre_id")]
         public int? ComentarioPadreId { get; set; }
         public Comentario? ComentarioPadre { get; set; }
+
+        // Colección para acceder a los comentarios hijo/respuestas
+        [InverseProperty("ComentarioPadre")]
+        public virtual ICollection<Comentario> ComentariosHijos { get; set; } = new List<Comentario>();
+
+        // Constructor para inicializar valores por defecto
+        public Comentario()
+        {
+            FechaCreacion = DateTime.Now;
+        }
     }
 }
