@@ -12,5 +12,7 @@ namespace BackendProyectoFinal.Domain.Interfaces
         Task<Usuario?> FindByEmailAsync(string email);
         Task<Usuario?> GetByIdWithRolAsync(int id);
         Task<IEnumerable<Usuario>> GetAllWithRolAsync();
+
+        Task<bool> ExistsAsync(int usuarioId);
     }
 }

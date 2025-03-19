@@ -23,7 +23,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 });
 
-// Asegúrate de que se escanee el ensamblado correcto
+// Asegï¿½rate de que se escanee el ensamblado correcto
 //builder.Services.AddControllers()
 //    .AddApplicationPart(typeof(CategoriaController).Assembly);
 
@@ -39,7 +39,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "BackendProyectoFinal API", Version = "v1" });
 
-    // Configuración para Swagger con autenticación JWT
+    // Configuraciï¿½n para Swagger con autenticaciï¿½n JWT
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token",
@@ -70,7 +70,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
-        new MySqlServerVersion(new Version(10, 6, 0)), // Asegúrate de que sea la versión correcta de MySQL
+        new MySqlServerVersion(new Version(10, 6, 0)), // Asegï¿½rate de que sea la versiï¿½n correcta de MySQL
         mySqlOptions => mySqlOptions.EnableRetryOnFailure(
             maxRetryCount: 5,
             maxRetryDelay: TimeSpan.FromSeconds(30),
@@ -79,7 +79,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 );
 
 
-// Configuración de autenticación JWT
+// Configuraciï¿½n de autenticaciï¿½n JWT
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -135,7 +135,7 @@ builder.Services.AddScoped<IErrorHandlingService, ErrorHandlingService>();
 
 
 
-// Configuración CORS
+// Configuraciï¿½n CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
@@ -156,7 +156,7 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    // En producción, usar el middleware personalizado para capturar errores globales
+    // En producciï¿½n, usar el middleware personalizado para capturar errores globales
     app.UseMiddleware<ErrorHandlingMiddleware>();
 }
 

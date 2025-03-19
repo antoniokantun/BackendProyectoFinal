@@ -35,5 +35,11 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Repositories
                 .Include(u => u.Rol)
                 .ToListAsync();
         }
+
+        public async Task<bool> ExistsAsync(int usuarioId)
+{
+    return await _dbSet.AnyAsync(u => u.IdUsuario == usuarioId);
+}
+
     }
 }
