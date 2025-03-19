@@ -10,7 +10,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioService _usuarioService;
@@ -27,10 +27,10 @@ namespace BackendProyectoFinal.Presentation.Controllers
         // GET: api/Usuario
         [HttpGet]
         /*[Authorize(Roles = "Administrador")] */// Solo administradores pueden ver todos los usuarios
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        // [ProducesResponseType(StatusCodes.Status200OK)]
+        // [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        // [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        // [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<UsuarioRespuestaDTO>>> GetUsuarios()
         {
             try
@@ -47,24 +47,24 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Usuario/5
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        // [ProducesResponseType(StatusCodes.Status200OK)]
+        // [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        // [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        // [ProducesResponseType(StatusCodes.Status404NotFound)]
+        // [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<UsuarioRespuestaDTO>> GetUsuario(int id)
         {
             try
             {
                 // Verificar si el usuario está intentando acceder a su propio perfil
-                var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+                // var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
                 var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
 
                 // Solo administradores o el propio usuario pueden acceder al perfil
-                if (userRole != "Administrador" && id != currentUserId)
-                {
-                    return Forbid();
-                }
+                // if (userRole != "Administrador" && id != currentUserId)
+                // {
+                //     return Forbid();
+                // }
 
                 var usuario = await _usuarioService.GetByIdAsync(id);
                 return Ok(usuario);
@@ -131,25 +131,25 @@ namespace BackendProyectoFinal.Presentation.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                // Verificar si el usuario está intentando modificar su propio perfil
-                var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-                var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+                // // Verificar si el usuario está intentando modificar su propio perfil
+                // var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+                // var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
 
-                // Solo administradores o el propio usuario pueden modificar el perfil
-                if (userRole != "Administrador" && id != currentUserId)
-                {
-                    return Forbid();
-                }
+                // // Solo administradores o el propio usuario pueden modificar el perfil
+                // if (userRole != "Administrador" && id != currentUserId)
+                // {
+                //     return Forbid();
+                // }
 
-                // Si no es administrador, no puede cambiar su propio rol
-                if (userRole != "Administrador" && id == currentUserId)
-                {
-                    var currentUser = await _usuarioService.GetByIdAsync(currentUserId);
-                    if (currentUser.RolId != usuarioDto.RolId)
-                    {
-                        return BadRequest("No tienes permiso para cambiar tu propio rol");
-                    }
-                }
+                // // Si no es administrador, no puede cambiar su propio rol
+                // if (userRole != "Administrador" && id == currentUserId)
+                // {
+                //     var currentUser = await _usuarioService.GetByIdAsync(currentUserId);
+                //     if (currentUser.RolId != usuarioDto.RolId)
+                //     {
+                //         return BadRequest("No tienes permiso para cambiar tu propio rol");
+                //     }
+                // }
 
                 await _usuarioService.UpdateAsync(usuarioDto);
                 return NoContent();
