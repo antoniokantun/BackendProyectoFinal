@@ -79,19 +79,20 @@ Asegúrate de tener instalado **.NET 8 SDK** y **MySQL** en tu sistema. Luego, s
 
 ```bash
 # Clona el repositorio
-git clone https://github.com/MrDorer/backend_strade.git
+git clone https://github.com/MrDorer/backend_strade.git](https://github.com/antoniokantun/BackendProyectoFinal.git
 
 # Ingresa a la carpeta del proyecto
-cd backend_strade
+cd BackendProyectoFinal
 
-# Aplica las migraciones en MySQL
-cd EcoCircular.Infrastructure
+# Aplica las migraciones en MySQL desde Package Manager Console
+Add-Migration InitialMigrationWithSeedData -Project BackendProyectoFinal.Infrastructure -StartupProject BackendProyectoFinal.Presentation
 
 # Ejecuta el comando para aplicar migraciones
- dotnet ef database update
+ Update-Database -Project BackendProyectoFinal.Infrastructure -StartupProject BackendProyectoFinal.Presentation
 
 # Regresa a la carpeta principal y ejecuta el proyecto
 cd ..
+cd BackendProyectoFinal.Presentation
 dotnet run
 ```
 
