@@ -79,7 +79,7 @@ Asegúrate de tener instalado **.NET 8 SDK** y **MySQL** en tu sistema. Luego, s
 
 ```bash
 # Clona el repositorio
-git clone https://github.com/MrDorer/backend_strade.git](https://github.com/antoniokantun/BackendProyectoFinal.git
+git clone https://github.com/antoniokantun/BackendProyectoFinal.git
 
 # Ingresa a la carpeta del proyecto
 cd BackendProyectoFinal
