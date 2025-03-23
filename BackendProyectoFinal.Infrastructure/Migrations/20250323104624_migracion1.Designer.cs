@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackendProyectoFinal.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250322195835_InitialMigrationWithSeedData")]
-    partial class InitialMigrationWithSeedData
+    [Migration("20250323104624_migracion1")]
+    partial class migracion1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -691,7 +691,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("BackendProyectoFinal.Domain.Entities.Producto", "Producto")
-                        .WithMany()
+                        .WithMany("CategoriaProductos")
                         .HasForeignKey("ProductoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -759,7 +759,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("BackendProyectoFinal.Domain.Entities.Producto", "Producto")
-                        .WithMany()
+                        .WithMany("ImagenProductos")
                         .HasForeignKey("ProductoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -852,6 +852,13 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Comentario", b =>
                 {
                     b.Navigation("ComentariosHijos");
+                });
+
+            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Producto", b =>
+                {
+                    b.Navigation("CategoriaProductos");
+
+                    b.Navigation("ImagenProductos");
                 });
 #pragma warning restore 612, 618
         }

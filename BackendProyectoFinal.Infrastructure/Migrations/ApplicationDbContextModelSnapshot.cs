@@ -688,7 +688,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("BackendProyectoFinal.Domain.Entities.Producto", "Producto")
-                        .WithMany()
+                        .WithMany("CategoriaProductos")
                         .HasForeignKey("ProductoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -756,7 +756,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("BackendProyectoFinal.Domain.Entities.Producto", "Producto")
-                        .WithMany()
+                        .WithMany("ImagenProductos")
                         .HasForeignKey("ProductoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -849,6 +849,13 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Comentario", b =>
                 {
                     b.Navigation("ComentariosHijos");
+                });
+
+            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Producto", b =>
+                {
+                    b.Navigation("CategoriaProductos");
+
+                    b.Navigation("ImagenProductos");
                 });
 #pragma warning restore 612, 618
         }
