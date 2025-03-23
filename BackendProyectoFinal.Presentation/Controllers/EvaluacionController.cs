@@ -26,7 +26,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<EvaluacionDTO>>> GetEvaluaciones()
         {
-            _logger.LogInformation("Obteniendo evaluaciones");
             try
             {
                 var evaluaciones = await _evaluacionService.GetAllAsync();
@@ -34,7 +33,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener evaluaciones");
                 await _errorHandlingService.LogErrorAsync(ex, nameof(GetEvaluaciones));
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener las evaluaciones");
             }
@@ -63,72 +61,41 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
         }
 
-        // GET: api/Evaluacion/producto/5
-        [HttpGet("producto/{productoId}")]
+        // GET: api/Evaluacion/Usuario/5
+        [HttpGet("Usuario/{usuarioId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<EvaluacionDTO>>> GetEvaluacionesByProducto(int productoId)
-        {
-            try
-            {
-                var evaluaciones = await _evaluacionService.GetByProductIdAsync(productoId);
-                return Ok(evaluaciones);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetEvaluacionesByProducto));
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener las evaluaciones del producto");
-            }
-        }
-
-        // GET: api/Evaluacion/usuario/5
-        [HttpGet("usuario/{usuarioId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<EvaluacionDTO>>> GetEvaluacionesByUsuario(int usuarioId)
+        public async Task<ActionResult<IEnumerable<EvaluacionDTO>>> GetEvaluacionesPorUsuario(int usuarioId)
         {
             try
             {
                 var evaluaciones = await _evaluacionService.GetByUsuarioIdAsync(usuarioId);
                 return Ok(evaluaciones);
             }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetEvaluacionesByUsuario));
+                await _errorHandlingService.LogErrorAsync(ex, nameof(GetEvaluacionesPorUsuario));
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener las evaluaciones del usuario");
             }
         }
 
-        // GET: api/Evaluacion/promedio/5
-        [HttpGet("promedio/{productoId}")]
+        // GET: api/Evaluacion/Producto/5
+        [HttpGet("Producto/{productoId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<double>> GetPromedioEvaluacionesByProducto(int productoId)
+        public async Task<ActionResult<IEnumerable<EvaluacionDTO>>> GetEvaluacionesPorProducto(int productoId)
         {
             try
             {
-                var promedio = await _evaluacionService.GetPromedioByProductIdAsync(productoId);
-                return Ok(promedio);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
+                var evaluaciones = await _evaluacionService.GetByProductoIdAsync(productoId);
+                return Ok(evaluaciones);
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetPromedioEvaluacionesByProducto));
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener el promedio de evaluaciones del producto");
+                await _errorHandlingService.LogErrorAsync(ex, nameof(GetEvaluacionesPorProducto));
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener las evaluaciones del producto");
             }
         }
 
@@ -137,20 +104,15 @@ namespace BackendProyectoFinal.Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<EvaluacionDTO>> PostEvaluacion(CreateEvaluacionDTO evaluacionDto)
+        public async Task<ActionResult<EvaluacionDTO>> PostEvaluacion(CreateEvaluacionDTO createEvaluacionDto)
         {
             try
             {
-                var evaluacion = await _evaluacionService.CreateAsync(evaluacionDto);
-                return CreatedAtAction(nameof(GetEvaluacion), new { id = evaluacion.IdEvaluacion }, evaluacion);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var createdEvaluacion = await _evaluacionService.CreateAsync(createEvaluacionDto);
+                return CreatedAtAction(nameof(GetEvaluacion), new { id = createdEvaluacion.IdEvaluacion }, createdEvaluacion);
             }
             catch (Exception ex)
             {
@@ -165,11 +127,14 @@ namespace BackendProyectoFinal.Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> PutEvaluacion(int id, UpdateEvaluacionDTO evaluacionDto)
+        public async Task<IActionResult> PutEvaluacion(int id, UpdateEvaluacionDTO updateEvaluacionDto)
         {
             try
             {
-                await _evaluacionService.UpdateAsync(id, evaluacionDto);
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                await _evaluacionService.UpdateAsync(id, updateEvaluacionDto);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)
@@ -203,24 +168,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
             {
                 await _errorHandlingService.LogErrorAsync(ex, nameof(DeleteEvaluacion));
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al eliminar la evaluación");
-            }
-        }
-
-        // GET: api/Evaluacion/existe/1/2
-        [HttpGet("existe/{usuarioId}/{productoId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<bool>> ExisteEvaluacionUsuarioProducto(int usuarioId, int productoId)
-        {
-            try
-            {
-                var existe = await _evaluacionService.ExisteEvaluacionUsuarioProductoAsync(usuarioId, productoId);
-                return Ok(existe);
-            }
-            catch (Exception ex)
-            {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(ExisteEvaluacionUsuarioProducto));
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al verificar la existencia de la evaluación");
             }
         }
     }

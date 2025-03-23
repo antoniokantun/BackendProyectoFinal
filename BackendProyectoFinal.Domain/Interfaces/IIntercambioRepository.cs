@@ -7,13 +7,11 @@ using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Domain.Interfaces
 {
-    public interface IIntercambioRepository
+    public interface IIntercambioRepository : IGenericRepository<Intercambio>
     {
-        Task<IEnumerable<Intercambio>> GetAllAsync();
-        Task<Intercambio> GetByIdAsync(int id);
-        Task<Intercambio> CreateAsync(Intercambio intercambio);
-        Task UpdateAsync(Intercambio intercambio);
-        Task DeleteAsync(int id);
-        Task<bool> ExistsAsync(int id);
+        // Métodos específicos para Intercambio si se necesitan
+        Task<IEnumerable<Intercambio>> GetByUsuarioSolicitanteIdAsync(int usuarioSolicitanteId);
+        Task<IEnumerable<Intercambio>> GetByUsuarioOfertanteIdAsync(int usuarioOfertanteId);
+        Task<IEnumerable<Intercambio>> GetByProductoIdAsync(int productoId);
     }
 }

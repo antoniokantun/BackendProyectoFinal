@@ -7,19 +7,10 @@ using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Domain.Interfaces
 {
-    public interface IEvaluacionRepository
+    public interface IEvaluacionRepository : IGenericRepository<Evaluacion>
     {
-        Task<IEnumerable<Evaluacion>> GetAllAsync();
-        Task<IEnumerable<Evaluacion>> GetAllWithDetailsAsync();
-        Task<Evaluacion?> GetByIdAsync(int id);
-        Task<Evaluacion?> GetByIdWithDetailsAsync(int id);
-        Task<IEnumerable<Evaluacion>> GetByProductIdAsync(int productoId);
+        // Métodos específicos para Evaluacion
         Task<IEnumerable<Evaluacion>> GetByUsuarioIdAsync(int usuarioId);
-        Task<double> GetPromedioByProductIdAsync(int productoId);
-        Task<Evaluacion> CreateAsync(Evaluacion evaluacion);
-        Task UpdateAsync(Evaluacion evaluacion);
-        Task DeleteAsync(int id);
-        Task<bool> ExistsAsync(int id);
-        Task<bool> ExisteEvaluacionUsuarioProductoAsync(int usuarioId, int productoId);
+        Task<IEnumerable<Evaluacion>> GetByProductoIdAsync(int productoId);
     }
 }

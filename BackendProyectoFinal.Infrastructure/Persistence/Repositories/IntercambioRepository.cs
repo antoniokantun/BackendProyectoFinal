@@ -10,59 +10,61 @@ using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Infrastructure.Persistence.Repositories
 {
-    public class IntercambioRepository : IIntercambioRepository
+    public class IntercambioRepository : GenericRepository<Intercambio>, IIntercambioRepository
     {
-        private readonly ApplicationDbContext _context;
-
-        public IntercambioRepository(ApplicationDbContext context)
+        public IntercambioRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
         }
 
-        public async Task<IEnumerable<Intercambio>> GetAllAsync()
+        public async Task<IEnumerable<Intercambio>> GetByUsuarioSolicitanteIdAsync(int usuarioSolicitanteId)
         {
-            return await _context.Intercambios
+            return await _dbSet
+                .Where(i => i.UsuarioSolicitanteId == usuarioSolicitanteId)
                 .Include(i => i.UsuarioSolicitante)
                 .Include(i => i.UsuarioOfertante)
                 .Include(i => i.Producto)
                 .ToListAsync();
         }
 
-        public async Task<Intercambio> GetByIdAsync(int id)
+        public async Task<IEnumerable<Intercambio>> GetByUsuarioOfertanteIdAsync(int usuarioOfertanteId)
         {
-            return await _context.Intercambios
+            return await _dbSet
+                .Where(i => i.UsuarioOfertanteId == usuarioOfertanteId)
                 .Include(i => i.UsuarioSolicitante)
                 .Include(i => i.UsuarioOfertante)
                 .Include(i => i.Producto)
-                .FirstOrDefaultAsync(i => i.IdIntercambio == id);
+                .ToListAsync();
         }
 
-        public async Task<Intercambio> CreateAsync(Intercambio intercambio)
+        public async Task<IEnumerable<Intercambio>> GetByProductoIdAsync(int productoId)
         {
-            _context.Intercambios.Add(intercambio);
-            await _context.SaveChangesAsync();
-            return intercambio;
+            return await _dbSet
+                .Where(i => i.ProductoId == productoId)
+                .Include(i => i.UsuarioSolicitante)
+                .Include(i => i.UsuarioOfertante)
+                .Include(i => i.Producto)
+                .ToListAsync();
         }
 
-        public async Task UpdateAsync(Intercambio intercambio)
+        // Sobreescribimos el método GetByIdAsync para incluir las entidades relacionadas
+        public async new Task<Intercambio?> GetByIdAsync(int id)
         {
-            _context.Entry(intercambio).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            return await _dbSet
+                .Where(i => i.IdIntercambio == id)
+                .Include(i => i.UsuarioSolicitante)
+                .Include(i => i.UsuarioOfertante)
+                .Include(i => i.Producto)
+                .FirstOrDefaultAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        // Sobreescribimos el método GetAllAsync para incluir las entidades relacionadas
+        public async new Task<IEnumerable<Intercambio>> GetAllAsync()
         {
-            var intercambio = await _context.Intercambios.FindAsync(id);
-            if (intercambio != null)
-            {
-                _context.Intercambios.Remove(intercambio);
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        public async Task<bool> ExistsAsync(int id)
-        {
-            return await _context.Intercambios.AnyAsync(i => i.IdIntercambio == id);
+            return await _dbSet
+                .Include(i => i.UsuarioSolicitante)
+                .Include(i => i.UsuarioOfertante)
+                .Include(i => i.Producto)
+                .ToListAsync();
         }
     }
 }

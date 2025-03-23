@@ -20,13 +20,12 @@ namespace BackendProyectoFinal.Presentation.Controllers
             _logger = logger;
         }
 
-        // GET: api/Productos
+        // GET: api/Producto
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<ProductoDTO>>> GetProductos()
         {
-            _logger.LogInformation("Obteniendo productos");
             try
             {
                 var productos = await _productoService.GetAllAsync();
@@ -34,13 +33,12 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener productos");
                 await _errorHandlingService.LogErrorAsync(ex, nameof(GetProductos));
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los productos");
             }
         }
 
-        // GET: api/Productos/5
+        // GET: api/Producto/5
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -63,11 +61,34 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
         }
 
-        // GET: api/Productos/usuario/5
+        // GET: api/Producto/detail/5
+        [HttpGet("detail/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ProductoDetailDTO>> GetProductoDetail(int id)
+        {
+            try
+            {
+                var producto = await _productoService.GetDetailByIdAsync(id);
+                return Ok(producto);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                await _errorHandlingService.LogErrorAsync(ex, nameof(GetProductoDetail));
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener el detalle del producto");
+            }
+        }
+
+        // GET: api/Producto/usuario/5
         [HttpGet("usuario/{usuarioId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<ProductoDTO>>> GetProductosByUsuario(int usuarioId)
+        public async Task<ActionResult<IEnumerable<ProductoDTO>>> GetProductosByUsuarioId(int usuarioId)
         {
             try
             {
@@ -76,22 +97,31 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetProductosByUsuario));
+                await _errorHandlingService.LogErrorAsync(ex, nameof(GetProductosByUsuarioId));
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los productos del usuario");
             }
         }
 
-        // POST: api/Productos
+        // POST: api/Producto
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ProductoDTO>> PostProducto(CreateProductoDTO productoDto)
+        public async Task<ActionResult<ProductoDTO>> PostProducto(ProductoDTO productoDto)
         {
             try
             {
-                var producto = await _productoService.CreateAsync(productoDto);
-                return CreatedAtAction(nameof(GetProducto), new { id = producto.IdProducto }, producto);
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                // Establecer la fecha de creación al momento actual si no se proporciona
+                if (productoDto.FechaCreacion == default)
+                {
+                    productoDto.FechaCreacion = DateTime.Now;
+                }
+
+                var createdProducto = await _productoService.CreateAsync(productoDto);
+                return CreatedAtAction(nameof(GetProducto), new { id = createdProducto.IdProducto }, createdProducto);
             }
             catch (Exception ex)
             {
@@ -100,17 +130,45 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
         }
 
-        // PUT: api/Productos/5
+        // POST: api/Producto/completo
+        [HttpPost("completo")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ProductoDTO>> PostProductoCompleto(ProductoCreateDTO productoCreateDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var createdProducto = await _productoService.CreateProductoCompletoAsync(productoCreateDto);
+                return CreatedAtAction(nameof(GetProducto), new { id = createdProducto.IdProducto }, createdProducto);
+            }
+            catch (Exception ex)
+            {
+                await _errorHandlingService.LogErrorAsync(ex, nameof(PostProductoCompleto));
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al crear el producto completo");
+            }
+        }
+
+        // PUT: api/Producto/5
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> PutProducto(int id, UpdateProductoDTO productoDto)
+        public async Task<IActionResult> PutProducto(int id, ProductoDTO productoDto)
         {
             try
             {
-                await _productoService.UpdateAsync(id, productoDto);
+                if (id != productoDto.IdProducto)
+                    return BadRequest("El ID no coincide con el ID del producto proporcionado");
+
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                await _productoService.UpdateAsync(productoDto);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)
@@ -124,7 +182,34 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
         }
 
-        // DELETE: api/Productos/5
+        // PUT: api/Producto/completo/5
+        [HttpPut("completo/{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> PutProductoCompleto(int id, ProductoCreateDTO productoUpdateDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                await _productoService.UpdateProductoCompletoAsync(id, productoUpdateDto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                await _errorHandlingService.LogErrorAsync(ex, nameof(PutProductoCompleto));
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar el producto completo");
+            }
+        }
+
+        // DELETE: api/Producto/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -133,7 +218,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
         {
             try
             {
-                await _productoService.DeleteAsync(id);
+                await _productoService.DeleteProductoCompletoAsync(id);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)

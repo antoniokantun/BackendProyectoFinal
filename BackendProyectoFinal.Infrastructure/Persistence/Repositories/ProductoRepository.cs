@@ -10,51 +10,26 @@ using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Infrastructure.Persistence.Repositories
 {
-    public class ProductoRepository : IProductoRepository
+    public class ProductoRepository : GenericRepository<Producto>, IProductoRepository
     {
-        private readonly ApplicationDbContext _context;
-
-        public ProductoRepository(ApplicationDbContext context)
+        public ProductoRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
-        }
-
-        public async Task<IEnumerable<Producto>> GetAllAsync()
-        {
-            return await _context.Productos.Include(p => p.Usuario).ToListAsync();
-        }
-
-        public async Task<Producto> GetByIdAsync(int id)
-        {
-            return await _context.Productos.Include(p => p.Usuario).FirstOrDefaultAsync(p => p.IdProducto == id);
         }
 
         public async Task<IEnumerable<Producto>> GetByUsuarioIdAsync(int usuarioId)
         {
-            return await _context.Productos.Where(p => p.UsuarioId == usuarioId).ToListAsync();
+            return await _dbSet.Where(p => p.UsuarioId == usuarioId).ToListAsync();
         }
 
-        public async Task<Producto> CreateAsync(Producto producto)
+        public async Task<Producto> GetProductoCompletoByIdAsync(int id)
         {
-            _context.Productos.Add(producto);
-            await _context.SaveChangesAsync();
-            return producto;
-        }
-
-        public async Task UpdateAsync(Producto producto)
-        {
-            _context.Entry(producto).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var producto = await _context.Productos.FindAsync(id);
-            if (producto != null)
-            {
-                _context.Productos.Remove(producto);
-                await _context.SaveChangesAsync();
-            }
+            return await _context.Set<Producto>()
+                .Include(p => p.Usuario)
+                .Include(p => p.CategoriaProductos)
+                    .ThenInclude(cp => cp.Categoria)
+                .Include(p => p.ImagenProductos)
+                    .ThenInclude(ip => ip.Imagen)
+                .FirstOrDefaultAsync(p => p.IdProducto == id);
         }
 
         public async Task<bool> ExistsAsync(int id)

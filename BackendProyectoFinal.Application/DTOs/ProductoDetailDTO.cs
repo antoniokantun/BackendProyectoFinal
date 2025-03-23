@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Application.DTOs
 {
-    public class ProductoDTO
+    public class ProductoDetailDTO
     {
         public int IdProducto { get; set; }
         public string Nombre { get; set; } = string.Empty;
@@ -15,10 +15,9 @@ namespace BackendProyectoFinal.Application.DTOs
         public bool ProcesoNegociacion { get; set; }
         public bool Intercambio { get; set; }
         public int UsuarioId { get; set; }
+        public string NombreUsuario { get; set; } = string.Empty;
 
-        public List<ImagenDTO>? Imagenes { get; set; }
-        public List<CategoriaDTO>? Categorias { get; set; }
+        public List<ImagenDTO> Imagenes { get; set; } = new List<ImagenDTO>();
+        public List<CategoriaDTO> Categorias { get; set; } = new List<CategoriaDTO>();
     }
-
-
 }

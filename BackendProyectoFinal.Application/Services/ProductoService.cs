@@ -14,49 +14,49 @@ namespace BackendProyectoFinal.Application.Services
     public class ProductoService : IProductoService
     {
         private readonly IProductoRepository _productoRepository;
-        private readonly IErrorHandlingService _errorHandlingService;
+        private readonly IImagenRepository _imagenRepository;
+        private readonly IImagenProductoRepository _imagenProductoRepository;
+        private readonly ICategoriaProductoRepository _categoriaProductoRepository;
+        private readonly ICategoriaRepository _categoriaRepository;
 
-        public ProductoService(IProductoRepository productoRepository, IErrorHandlingService errorHandlingService)
+        public ProductoService(
+            IProductoRepository productoRepository,
+            IImagenRepository imagenRepository,
+            IImagenProductoRepository imagenProductoRepository,
+            ICategoriaProductoRepository categoriaProductoRepository,
+            ICategoriaRepository categoriaRepository)
         {
             _productoRepository = productoRepository;
-            _errorHandlingService = errorHandlingService;
+            _imagenRepository = imagenRepository;
+            _imagenProductoRepository = imagenProductoRepository;
+            _categoriaProductoRepository = categoriaProductoRepository;
+            _categoriaRepository = categoriaRepository;
         }
 
         public async Task<IEnumerable<ProductoDTO>> GetAllAsync()
         {
-            try
-            {
-                var productos = await _productoRepository.GetAllAsync();
-                return productos.Select(p => new ProductoDTO
-                {
-                    IdProducto = p.IdProducto,
-                    Nombre = p.Nombre,
-                    Descripcion = p.Descripcion,
-                    FechaCreacion = p.FechaCreacion,
-                    ProcesoNegociacion = p.ProcesoNegociacion,
-                    Intercambio = p.Intercambio,
-                    UsuarioId = p.UsuarioId
-                });
-            }
-            catch (Exception ex)
-            {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetAllAsync));
-                throw;
-            }
-        }
+            var productos = await _productoRepository.GetAllAsync();
+            var resultList = new List<ProductoDTO>();
 
-        public async Task<ProductoDTO> GetByIdAsync(int id)
-        {
-            try
+            foreach (var producto in productos)
             {
-                var producto = await _productoRepository.GetByIdAsync(id);
-                if (producto == null)
+                // Obtener imágenes del producto
+                var imagenesProducto = await _imagenProductoRepository.GetByProductoIdAsync(producto.IdProducto);
+                var imagenes = imagenesProducto.Select(ip => new ImagenDTO
                 {
-                    await _errorHandlingService.LogErrorAsync($"Producto con ID {id} no encontrado", nameof(GetByIdAsync), "Advertencia");
-                    throw new KeyNotFoundException($"Producto con ID {id} no encontrado");
-                }
+                    IdImagen = ip.Imagen.IdImagen,
+                    UrlImagen = ip.Imagen.UrlImagen
+                }).ToList();
 
-                return new ProductoDTO
+                // Obtener categorías del producto
+                var categoriasProducto = await _categoriaProductoRepository.GetByProductoIdAsync(producto.IdProducto);
+                var categorias = categoriasProducto.Select(cp => new CategoriaDTO
+                {
+                    IdCategoria = cp.Categoria.IdCategoria,
+                    Nombre = cp.Categoria.Nombre
+                }).ToList();
+
+                resultList.Add(new ProductoDTO
                 {
                     IdProducto = producto.IdProducto,
                     Nombre = producto.Nombre,
@@ -64,129 +64,357 @@ namespace BackendProyectoFinal.Application.Services
                     FechaCreacion = producto.FechaCreacion,
                     ProcesoNegociacion = producto.ProcesoNegociacion,
                     Intercambio = producto.Intercambio,
-                    UsuarioId = producto.UsuarioId
-                };
-            }
-            catch (KeyNotFoundException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetByIdAsync));
-                throw;
-            }
-        }
-
-        public async Task<IEnumerable<ProductoDTO>> GetByUsuarioIdAsync(int usuarioId)
-        {
-            try
-            {
-                var productos = await _productoRepository.GetByUsuarioIdAsync(usuarioId);
-                return productos.Select(p => new ProductoDTO
-                {
-                    IdProducto = p.IdProducto,
-                    Nombre = p.Nombre,
-                    Descripcion = p.Descripcion,
-                    FechaCreacion = p.FechaCreacion,
-                    ProcesoNegociacion = p.ProcesoNegociacion,
-                    Intercambio = p.Intercambio,
-                    UsuarioId = p.UsuarioId
+                    UsuarioId = producto.UsuarioId,
+                    Imagenes = imagenes,
+                    Categorias = categorias
                 });
             }
-            catch (Exception ex)
-            {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetByUsuarioIdAsync));
-                throw;
-            }
+
+            return resultList;
         }
 
-        public async Task<ProductoDTO> CreateAsync(CreateProductoDTO productoDto)
+        public async Task<ProductoDTO> GetByIdAsync(int id)
         {
-            try
-            {
-                var producto = new Producto
-                {
-                    Nombre = productoDto.Nombre,
-                    Descripcion = productoDto.Descripcion,
-                    FechaCreacion = DateTime.Now,
-                    ProcesoNegociacion = productoDto.ProcesoNegociacion,
-                    Intercambio = productoDto.Intercambio,
-                    UsuarioId = productoDto.UsuarioId
-                };
+            var producto = await _productoRepository.GetByIdAsync(id);
 
-                var createdProducto = await _productoRepository.CreateAsync(producto);
+            if (producto == null)
+                throw new KeyNotFoundException($"Producto con ID {id} no encontrado.");
 
-                return new ProductoDTO
-                {
-                    IdProducto = createdProducto.IdProducto,
-                    Nombre = createdProducto.Nombre,
-                    Descripcion = createdProducto.Descripcion,
-                    FechaCreacion = createdProducto.FechaCreacion,
-                    ProcesoNegociacion = createdProducto.ProcesoNegociacion,
-                    Intercambio = createdProducto.Intercambio,
-                    UsuarioId = createdProducto.UsuarioId
-                };
-            }
-            catch (Exception ex)
+            // Obtener imágenes del producto
+            var imagenesProducto = await _imagenProductoRepository.GetByProductoIdAsync(producto.IdProducto);
+            var imagenes = imagenesProducto.Select(ip => new ImagenDTO
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(CreateAsync));
-                throw;
-            }
+                IdImagen = ip.Imagen.IdImagen,
+                UrlImagen = ip.Imagen.UrlImagen
+            }).ToList();
+
+            // Obtener categorías del producto
+            var categoriasProducto = await _categoriaProductoRepository.GetByProductoIdAsync(producto.IdProducto);
+            var categorias = categoriasProducto.Select(cp => new CategoriaDTO
+            {
+                IdCategoria = cp.Categoria.IdCategoria,
+                Nombre = cp.Categoria.Nombre
+            }).ToList();
+
+            return new ProductoDTO
+            {
+                IdProducto = producto.IdProducto,
+                Nombre = producto.Nombre,
+                Descripcion = producto.Descripcion,
+                FechaCreacion = producto.FechaCreacion,
+                ProcesoNegociacion = producto.ProcesoNegociacion,
+                Intercambio = producto.Intercambio,
+                UsuarioId = producto.UsuarioId,
+                Imagenes = imagenes,
+                Categorias = categorias
+            };
         }
 
-        public async Task UpdateAsync(int id, UpdateProductoDTO productoDto)
+        public async Task<ProductoDetailDTO> GetDetailByIdAsync(int id)
         {
-            try
+            var producto = await _productoRepository.GetProductoCompletoByIdAsync(id);
+
+            if (producto == null)
+                throw new KeyNotFoundException($"Producto con ID {id} no encontrado.");
+
+            var result = new ProductoDetailDTO
             {
-                // Verificar si el producto existe
-                var producto = await _productoRepository.GetByIdAsync(id);
-                if (producto == null)
+                IdProducto = producto.IdProducto,
+                Nombre = producto.Nombre,
+                Descripcion = producto.Descripcion,
+                FechaCreacion = producto.FechaCreacion,
+                ProcesoNegociacion = producto.ProcesoNegociacion,
+                Intercambio = producto.Intercambio,
+                UsuarioId = producto.UsuarioId,
+                NombreUsuario = producto.Usuario?.Nombre ?? "Usuario no disponible",
+                Imagenes = producto.ImagenProductos?.Select(ip => new ImagenDTO
                 {
-                    await _errorHandlingService.LogErrorAsync($"Producto con ID {id} no encontrado para actualizar", nameof(UpdateAsync), "Advertencia");
-                    throw new KeyNotFoundException($"Producto con ID {id} no encontrado");
-                }
+                    IdImagen = ip.Imagen.IdImagen,
+                    UrlImagen = ip.Imagen.UrlImagen
+                }).ToList() ?? new List<ImagenDTO>(),
+                Categorias = producto.CategoriaProductos?.Select(cp => new CategoriaDTO
+                {
+                    IdCategoria = cp.Categoria.IdCategoria,
+                    Nombre = cp.Categoria.Nombre
+                }).ToList() ?? new List<CategoriaDTO>()
+            };
 
-                producto.Nombre = productoDto.Nombre;
-                producto.Descripcion = productoDto.Descripcion;
-                producto.ProcesoNegociacion = productoDto.ProcesoNegociacion;
-                producto.Intercambio = productoDto.Intercambio;
+            return result;
+        }
 
-                await _productoRepository.UpdateAsync(producto);
-            }
-            catch (KeyNotFoundException)
+        public async Task<ProductoDTO> CreateAsync(ProductoDTO productoDto)
+        {
+            var producto = new Producto
             {
-                throw;
-            }
-            catch (Exception ex)
+                Nombre = productoDto.Nombre,
+                Descripcion = productoDto.Descripcion,
+                FechaCreacion = productoDto.FechaCreacion,
+                ProcesoNegociacion = productoDto.ProcesoNegociacion,
+                Intercambio = productoDto.Intercambio,
+                UsuarioId = productoDto.UsuarioId
+            };
+
+            var createdProducto = await _productoRepository.AddAsync(producto);
+
+            return new ProductoDTO
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(UpdateAsync));
-                throw;
+                IdProducto = createdProducto.IdProducto,
+                Nombre = createdProducto.Nombre,
+                Descripcion = createdProducto.Descripcion,
+                FechaCreacion = createdProducto.FechaCreacion,
+                ProcesoNegociacion = createdProducto.ProcesoNegociacion,
+                Intercambio = createdProducto.Intercambio,
+                UsuarioId = createdProducto.UsuarioId
+            };
+        }
+
+        public async Task<ProductoDTO> CreateProductoCompletoAsync(ProductoCreateDTO productoCreateDto)
+        {
+            // 1. Crear el producto
+            var producto = new Producto
+            {
+                Nombre = productoCreateDto.Nombre,
+                Descripcion = productoCreateDto.Descripcion,
+                FechaCreacion = DateTime.Now,
+                ProcesoNegociacion = productoCreateDto.ProcesoNegociacion,
+                Intercambio = productoCreateDto.Intercambio,
+                UsuarioId = productoCreateDto.UsuarioId
+            };
+
+            var createdProducto = await _productoRepository.AddAsync(producto);
+
+            // 2. Procesar las imágenes
+            var imagenes = new List<ImagenDTO>();
+            foreach (var urlImagen in productoCreateDto.ImagenesUrl)
+            {
+                // Crear la imagen
+                var imagen = new Imagen
+                {
+                    UrlImagen = urlImagen
+                };
+                var createdImagen = await _imagenRepository.AddAsync(imagen);
+
+                // Crear la relación entre producto e imagen
+                var imagenProducto = new ImagenProducto
+                {
+                    ProductoId = createdProducto.IdProducto,
+                    ImagenId = createdImagen.IdImagen
+                };
+                await _imagenProductoRepository.AddAsync(imagenProducto);
+
+                imagenes.Add(new ImagenDTO
+                {
+                    IdImagen = createdImagen.IdImagen,
+                    UrlImagen = createdImagen.UrlImagen
+                });
+            }
+
+            // 3. Procesar las categorías
+            var categorias = new List<CategoriaDTO>();
+            foreach (var categoriaId in productoCreateDto.CategoriasIds)
+            {
+                // Verificar si la categoría existe
+                var categoria = await _categoriaRepository.GetByIdAsync(categoriaId);
+                if (categoria == null)
+                    continue;
+
+                // Crear la relación entre producto y categoría
+                var categoriaProducto = new CategoriaProducto
+                {
+                    ProductoId = createdProducto.IdProducto,
+                    CategoriaId = categoriaId
+                };
+                await _categoriaProductoRepository.AddAsync(categoriaProducto);
+
+                categorias.Add(new CategoriaDTO
+                {
+                    IdCategoria = categoria.IdCategoria,
+                    Nombre = categoria.Nombre
+                });
+            }
+
+            // 4. Devolver el producto creado con sus relaciones
+            return new ProductoDTO
+            {
+                IdProducto = createdProducto.IdProducto,
+                Nombre = createdProducto.Nombre,
+                Descripcion = createdProducto.Descripcion,
+                FechaCreacion = createdProducto.FechaCreacion,
+                ProcesoNegociacion = createdProducto.ProcesoNegociacion,
+                Intercambio = createdProducto.Intercambio,
+                UsuarioId = createdProducto.UsuarioId,
+                Imagenes = imagenes,
+                Categorias = categorias
+            };
+        }
+
+        public async Task UpdateAsync(ProductoDTO productoDto)
+        {
+            var existingProducto = await _productoRepository.GetByIdAsync(productoDto.IdProducto);
+
+            if (existingProducto == null)
+                throw new KeyNotFoundException($"Producto con ID {productoDto.IdProducto} no encontrado.");
+
+            existingProducto.Nombre = productoDto.Nombre;
+            existingProducto.Descripcion = productoDto.Descripcion;
+            existingProducto.ProcesoNegociacion = productoDto.ProcesoNegociacion;
+            existingProducto.Intercambio = productoDto.Intercambio;
+            existingProducto.UsuarioId = productoDto.UsuarioId;
+
+            await _productoRepository.UpdateAsync(existingProducto);
+        }
+
+        public async Task UpdateProductoCompletoAsync(int id, ProductoCreateDTO productoUpdateDto)
+        {
+            // 1. Verificar si el producto existe
+            var existingProducto = await _productoRepository.GetByIdAsync(id);
+            if (existingProducto == null)
+                throw new KeyNotFoundException($"Producto con ID {id} no encontrado.");
+
+            // 2. Actualizar datos básicos del producto
+            existingProducto.Nombre = productoUpdateDto.Nombre;
+            existingProducto.Descripcion = productoUpdateDto.Descripcion;
+            existingProducto.ProcesoNegociacion = productoUpdateDto.ProcesoNegociacion;
+            existingProducto.Intercambio = productoUpdateDto.Intercambio;
+            existingProducto.UsuarioId = productoUpdateDto.UsuarioId;
+
+            await _productoRepository.UpdateAsync(existingProducto);
+
+            // 3. Actualizar imágenes (eliminar las existentes y agregar las nuevas)
+            // 3.1 Obtener las relaciones de imágenes actuales
+            var imagenesProductoActuales = await _imagenProductoRepository.GetByProductoIdAsync(id);
+
+            // 3.2 Eliminar las relaciones y las imágenes actuales
+            foreach (var imagenProducto in imagenesProductoActuales)
+            {
+                await _imagenProductoRepository.DeleteAsync(imagenProducto.IdImagenProducto);
+                await _imagenRepository.DeleteAsync(imagenProducto.ImagenId);
+            }
+
+            // 3.3 Agregar las nuevas imágenes
+            foreach (var urlImagen in productoUpdateDto.ImagenesUrl)
+            {
+                // Crear la imagen
+                var imagen = new Imagen
+                {
+                    UrlImagen = urlImagen
+                };
+                var createdImagen = await _imagenRepository.AddAsync(imagen);
+
+                // Crear la relación entre producto e imagen
+                var imagenProducto = new ImagenProducto
+                {
+                    ProductoId = id,
+                    ImagenId = createdImagen.IdImagen
+                };
+                await _imagenProductoRepository.AddAsync(imagenProducto);
+            }
+
+            // 4. Actualizar categorías (eliminar las existentes y agregar las nuevas)
+            // 4.1 Obtener las relaciones de categorías actuales
+            var categoriasProductoActuales = await _categoriaProductoRepository.GetByProductoIdAsync(id);
+
+            // 4.2 Eliminar las relaciones actuales
+            foreach (var categoriaProducto in categoriasProductoActuales)
+            {
+                await _categoriaProductoRepository.DeleteAsync(categoriaProducto.IdCategoriaProducto);
+            }
+
+            // 4.3 Agregar las nuevas categorías
+            foreach (var categoriaId in productoUpdateDto.CategoriasIds)
+            {
+                // Verificar si la categoría existe
+                var categoria = await _categoriaRepository.GetByIdAsync(categoriaId);
+                if (categoria == null)
+                    continue;
+
+                // Crear la relación entre producto y categoría
+                var categoriaProducto = new CategoriaProducto
+                {
+                    ProductoId = id,
+                    CategoriaId = categoriaId
+                };
+                await _categoriaProductoRepository.AddAsync(categoriaProducto);
             }
         }
 
         public async Task DeleteAsync(int id)
         {
-            try
-            {
-                // Verificar si el producto existe
-                if (!await _productoRepository.ExistsAsync(id))
-                {
-                    await _errorHandlingService.LogErrorAsync($"Producto con ID {id} no encontrado para eliminar", nameof(DeleteAsync), "Advertencia");
-                    throw new KeyNotFoundException($"Producto con ID {id} no encontrado");
-                }
+            var existingProducto = await _productoRepository.GetByIdAsync(id);
 
-                await _productoRepository.DeleteAsync(id);
-            }
-            catch (KeyNotFoundException)
+            if (existingProducto == null)
+                throw new KeyNotFoundException($"Producto con ID {id} no encontrado.");
+
+            await _productoRepository.DeleteAsync(id);
+        }
+
+        public async Task DeleteProductoCompletoAsync(int id)
+        {
+            // 1. Verificar si el producto existe
+            var existingProducto = await _productoRepository.GetByIdAsync(id);
+            if (existingProducto == null)
+                throw new KeyNotFoundException($"Producto con ID {id} no encontrado.");
+
+            // 2. Eliminar primero las relaciones con imágenes y las imágenes
+            var imagenesProducto = await _imagenProductoRepository.GetByProductoIdAsync(id);
+            foreach (var imagenProducto in imagenesProducto)
             {
-                throw;
+                // Eliminar la relación
+                await _imagenProductoRepository.DeleteAsync(imagenProducto.IdImagenProducto);
+
+                // Eliminar la imagen
+                await _imagenRepository.DeleteAsync(imagenProducto.ImagenId);
             }
-            catch (Exception ex)
+
+            // 3. Eliminar las relaciones con categorías
+            var categoriasProducto = await _categoriaProductoRepository.GetByProductoIdAsync(id);
+            foreach (var categoriaProducto in categoriasProducto)
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(DeleteAsync));
-                throw;
+                await _categoriaProductoRepository.DeleteAsync(categoriaProducto.IdCategoriaProducto);
             }
+
+            // 4. Finalmente, eliminar el producto
+            await _productoRepository.DeleteAsync(id);
+        }
+
+        public async Task<IEnumerable<ProductoDTO>> GetByUsuarioIdAsync(int usuarioId)
+        {
+            var productos = await _productoRepository.GetByUsuarioIdAsync(usuarioId);
+            var resultList = new List<ProductoDTO>();
+
+            foreach (var producto in productos)
+            {
+                // Obtener imágenes del producto
+                var imagenesProducto = await _imagenProductoRepository.GetByProductoIdAsync(producto.IdProducto);
+                var imagenes = imagenesProducto.Select(ip => new ImagenDTO
+                {
+                    IdImagen = ip.Imagen.IdImagen,
+                    UrlImagen = ip.Imagen.UrlImagen
+                }).ToList();
+
+                // Obtener categorías del producto
+                var categoriasProducto = await _categoriaProductoRepository.GetByProductoIdAsync(producto.IdProducto);
+                var categorias = categoriasProducto.Select(cp => new CategoriaDTO
+                {
+                    IdCategoria = cp.Categoria.IdCategoria,
+                    Nombre = cp.Categoria.Nombre
+                }).ToList();
+
+                resultList.Add(new ProductoDTO
+                {
+                    IdProducto = producto.IdProducto,
+                    Nombre = producto.Nombre,
+                    Descripcion = producto.Descripcion,
+                    FechaCreacion = producto.FechaCreacion,
+                    ProcesoNegociacion = producto.ProcesoNegociacion,
+                    Intercambio = producto.Intercambio,
+                    UsuarioId = producto.UsuarioId,
+                    Imagenes = imagenes,
+                    Categorias = categorias
+                });
+            }
+
+            return resultList;
         }
     }
 }

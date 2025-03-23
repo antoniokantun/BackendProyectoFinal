@@ -73,7 +73,7 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                 .HasForeignKey(p => p.UsuarioId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Configurar relación para categorías de producto
+            // CORRECCIÓN: Configurar relación para categorías de producto con navegación bidireccional
             modelBuilder.Entity<CategoriaProducto>()
                 .HasOne(cp => cp.Categoria)
                 .WithMany()
@@ -82,21 +82,21 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
 
             modelBuilder.Entity<CategoriaProducto>()
                 .HasOne(cp => cp.Producto)
-                .WithMany()
+                .WithMany(p => p.CategoriaProductos) // Especificar la colección en Producto
                 .HasForeignKey(cp => cp.ProductoId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Configurar relación para imágenes de producto
-            modelBuilder.Entity<ImagenProducto>()
-                .HasOne(ip => ip.Producto)
-                .WithMany()
-                .HasForeignKey(ip => ip.ProductoId)
-                .OnDelete(DeleteBehavior.Cascade);
-
+            // CORRECCIÓN: Configurar relación para imágenes de producto con navegación bidireccional
             modelBuilder.Entity<ImagenProducto>()
                 .HasOne(ip => ip.Imagen)
                 .WithMany()
                 .HasForeignKey(ip => ip.ImagenId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ImagenProducto>()
+                .HasOne(ip => ip.Producto)
+                .WithMany(p => p.ImagenProductos) // Especificar la colección en Producto
+                .HasForeignKey(ip => ip.ProductoId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Configurar relación para evaluaciones

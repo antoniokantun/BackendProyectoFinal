@@ -7,14 +7,11 @@ using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Domain.Interfaces
 {
-    public interface IProductoRepository
+    public interface IProductoRepository : IGenericRepository<Producto>
     {
-        Task<IEnumerable<Producto>> GetAllAsync();
-        Task<Producto> GetByIdAsync(int id);
         Task<IEnumerable<Producto>> GetByUsuarioIdAsync(int usuarioId);
-        Task<Producto> CreateAsync(Producto producto);
-        Task UpdateAsync(Producto producto);
-        Task DeleteAsync(int id);
+        Task<Producto> GetProductoCompletoByIdAsync(int id);
+
         Task<bool> ExistsAsync(int id);
     }
 }

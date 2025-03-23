@@ -26,7 +26,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<PerfilDTO>>> GetPerfiles()
         {
-            _logger.LogInformation("Obteniendo perfiles");
             try
             {
                 var perfiles = await _perfilService.GetAllAsync();
@@ -34,7 +33,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener perfiles");
                 await _errorHandlingService.LogErrorAsync(ex, nameof(GetPerfiles));
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los perfiles");
             }
@@ -63,26 +61,21 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
         }
 
-        // GET: api/Perfil/Usuario/5
-        [HttpGet("Usuario/{usuarioId}")]
+        // GET: api/Perfil/usuario/5
+        [HttpGet("usuario/{usuarioId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PerfilDTO>> GetPerfilByUsuarioId(int usuarioId)
+        public async Task<ActionResult<IEnumerable<PerfilDTO>>> GetPerfilesByUsuario(int usuarioId)
         {
             try
             {
-                var perfil = await _perfilService.GetByUsuarioIdAsync(usuarioId);
-                return Ok(perfil);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
+                var perfiles = await _perfilService.GetByUsuarioIdAsync(usuarioId);
+                return Ok(perfiles);
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetPerfilByUsuarioId));
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener el perfil por usuario");
+                await _errorHandlingService.LogErrorAsync(ex, nameof(GetPerfilesByUsuario));
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los perfiles del usuario");
             }
         }
 
@@ -90,22 +83,16 @@ namespace BackendProyectoFinal.Presentation.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<PerfilDTO>> PostPerfil(CreatePerfilDTO perfilDto)
         {
             try
             {
-                var perfil = await _perfilService.CreateAsync(perfilDto);
-                return CreatedAtAction(nameof(GetPerfil), new { id = perfil.IdPerfil }, perfil);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var createdPerfil = await _perfilService.CreateAsync(perfilDto);
+                return CreatedAtAction(nameof(GetPerfil), new { id = createdPerfil.IdPerfil }, createdPerfil);
             }
             catch (Exception ex)
             {
@@ -124,6 +111,9 @@ namespace BackendProyectoFinal.Presentation.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
                 await _perfilService.UpdateAsync(id, perfilDto);
                 return NoContent();
             }

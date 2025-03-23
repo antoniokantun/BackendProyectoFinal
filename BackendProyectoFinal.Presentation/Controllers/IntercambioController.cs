@@ -13,7 +13,10 @@ namespace BackendProyectoFinal.Presentation.Controllers
         private readonly IErrorHandlingService _errorHandlingService;
         private readonly ILogger<IntercambioController> _logger;
 
-        public IntercambioController(IIntercambioService intercambioService, IErrorHandlingService errorHandlingService, ILogger<IntercambioController> logger)
+        public IntercambioController(
+            IIntercambioService intercambioService,
+            IErrorHandlingService errorHandlingService,
+            ILogger<IntercambioController> logger)
         {
             _intercambioService = intercambioService;
             _errorHandlingService = errorHandlingService;
@@ -26,7 +29,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<IntercambioDTO>>> GetIntercambios()
         {
-            _logger.LogInformation("Obteniendo intercambios");
             try
             {
                 var intercambios = await _intercambioService.GetAllAsync();
@@ -34,7 +36,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener intercambios");
                 await _errorHandlingService.LogErrorAsync(ex, nameof(GetIntercambios));
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los intercambios");
             }
@@ -63,25 +64,74 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
         }
 
+        // GET: api/Intercambio/solicitante/5
+        [HttpGet("solicitante/{usuarioSolicitanteId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<IntercambioDTO>>> GetIntercambiosPorSolicitante(int usuarioSolicitanteId)
+        {
+            try
+            {
+                var intercambios = await _intercambioService.GetByUsuarioSolicitanteIdAsync(usuarioSolicitanteId);
+                return Ok(intercambios);
+            }
+            catch (Exception ex)
+            {
+                await _errorHandlingService.LogErrorAsync(ex, nameof(GetIntercambiosPorSolicitante));
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los intercambios por solicitante");
+            }
+        }
+
+        // GET: api/Intercambio/ofertante/5
+        [HttpGet("ofertante/{usuarioOfertanteId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<IntercambioDTO>>> GetIntercambiosPorOfertante(int usuarioOfertanteId)
+        {
+            try
+            {
+                var intercambios = await _intercambioService.GetByUsuarioOfertanteIdAsync(usuarioOfertanteId);
+                return Ok(intercambios);
+            }
+            catch (Exception ex)
+            {
+                await _errorHandlingService.LogErrorAsync(ex, nameof(GetIntercambiosPorOfertante));
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los intercambios por ofertante");
+            }
+        }
+
+        // GET: api/Intercambio/producto/5
+        [HttpGet("producto/{productoId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<IntercambioDTO>>> GetIntercambiosPorProducto(int productoId)
+        {
+            try
+            {
+                var intercambios = await _intercambioService.GetByProductoIdAsync(productoId);
+                return Ok(intercambios);
+            }
+            catch (Exception ex)
+            {
+                await _errorHandlingService.LogErrorAsync(ex, nameof(GetIntercambiosPorProducto));
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los intercambios por producto");
+            }
+        }
+
         // POST: api/Intercambio
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IntercambioDTO>> PostIntercambio(CreateIntercambioDTO intercambioDto)
+        public async Task<ActionResult<IntercambioDTO>> PostIntercambio(CreateIntercambioDTO createDto)
         {
             try
             {
-                var intercambio = await _intercambioService.CreateAsync(intercambioDto);
-                return CreatedAtAction(nameof(GetIntercambio), new { id = intercambio.IdIntercambio }, intercambio);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var createdIntercambio = await _intercambioService.CreateAsync(createDto);
+                return CreatedAtAction(nameof(GetIntercambio), new { id = createdIntercambio.IdIntercambio }, createdIntercambio);
             }
             catch (Exception ex)
             {
@@ -96,20 +146,19 @@ namespace BackendProyectoFinal.Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> PutIntercambio(int id, UpdateIntercambioDTO intercambioDto)
+        public async Task<IActionResult> PutIntercambio(int id, UpdateIntercambioDTO updateDto)
         {
             try
             {
-                await _intercambioService.UpdateAsync(id, intercambioDto);
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                await _intercambioService.UpdateAsync(id, updateDto);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)
             {
                 return NotFound(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {

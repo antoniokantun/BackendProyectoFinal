@@ -14,5 +14,8 @@ namespace BackendProyectoFinal.Application.Interfaces
         Task<IntercambioDTO> CreateAsync(CreateIntercambioDTO intercambioDto);
         Task UpdateAsync(int id, UpdateIntercambioDTO intercambioDto);
         Task DeleteAsync(int id);
+        Task<IEnumerable<IntercambioDTO>> GetByUsuarioSolicitanteIdAsync(int usuarioSolicitanteId);
+        Task<IEnumerable<IntercambioDTO>> GetByUsuarioOfertanteIdAsync(int usuarioOfertanteId);
+        Task<IEnumerable<IntercambioDTO>> GetByProductoIdAsync(int productoId);
     }
 }

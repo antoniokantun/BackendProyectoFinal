@@ -41,5 +41,9 @@ namespace BackendProyectoFinal.Domain.Entities
         [Column("usuario_id")]
         public int UsuarioId { get; set; }
         public Usuario Usuario { get; set; } = null!;
+
+        // Propiedades de navegación para las relaciones
+        public virtual ICollection<CategoriaProducto> CategoriaProductos { get; set; } = new List<CategoriaProducto>();
+        public virtual ICollection<ImagenProducto> ImagenProductos { get; set; } = new List<ImagenProducto>();
     }
 }

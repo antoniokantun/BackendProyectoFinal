@@ -11,7 +11,7 @@ namespace BackendProyectoFinal.Application.Interfaces
     {
         Task<IEnumerable<PerfilDTO>> GetAllAsync();
         Task<PerfilDTO> GetByIdAsync(int id);
-        Task<PerfilDTO> GetByUsuarioIdAsync(int usuarioId);
+        Task<IEnumerable<PerfilDTO>> GetByUsuarioIdAsync(int usuarioId);
         Task<PerfilDTO> CreateAsync(CreatePerfilDTO perfilDto);
         Task UpdateAsync(int id, UpdatePerfilDTO perfilDto);
         Task DeleteAsync(int id);

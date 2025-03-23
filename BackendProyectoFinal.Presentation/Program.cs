@@ -110,6 +110,9 @@ builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<IEvaluacionRepository, EvaluacionRepository>();
 builder.Services.AddScoped<IRolRepository, RolRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IImagenRepository, ImagenRepository>();
+builder.Services.AddScoped<IImagenProductoRepository, ImagenProductoRepository>();
+builder.Services.AddScoped<ICategoriaProductoRepository, CategoriaProductoRepository>();
 
 
 

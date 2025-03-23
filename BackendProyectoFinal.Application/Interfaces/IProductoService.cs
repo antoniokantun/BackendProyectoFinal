@@ -10,10 +10,14 @@ namespace BackendProyectoFinal.Application.Interfaces
     public interface IProductoService
     {
         Task<IEnumerable<ProductoDTO>> GetAllAsync();
+        Task<ProductoDetailDTO> GetDetailByIdAsync(int id);
         Task<ProductoDTO> GetByIdAsync(int id);
-        Task<ProductoDTO> CreateAsync(CreateProductoDTO productoDto);
-        Task UpdateAsync(int id, UpdateProductoDTO productoDto);
+        Task<ProductoDTO> CreateAsync(ProductoDTO productoDto);
+        Task<ProductoDTO> CreateProductoCompletoAsync(ProductoCreateDTO productoCreateDto);
+        Task UpdateAsync(ProductoDTO productoDto);
+        Task UpdateProductoCompletoAsync(int id, ProductoCreateDTO productoUpdateDto);
         Task DeleteAsync(int id);
+        Task DeleteProductoCompletoAsync(int id);
         Task<IEnumerable<ProductoDTO>> GetByUsuarioIdAsync(int usuarioId);
     }
 }

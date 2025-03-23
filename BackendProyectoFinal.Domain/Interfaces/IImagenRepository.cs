@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Domain.Interfaces
 {
-    public interface IPerfilRepository : IGenericRepository<Perfil>
+    public interface IImagenRepository : IGenericRepository<Imagen>
     {
-        // Métodos específicos para Perfil si se necesitan
-        Task<IEnumerable<Perfil>> GetPerfilesByUsuarioIdAsync(int usuarioId);
     }
 }

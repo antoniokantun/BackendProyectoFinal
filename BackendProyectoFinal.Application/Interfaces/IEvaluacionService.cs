@@ -11,12 +11,10 @@ namespace BackendProyectoFinal.Application.Interfaces
     {
         Task<IEnumerable<EvaluacionDTO>> GetAllAsync();
         Task<EvaluacionDTO> GetByIdAsync(int id);
-        Task<IEnumerable<EvaluacionDTO>> GetByProductIdAsync(int productoId);
         Task<IEnumerable<EvaluacionDTO>> GetByUsuarioIdAsync(int usuarioId);
-        Task<double> GetPromedioByProductIdAsync(int productoId);
-        Task<EvaluacionDTO> CreateAsync(CreateEvaluacionDTO evaluacionDto);
-        Task UpdateAsync(int id, UpdateEvaluacionDTO evaluacionDto);
+        Task<IEnumerable<EvaluacionDTO>> GetByProductoIdAsync(int productoId);
+        Task<EvaluacionDTO> CreateAsync(CreateEvaluacionDTO createEvaluacionDto);
+        Task UpdateAsync(int id, UpdateEvaluacionDTO updateEvaluacionDto);
         Task DeleteAsync(int id);
-        Task<bool> ExisteEvaluacionUsuarioProductoAsync(int usuarioId, int productoId);
     }
 }

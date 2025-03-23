@@ -11,12 +11,14 @@ namespace BackendProyectoFinal.Application.DTOs
     {
         public int IdEvaluacion { get; set; }
         public int UsuarioId { get; set; }
-        public string NombreUsuario { get; set; } = string.Empty;
         public int ProductoId { get; set; }
-        public string NombreProducto { get; set; } = string.Empty;
         public DateTime FechaCreacion { get; set; }
         public string? Comentario { get; set; }
         public int Puntuacion { get; set; }
+
+        // Propiedades adicionales para mostrar información relacionada (opcional)
+        public string? NombreUsuario { get; set; }
+        public string? NombreProducto { get; set; }
     }
 
     public class CreateEvaluacionDTO

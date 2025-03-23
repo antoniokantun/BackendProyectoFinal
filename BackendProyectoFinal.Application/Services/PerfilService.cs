@@ -14,203 +14,99 @@ namespace BackendProyectoFinal.Application.Services
     public class PerfilService : IPerfilService
     {
         private readonly IPerfilRepository _perfilRepository;
-        private readonly IUsuarioRepository _usuarioRepository;
-        private readonly IErrorHandlingService _errorHandlingService;
 
-        public PerfilService(IPerfilRepository perfilRepository, IUsuarioRepository usuarioRepository, IErrorHandlingService errorHandlingService)
+        public PerfilService(IPerfilRepository perfilRepository)
         {
             _perfilRepository = perfilRepository;
-            _usuarioRepository = usuarioRepository;
-            _errorHandlingService = errorHandlingService;
         }
 
         public async Task<IEnumerable<PerfilDTO>> GetAllAsync()
         {
-            try
+            var perfiles = await _perfilRepository.GetAllAsync();
+            return perfiles.Select(p => new PerfilDTO
             {
-                var perfiles = await _perfilRepository.GetAllAsync();
-                return perfiles.Select(p => new PerfilDTO
-                {
-                    IdPerfil = p.IdPerfil,
-                    UsuarioId = p.UsuarioId,
-                    ImagenPerfil = p.ImagenPerfil,
-                    NombrePerfil = p.NombrePerfil,
-                    Descripcion = p.Descripcion
-                });
-            }
-            catch (Exception ex)
-            {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetAllAsync));
-                throw;
-            }
+                IdPerfil = p.IdPerfil,
+                UsuarioId = p.UsuarioId,
+                ImagenPerfil = p.ImagenPerfil,
+                NombrePerfil = p.NombrePerfil,
+                Descripcion = p.Descripcion
+            });
         }
 
         public async Task<PerfilDTO> GetByIdAsync(int id)
         {
-            try
-            {
-                var perfil = await _perfilRepository.GetByIdAsync(id);
-                if (perfil == null)
-                {
-                    await _errorHandlingService.LogErrorAsync($"Perfil con ID {id} no encontrado", nameof(GetByIdAsync), "Advertencia");
-                    throw new KeyNotFoundException($"Perfil con ID {id} no encontrado");
-                }
+            var perfil = await _perfilRepository.GetByIdAsync(id);
 
-                return new PerfilDTO
-                {
-                    IdPerfil = perfil.IdPerfil,
-                    UsuarioId = perfil.UsuarioId,
-                    ImagenPerfil = perfil.ImagenPerfil,
-                    NombrePerfil = perfil.NombrePerfil,
-                    Descripcion = perfil.Descripcion
-                };
-            }
-            catch (KeyNotFoundException)
+            if (perfil == null)
+                throw new KeyNotFoundException($"Perfil con ID {id} no encontrado.");
+
+            return new PerfilDTO
             {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetByIdAsync));
-                throw;
-            }
+                IdPerfil = perfil.IdPerfil,
+                UsuarioId = perfil.UsuarioId,
+                ImagenPerfil = perfil.ImagenPerfil,
+                NombrePerfil = perfil.NombrePerfil,
+                Descripcion = perfil.Descripcion
+            };
         }
 
-        public async Task<PerfilDTO> GetByUsuarioIdAsync(int usuarioId)
+        public async Task<IEnumerable<PerfilDTO>> GetByUsuarioIdAsync(int usuarioId)
         {
-            try
+            var perfiles = await _perfilRepository.GetPerfilesByUsuarioIdAsync(usuarioId);
+            return perfiles.Select(p => new PerfilDTO
             {
-                var perfil = await _perfilRepository.GetByUsuarioIdAsync(usuarioId);
-                if (perfil == null)
-                {
-                    await _errorHandlingService.LogErrorAsync($"Perfil para el Usuario con ID {usuarioId} no encontrado", nameof(GetByUsuarioIdAsync), "Advertencia");
-                    throw new KeyNotFoundException($"Perfil para el Usuario con ID {usuarioId} no encontrado");
-                }
-
-                return new PerfilDTO
-                {
-                    IdPerfil = perfil.IdPerfil,
-                    UsuarioId = perfil.UsuarioId,
-                    ImagenPerfil = perfil.ImagenPerfil,
-                    NombrePerfil = perfil.NombrePerfil,
-                    Descripcion = perfil.Descripcion
-                };
-            }
-            catch (KeyNotFoundException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetByUsuarioIdAsync));
-                throw;
-            }
+                IdPerfil = p.IdPerfil,
+                UsuarioId = p.UsuarioId,
+                ImagenPerfil = p.ImagenPerfil,
+                NombrePerfil = p.NombrePerfil,
+                Descripcion = p.Descripcion
+            });
         }
 
         public async Task<PerfilDTO> CreateAsync(CreatePerfilDTO perfilDto)
         {
-            try
+            var perfil = new Perfil
             {
-                // Validar si el usuario existe
-                if (!await _usuarioRepository.ExistsAsync(perfilDto.UsuarioId))
-                {
-                    await _errorHandlingService.LogErrorAsync($"Usuario con ID {perfilDto.UsuarioId} no encontrado", nameof(CreateAsync), "Advertencia");
-                    throw new KeyNotFoundException($"Usuario con ID {perfilDto.UsuarioId} no encontrado");
-                }
+                UsuarioId = perfilDto.UsuarioId,
+                ImagenPerfil = perfilDto.ImagenPerfil,
+                NombrePerfil = perfilDto.NombrePerfil,
+                Descripcion = perfilDto.Descripcion
+            };
 
-                // Validar si ya existe un perfil para este usuario
-                if (await _perfilRepository.ExistsByUsuarioIdAsync(perfilDto.UsuarioId))
-                {
-                    await _errorHandlingService.LogErrorAsync($"Ya existe un perfil para el Usuario con ID {perfilDto.UsuarioId}", nameof(CreateAsync), "Advertencia");
-                    throw new InvalidOperationException($"Ya existe un perfil para el Usuario con ID {perfilDto.UsuarioId}");
-                }
+            var createdPerfil = await _perfilRepository.AddAsync(perfil);
 
-                var perfil = new Perfil
-                {
-                    UsuarioId = perfilDto.UsuarioId,
-                    ImagenPerfil = perfilDto.ImagenPerfil,
-                    NombrePerfil = perfilDto.NombrePerfil,
-                    Descripcion = perfilDto.Descripcion
-                };
-
-                var createdPerfil = await _perfilRepository.CreateAsync(perfil);
-
-                return new PerfilDTO
-                {
-                    IdPerfil = createdPerfil.IdPerfil,
-                    UsuarioId = createdPerfil.UsuarioId,
-                    ImagenPerfil = createdPerfil.ImagenPerfil,
-                    NombrePerfil = createdPerfil.NombrePerfil,
-                    Descripcion = createdPerfil.Descripcion
-                };
-            }
-            catch (KeyNotFoundException)
+            return new PerfilDTO
             {
-                throw;
-            }
-            catch (InvalidOperationException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(CreateAsync));
-                throw;
-            }
+                IdPerfil = createdPerfil.IdPerfil,
+                UsuarioId = createdPerfil.UsuarioId,
+                ImagenPerfil = createdPerfil.ImagenPerfil,
+                NombrePerfil = createdPerfil.NombrePerfil,
+                Descripcion = createdPerfil.Descripcion
+            };
         }
 
         public async Task UpdateAsync(int id, UpdatePerfilDTO perfilDto)
         {
-            try
-            {
-                // Verificar si el perfil existe
-                var perfil = await _perfilRepository.GetByIdAsync(id);
-                if (perfil == null)
-                {
-                    await _errorHandlingService.LogErrorAsync($"Perfil con ID {id} no encontrado para actualizar", nameof(UpdateAsync), "Advertencia");
-                    throw new KeyNotFoundException($"Perfil con ID {id} no encontrado");
-                }
+            var existingPerfil = await _perfilRepository.GetByIdAsync(id);
 
-                // Actualizar propiedades del perfil
-                perfil.ImagenPerfil = perfilDto.ImagenPerfil;
-                perfil.NombrePerfil = perfilDto.NombrePerfil;
-                perfil.Descripcion = perfilDto.Descripcion;
+            if (existingPerfil == null)
+                throw new KeyNotFoundException($"Perfil con ID {id} no encontrado.");
 
-                await _perfilRepository.UpdateAsync(perfil);
-            }
-            catch (KeyNotFoundException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(UpdateAsync));
-                throw;
-            }
+            existingPerfil.ImagenPerfil = perfilDto.ImagenPerfil;
+            existingPerfil.NombrePerfil = perfilDto.NombrePerfil;
+            existingPerfil.Descripcion = perfilDto.Descripcion;
+
+            await _perfilRepository.UpdateAsync(existingPerfil);
         }
 
         public async Task DeleteAsync(int id)
         {
-            try
-            {
-                // Verificar si el perfil existe
-                if (!await _perfilRepository.ExistsAsync(id))
-                {
-                    await _errorHandlingService.LogErrorAsync($"Perfil con ID {id} no encontrado para eliminar", nameof(DeleteAsync), "Advertencia");
-                    throw new KeyNotFoundException($"Perfil con ID {id} no encontrado");
-                }
+            var existingPerfil = await _perfilRepository.GetByIdAsync(id);
 
-                await _perfilRepository.DeleteAsync(id);
-            }
-            catch (KeyNotFoundException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(DeleteAsync));
-                throw;
-            }
+            if (existingPerfil == null)
+                throw new KeyNotFoundException($"Perfil con ID {id} no encontrado.");
+
+            await _perfilRepository.DeleteAsync(id);
         }
-    } 
+    }
 }
