@@ -5,6 +5,7 @@ using BackendProyectoFinal.Application.Services;
 using BackendProyectoFinal.Domain.Interfaces;
 using System.Diagnostics;
 using BackendProyectoFinal.Application.Interfaces;
+using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Presentation.Controllers
 {
@@ -12,31 +13,25 @@ namespace BackendProyectoFinal.Presentation.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        //private readonly IAuthService _authService;
-        //private readonly IErrorHandlingService _errorHandlingService;
-        //private readonly ILogger<AuthController> _logger;
-
         private readonly IGenericRepository<Usuario> _usuarioService;
+        private readonly IGenericRepository<RefreshToken> _refreshTokenService;
         private readonly JwtService _jwtService;
         private readonly IPasswordService _passwordService;
 
-        public AuthController(IGenericRepository<Usuario> usuarioService, JwtService jwtService, IPasswordService passwordService)
+        public AuthController(
+            IGenericRepository<Usuario> usuarioService,
+            IGenericRepository<RefreshToken> refreshTokenService,
+            JwtService jwtService,
+            IPasswordService passwordService)
         {
-            //_authService = authService;
-            //_errorHandlingService = errorHandlingService;
-            //_logger = logger;
-            _jwtService = jwtService;
             _usuarioService = usuarioService;
+            _refreshTokenService = refreshTokenService;
+            _jwtService = jwtService;
             _passwordService = passwordService;
         }
 
         // POST: api/Auth/Login
         [HttpPost("Login")]
-        //[AllowAnonymous]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
             // Buscar el usuario por email
@@ -48,19 +43,88 @@ namespace BackendProyectoFinal.Presentation.Controllers
                 return Unauthorized("El usuario ingresado no existe");
             }
 
+            // Verificar la contraseña
             var contraseniaVerificada = _passwordService.VerifyPassword(usuario.Contrasenia, loginDTO.Contrasenia);
 
-            // Verificar la contraseña (comparación directa en texto plano)
-            if (contraseniaVerificada == false)
+            if (!contraseniaVerificada)
             {
                 return Unauthorized("La contraseña ingresada fue incorrecta.");
             }
 
-            // Generar el token JWT
-            var token = _jwtService.GenerateToken(usuario.CorreoElectronico, usuario.RolId.ToString());
+            // Generar el access token
+            var accessToken = _jwtService.GenerateToken(usuario.CorreoElectronico, usuario.RolId.ToString());
 
-            // Devolver el token
-            return Ok(new { Token = token });
+            // Generar el refresh token
+            var refreshToken = _jwtService.GenerateRefreshToken();
+
+            // Guardar el refresh token en la base de datos
+            var refreshTokenEntity = new RefreshToken
+            {
+                Token = refreshToken,
+                FechaExpiracion = DateTime.UtcNow.AddDays(7), // Expira en 7 días
+                FechaCreacion = DateTime.UtcNow,
+                EstaActivo = true,
+                UsuarioId = usuario.IdUsuario
+            };
+
+            await _refreshTokenService.AddAsync(refreshTokenEntity);
+
+            // Devolver ambos tokens
+            return Ok(new
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            });
+        }
+
+        // POST: api/Auth/RefreshToken
+        [HttpPost("RefreshToken")]
+        public async Task<IActionResult> RefreshToken(RefreshTokenRequest request)
+        {
+            // Validar el refresh token
+            var refreshTokenEntity = await _refreshTokenService.GetByTokenAsync(request.RefreshToken);
+
+            if (refreshTokenEntity == null || refreshTokenEntity.FechaExpiracion < DateTime.UtcNow || !refreshTokenEntity.EstaActivo)
+            {
+                return Unauthorized("Refresh token inválido o expirado.");
+            }
+
+            // Obtener el usuario asociado al refresh token
+            var usuario = await _usuarioService.GetByIdAsync(refreshTokenEntity.UsuarioId);
+
+            if (usuario == null)
+            {
+                return Unauthorized("Usuario no encontrado.");
+            }
+
+            // Generar un nuevo access token
+            var newAccessToken = _jwtService.GenerateToken(usuario.CorreoElectronico, usuario.RolId.ToString());
+
+            // Generar un nuevo refresh token
+            var newRefreshToken = _jwtService.GenerateRefreshToken();
+
+            // Desactivar el refresh token anterior
+            refreshTokenEntity.EstaActivo = false;
+            await _refreshTokenService.UpdateAsync(refreshTokenEntity);
+
+            // Guardar el nuevo refresh token en la base de datos
+            var newRefreshTokenEntity = new RefreshToken
+            {
+                Token = newRefreshToken,
+                FechaExpiracion = DateTime.UtcNow.AddDays(7), // Expira en 7 días
+                FechaCreacion = DateTime.UtcNow,
+                EstaActivo = true,
+                UsuarioId = usuario.IdUsuario
+            };
+
+            await _refreshTokenService.AddAsync(newRefreshTokenEntity);
+
+            // Devolver los nuevos tokens
+            return Ok(new
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken
+            });
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BackendProyectoFinal.Domain.Interfaces;
+﻿using BackendProyectoFinal.Domain.Entities;
+using BackendProyectoFinal.Domain.Interfaces;
 using BackendProyectoFinal.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -58,5 +59,18 @@ namespace BackendProyectoFinal.Infrastructure.RepositoriesBase
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
+
+        public async Task<T?> GetByTokenAsync(string token)
+        {
+            // Si T es RefreshToken, busca por el campo Token
+            if (typeof(T) == typeof(RefreshToken))
+            {
+                return await _dbSet.FirstOrDefaultAsync(e => EF.Property<string>(e, "Token") == token);
+            }
+            throw new NotSupportedException("Este método solo es compatible con RefreshToken.");
+        }
+
+
+
     }
 }

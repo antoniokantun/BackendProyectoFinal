@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using BackendProyectoFinal.Domain.Interfaces;
 using BackendProyectoFinal.Infrastructure.Persistence.Data;
+using BackendProyectoFinal.Domain.Entities;
 
 
 namespace BackendProyectoFinal.Infrastructure.Persistence.Repositories
@@ -58,6 +59,16 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Repositories
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.Where(predicate).ToListAsync();
+        }
+
+        public async Task<T?> GetByTokenAsync(string token)
+        {
+            // Si T es RefreshToken, busca por el campo Token
+            if (typeof(T) == typeof(RefreshToken))
+            {
+                return await _dbSet.FirstOrDefaultAsync(e => EF.Property<string>(e, "Token") == token);
+            }
+            throw new NotSupportedException("Este método solo es compatible con RefreshToken.");
         }
     }
 }
