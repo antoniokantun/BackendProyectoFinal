@@ -176,22 +176,26 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
         }
 
-        // PUT: api/Producto/completo-con-imagenes/{id}
-        [HttpPut("completo-con-imagenes/{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        // BackendProyectoFinal.Presentation/Controllers/ProductoController.cs
+        // Añadir este método al controlador existente
+
+        // PUT: api/Producto/edicion-completa/{id}
+        [HttpPut("edicion-completa/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> PutProductoCompletoConImagenes(int id, [FromForm] ProductoCreateForm productoForm)
+        public async Task<ActionResult<ProductoDTO>> PutProductoEdicionCompleta(int id, [FromForm] ProductoEditForm productoForm)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                // Primero obtenemos el producto actual para saber las imágenes a eliminar
+                // Obtener el producto actual para verificar que existe
                 var productoActual = await _productoService.GetByIdAsync(id);
 
+                // Crear el DTO de actualización
                 var productoUpdateDto = new ProductoCreateDTO
                 {
                     Nombre = productoForm.Nombre,
@@ -202,39 +206,26 @@ namespace BackendProyectoFinal.Presentation.Controllers
                     CategoriasIds = productoForm.CategoriasIds
                 };
 
-                // Procesar nuevas imágenes
-                var imagenesUrl = new List<string>();
-                if (productoForm.Imagenes != null && productoForm.Imagenes.Count > 0)
+                // Procesar nuevas imágenes (si hay)
+                var nuevasImagenesUrls = new List<string>();
+                if (productoForm.NuevasImagenes != null && productoForm.NuevasImagenes.Any())
                 {
-                    foreach (var imagen in productoForm.Imagenes)
+                    foreach (var imagen in productoForm.NuevasImagenes)
                     {
+                        // Guardar la imagen físicamente y obtener su URL
                         var url = await _fileStorageService.SaveFileAsync(imagen, "productos");
-                        imagenesUrl.Add(url);
+                        nuevasImagenesUrls.Add(url);
                     }
                 }
 
-                // Si el usuario envió un formulario sin imágenes pero quiere mantener las imágenes existentes
-                if (productoForm.MantenerImagenesExistentes && productoActual.Imagenes != null)
-                {
-                    foreach (var imagen in productoActual.Imagenes)
-                    {
-                        imagenesUrl.Add(imagen.UrlImagen);
-                    }
-                }
+                // Actualizar el producto con sus imágenes y categorías
+                var productoActualizado = await _productoService.UpdateProductoCompletoConImagenesAsync(
+                    id,
+                    productoForm.ImagenesExistentesIds,
+                    nuevasImagenesUrls,
+                    productoUpdateDto);
 
-                productoUpdateDto.ImagenesUrl = imagenesUrl;
-
-                // Eliminamos las imágenes antiguas solo si no queremos mantenerlas
-                if (!productoForm.MantenerImagenesExistentes && productoActual.Imagenes != null)
-                {
-                    foreach (var imagen in productoActual.Imagenes)
-                    {
-                        await _fileStorageService.DeleteFileAsync(imagen.UrlImagen, "productos");
-                    }
-                }
-
-                await _productoService.UpdateProductoCompletoAsync(id, productoUpdateDto);
-                return NoContent();
+                return Ok(productoActualizado);
             }
             catch (KeyNotFoundException ex)
             {
@@ -242,8 +233,8 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(PutProductoCompletoConImagenes));
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar el producto completo con imágenes");
+                await _errorHandlingService.LogErrorAsync(ex, nameof(PutProductoEdicionCompleta));
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar el producto completo");
             }
         }
 
@@ -296,5 +287,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al eliminar el producto");
             }
         }
+
     }
 }

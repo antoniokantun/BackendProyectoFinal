@@ -416,5 +416,81 @@ namespace BackendProyectoFinal.Application.Services
 
             return resultList;
         }
+
+        // BackendProyectoFinal.Application/Services/ProductoService.cs
+        // Añadir este método a la clase existente
+        public async Task<ProductoDTO> UpdateProductoCompletoConImagenesAsync(int id, List<int> imagenesExistentesIds, List<string> nuevasImagenesUrls, ProductoCreateDTO productoUpdateDto)
+        {
+            // 1. Verificar si el producto existe
+            var existingProducto = await _productoRepository.GetByIdAsync(id);
+            if (existingProducto == null)
+                throw new KeyNotFoundException($"Producto con ID {id} no encontrado.");
+
+            // 2. Actualizar datos básicos del producto
+            existingProducto.Nombre = productoUpdateDto.Nombre;
+            existingProducto.Descripcion = productoUpdateDto.Descripcion;
+            existingProducto.ProcesoNegociacion = productoUpdateDto.ProcesoNegociacion;
+            existingProducto.Intercambio = productoUpdateDto.Intercambio;
+            existingProducto.UsuarioId = productoUpdateDto.UsuarioId;
+
+            await _productoRepository.UpdateAsync(existingProducto);
+
+            // 3. Actualizar imágenes (mantener las seleccionadas, eliminar las no seleccionadas y agregar las nuevas)
+            // 3.1 Obtener las imágenes actuales
+            var imagenesProductoActuales = await _imagenProductoRepository.GetByProductoIdAsync(id);
+
+            // 3.2 Identificar y eliminar las imágenes que ya no se quieren mantener
+            var imagenesAEliminar = imagenesProductoActuales
+                .Where(ip => !imagenesExistentesIds.Contains(ip.ImagenId))
+                .ToList();
+
+            foreach (var imagenProducto in imagenesAEliminar)
+            {
+                await _imagenProductoRepository.DeleteAsync(imagenProducto.IdImagenProducto);
+                await _imagenRepository.DeleteAsync(imagenProducto.ImagenId);
+            }
+
+            // 3.3 Agregar las nuevas imágenes
+            foreach (var urlImagen in nuevasImagenesUrls)
+            {
+                var imagen = new Imagen { UrlImagen = urlImagen };
+                var createdImagen = await _imagenRepository.AddAsync(imagen);
+
+                var imagenProducto = new ImagenProducto
+                {
+                    ProductoId = id,
+                    ImagenId = createdImagen.IdImagen
+                };
+                await _imagenProductoRepository.AddAsync(imagenProducto);
+            }
+
+            // 4. Actualizar categorías (eliminar las existentes y agregar las nuevas)
+            // 4.1 Obtener las relaciones de categorías actuales
+            var categoriasProductoActuales = await _categoriaProductoRepository.GetByProductoIdAsync(id);
+
+            // 4.2 Eliminar las relaciones actuales
+            foreach (var categoriaProducto in categoriasProductoActuales)
+            {
+                await _categoriaProductoRepository.DeleteAsync(categoriaProducto.IdCategoriaProducto);
+            }
+
+            // 4.3 Agregar las nuevas categorías
+            foreach (var categoriaId in productoUpdateDto.CategoriasIds)
+            {
+                var categoria = await _categoriaRepository.GetByIdAsync(categoriaId);
+                if (categoria == null)
+                    continue;
+
+                var categoriaProducto = new CategoriaProducto
+                {
+                    ProductoId = id,
+                    CategoriaId = categoriaId
+                };
+                await _categoriaProductoRepository.AddAsync(categoriaProducto);
+            }
+
+            // 5. Devolver el producto actualizado con sus nuevas relaciones
+            return await GetByIdAsync(id);
+        }
     }
 }
