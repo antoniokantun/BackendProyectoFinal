@@ -16,5 +16,6 @@ namespace BackendProyectoFinal.Application.DTOs
         public int UsuarioId { get; set; }
         public List<int> CategoriasIds { get; set; } = new List<int>();
         public List<IFormFile>? Imagenes { get; set; }
+        public bool MantenerImagenesExistentes { get; set; } = false;
     }
 }
