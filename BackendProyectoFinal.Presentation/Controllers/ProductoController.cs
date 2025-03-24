@@ -12,12 +12,14 @@ namespace BackendProyectoFinal.Presentation.Controllers
         private readonly IProductoService _productoService;
         private readonly IErrorHandlingService _errorHandlingService;
         private readonly ILogger<ProductoController> _logger;
+        private readonly IFileStorageService _fileStorageService; // Agregar esto
 
-        public ProductoController(IProductoService productoService, IErrorHandlingService errorHandlingService, ILogger<ProductoController> logger)
+        public ProductoController(IProductoService productoService, IErrorHandlingService errorHandlingService, ILogger<ProductoController> logger, IFileStorageService fileStorageService)
         {
             _productoService = productoService;
             _errorHandlingService = errorHandlingService;
             _logger = logger;
+            _fileStorageService = fileStorageService;
         }
 
         // GET: api/Producto
@@ -130,25 +132,47 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
         }
 
-        // POST: api/Producto/completo
-        [HttpPost("completo")]
+        // POST: api/Producto/completo-con-imagenes
+        [HttpPost("completo-con-imagenes")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ProductoDTO>> PostProductoCompleto(ProductoCreateDTO productoCreateDto)
+        public async Task<ActionResult<ProductoDTO>> PostProductoCompletoConImagenes([FromForm] ProductoCreateForm productoForm)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
+                var productoCreateDto = new ProductoCreateDTO
+                {
+                    Nombre = productoForm.Nombre,
+                    Descripcion = productoForm.Descripcion,
+                    ProcesoNegociacion = productoForm.ProcesoNegociacion,
+                    Intercambio = productoForm.Intercambio,
+                    UsuarioId = productoForm.UsuarioId,
+                    CategoriasIds = productoForm.CategoriasIds
+                };
+
+                // Procesar imágenes
+                var imagenesUrl = new List<string>();
+                if (productoForm.Imagenes != null)
+                {
+                    foreach (var imagen in productoForm.Imagenes)
+                    {
+                        var url = await _fileStorageService.SaveFileAsync(imagen, "productos");
+                        imagenesUrl.Add(url);
+                    }
+                }
+                productoCreateDto.ImagenesUrl = imagenesUrl;
+
                 var createdProducto = await _productoService.CreateProductoCompletoAsync(productoCreateDto);
                 return CreatedAtAction(nameof(GetProducto), new { id = createdProducto.IdProducto }, createdProducto);
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(PostProductoCompleto));
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al crear el producto completo");
+                await _errorHandlingService.LogErrorAsync(ex, nameof(PostProductoCompletoConImagenes));
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al crear el producto completo con imágenes");
             }
         }
 

@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using BackendProyectoFinal.Domain.Entities;
+using BackendProyectoFinal.Infrastructure.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -145,6 +146,9 @@ builder.Services.AddScoped<IErrorHandlingService, ErrorHandlingService>();
 
 builder.Services.AddScoped<JwtService>();
 
+// En Program.cs
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
 
 // Configuraci�n CORS
 builder.Services.AddCors(options =>
