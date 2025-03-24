@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackendProyectoFinal.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250323104624_migracion1")]
-    partial class migracion1
+    [Migration("20250324082753_Migracion1")]
+    partial class Migracion1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,12 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IdCategoria"));
 
+                    b.Property<string>("ImagenCategoria")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)")
+                        .HasColumnName("imagen_categoria");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -48,12 +54,50 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         new
                         {
                             IdCategoria = 1,
+                            ImagenCategoria = "https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=1201&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                             Nombre = "Electrónica"
                         },
                         new
                         {
                             IdCategoria = 2,
+                            ImagenCategoria = "https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=1227&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                             Nombre = "Hogar"
+                        },
+                        new
+                        {
+                            IdCategoria = 3,
+                            ImagenCategoria = "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            Nombre = "Ropa"
+                        },
+                        new
+                        {
+                            IdCategoria = 4,
+                            ImagenCategoria = "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            Nombre = "Libros"
+                        },
+                        new
+                        {
+                            IdCategoria = 5,
+                            ImagenCategoria = "https://images.unsplash.com/flagged/photo-1556746834-cbb4a38ee593?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            Nombre = "Deportes"
+                        },
+                        new
+                        {
+                            IdCategoria = 6,
+                            ImagenCategoria = "https://images.unsplash.com/photo-1587654780291-39c9404d746b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            Nombre = "Juguetes"
+                        },
+                        new
+                        {
+                            IdCategoria = 7,
+                            ImagenCategoria = "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            Nombre = "Muebles"
+                        },
+                        new
+                        {
+                            IdCategoria = 8,
+                            ImagenCategoria = "https://images.unsplash.com/photo-1581783898377-1c85bf937427?q=80&w=1015&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            Nombre = "Herramientas"
                         });
                 });
 
@@ -87,12 +131,54 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         {
                             IdCategoriaProducto = 1,
                             CategoriaId = 1,
-                            ProductoId = 2
+                            ProductoId = 1
                         },
                         new
                         {
                             IdCategoriaProducto = 2,
                             CategoriaId = 2,
+                            ProductoId = 2
+                        },
+                        new
+                        {
+                            IdCategoriaProducto = 3,
+                            CategoriaId = 2,
+                            ProductoId = 3
+                        },
+                        new
+                        {
+                            IdCategoriaProducto = 4,
+                            CategoriaId = 4,
+                            ProductoId = 3
+                        },
+                        new
+                        {
+                            IdCategoriaProducto = 5,
+                            CategoriaId = 5,
+                            ProductoId = 4
+                        },
+                        new
+                        {
+                            IdCategoriaProducto = 6,
+                            CategoriaId = 6,
+                            ProductoId = 5
+                        },
+                        new
+                        {
+                            IdCategoriaProducto = 7,
+                            CategoriaId = 2,
+                            ProductoId = 5
+                        },
+                        new
+                        {
+                            IdCategoriaProducto = 8,
+                            CategoriaId = 1,
+                            ProductoId = 1
+                        },
+                        new
+                        {
+                            IdCategoriaProducto = 9,
+                            CategoriaId = 7,
                             ProductoId = 2
                         });
                 });
@@ -245,12 +331,27 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         new
                         {
                             IdImagen = 1,
-                            UrlImagen = "smartphone_1.jpg"
+                            UrlImagen = "https://plus.unsplash.com/premium_photo-1664201890402-6886a989796f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         },
                         new
                         {
                             IdImagen = 2,
-                            UrlImagen = "mesa_cafe_1.jpg"
+                            UrlImagen = "https://images.unsplash.com/photo-1597072689227-8882273e8f6a?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        },
+                        new
+                        {
+                            IdImagen = 3,
+                            UrlImagen = "https://images.unsplash.com/photo-1495546968767-f0573cca821e?q=80&w=1031&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        },
+                        new
+                        {
+                            IdImagen = 4,
+                            UrlImagen = "https://images.unsplash.com/photo-1485965120184-e220f721d03e?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        },
+                        new
+                        {
+                            IdImagen = 5,
+                            UrlImagen = "https://images.unsplash.com/photo-1610890716171-6b1bb98ffd09?q=80&w=1031&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         });
                 });
 
@@ -291,6 +392,24 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             IdImagenProducto = 2,
                             ImagenId = 2,
                             ProductoId = 2
+                        },
+                        new
+                        {
+                            IdImagenProducto = 3,
+                            ImagenId = 3,
+                            ProductoId = 3
+                        },
+                        new
+                        {
+                            IdImagenProducto = 4,
+                            ImagenId = 4,
+                            ProductoId = 4
+                        },
+                        new
+                        {
+                            IdImagenProducto = 5,
+                            ImagenId = 5,
+                            ProductoId = 5
                         });
                 });
 
@@ -455,7 +574,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         {
                             IdPerfil = 1,
                             Descripcion = "Perfil administrador del sistema",
-                            ImagenPerfil = "admin_profile.jpg",
+                            ImagenPerfil = "https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?q=80&w=1856&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                             NombrePerfil = "Administrador",
                             UsuarioId = 1
                         },
@@ -463,9 +582,25 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         {
                             IdPerfil = 2,
                             Descripcion = "Me encanta intercambiar productos",
-                            ImagenPerfil = "juan_profile.jpg",
+                            ImagenPerfil = "https://images.unsplash.com/photo-1489980557514-251d61e3eeb6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                             NombrePerfil = "JuanP",
                             UsuarioId = 2
+                        },
+                        new
+                        {
+                            IdPerfil = 3,
+                            Descripcion = "Busco ofertas interesantes para mi hogar",
+                            ImagenPerfil = "https://images.unsplash.com/photo-1577565177023-d0f29c354b69?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            NombrePerfil = "MariaG",
+                            UsuarioId = 3
+                        },
+                        new
+                        {
+                            IdPerfil = 4,
+                            Descripcion = "Apasionado por la tecnología y los gadgets",
+                            ImagenPerfil = "https://images.unsplash.com/photo-1558203728-00f45181dd84?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            NombrePerfil = "CarlosL",
+                            UsuarioId = 4
                         });
                 });
 
@@ -531,6 +666,36 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             Nombre = "Mesa de café",
                             ProcesoNegociacion = false,
                             UsuarioId = 2
+                        },
+                        new
+                        {
+                            IdProducto = 3,
+                            Descripcion = "Recetas fáciles y deliciosas",
+                            FechaCreacion = new DateTime(2025, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Intercambio = true,
+                            Nombre = "Libro de cocina",
+                            ProcesoNegociacion = false,
+                            UsuarioId = 3
+                        },
+                        new
+                        {
+                            IdProducto = 4,
+                            Descripcion = "Ideal para aventuras al aire libre",
+                            FechaCreacion = new DateTime(2025, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Intercambio = true,
+                            Nombre = "Bicicleta de montaña",
+                            ProcesoNegociacion = true,
+                            UsuarioId = 4
+                        },
+                        new
+                        {
+                            IdProducto = 5,
+                            Descripcion = "Para disfrutar en familia o con amigos",
+                            FechaCreacion = new DateTime(2025, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Intercambio = true,
+                            Nombre = "Juego de mesa",
+                            ProcesoNegociacion = false,
+                            UsuarioId = 3
                         });
                 });
 
@@ -679,6 +844,28 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             Nombre = "Juan",
                             RolId = 2,
                             Telefono = "987654321"
+                        },
+                        new
+                        {
+                            IdUsuario = 3,
+                            Apellido = "Gómez",
+                            Contrasenia = "AQAAAAEAACcQAAAAEFCxR9j/L3Wd7nC0p/W4aLgYg1zMv8zKjEaXbZ9pQoR/sT2uBvC7wYnZqN8u9yFAA==",
+                            CorreoElectronico = "maria@example.com",
+                            FechaRegistro = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Nombre = "María",
+                            RolId = 2,
+                            Telefono = "5551234567"
+                        },
+                        new
+                        {
+                            IdUsuario = 4,
+                            Apellido = "López",
+                            Contrasenia = "AQAAAAEAACcQAAAAEL+0iJ9pS/RkYvX/Z8bTqU2wN1oPz7uIe/jKdLsMvX9bZcRjWnFvQxUeYvA2b7AAA==",
+                            CorreoElectronico = "carlos@example.com",
+                            FechaRegistro = new DateTime(2025, 1, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Nombre = "Carlos",
+                            RolId = 2,
+                            Telefono = "1119876543"
                         });
                 });
 

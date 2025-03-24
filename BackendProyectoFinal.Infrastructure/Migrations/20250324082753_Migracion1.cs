@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BackendProyectoFinal.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class migracion1 : Migration
+    public partial class Migracion1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,6 +24,8 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     id_categoria = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     nombre_categoria = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    imagen_categoria = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -364,11 +366,17 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "categorias",
-                columns: new[] { "id_categoria", "nombre_categoria" },
+                columns: new[] { "id_categoria", "imagen_categoria", "nombre_categoria" },
                 values: new object[,]
                 {
-                    { 1, "Electrónica" },
-                    { 2, "Hogar" }
+                    { 1, "https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=1201&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Electrónica" },
+                    { 2, "https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=1227&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Hogar" },
+                    { 3, "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Ropa" },
+                    { 4, "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Libros" },
+                    { 5, "https://images.unsplash.com/flagged/photo-1556746834-cbb4a38ee593?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Deportes" },
+                    { 6, "https://images.unsplash.com/photo-1587654780291-39c9404d746b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Juguetes" },
+                    { 7, "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Muebles" },
+                    { 8, "https://images.unsplash.com/photo-1581783898377-1c85bf937427?q=80&w=1015&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Herramientas" }
                 });
 
             migrationBuilder.InsertData(
@@ -376,8 +384,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 columns: new[] { "id_imagen", "url_image" },
                 values: new object[,]
                 {
-                    { 1, "smartphone_1.jpg" },
-                    { 2, "mesa_cafe_1.jpg" }
+                    { 1, "https://plus.unsplash.com/premium_photo-1664201890402-6886a989796f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+                    { 2, "https://images.unsplash.com/photo-1597072689227-8882273e8f6a?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+                    { 3, "https://images.unsplash.com/photo-1495546968767-f0573cca821e?q=80&w=1031&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+                    { 4, "https://images.unsplash.com/photo-1485965120184-e220f721d03e?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+                    { 5, "https://images.unsplash.com/photo-1610890716171-6b1bb98ffd09?q=80&w=1031&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" }
                 });
 
             migrationBuilder.InsertData(
@@ -400,7 +411,9 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 values: new object[,]
                 {
                     { 1, "Sistema", "AQAAAAEAACcQAAAAEJGuO48K7z1Px5f3VTQE9YiuO0xi4A5WyHIjWc2wNpKPMxl35dyz0gEcdGDwgm9kzA==", "admin@sistema.com", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Admin", 1, "123456789" },
-                    { 2, "Pérez", "AQAAAAEAACcQAAAAEDy7P2HKHRAcZpScUPiVTBtLGFpG2XMfqhMHQUYP9l7HNmtfwXwfNnHUMpJ4G7VVAA==", "juan@example.com", new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Juan", 2, "987654321" }
+                    { 2, "Pérez", "AQAAAAEAACcQAAAAEDy7P2HKHRAcZpScUPiVTBtLGFpG2XMfqhMHQUYP9l7HNmtfwXwfNnHUMpJ4G7VVAA==", "juan@example.com", new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Juan", 2, "987654321" },
+                    { 3, "Gómez", "AQAAAAEAACcQAAAAEFCxR9j/L3Wd7nC0p/W4aLgYg1zMv8zKjEaXbZ9pQoR/sT2uBvC7wYnZqN8u9yFAA==", "maria@example.com", new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "María", 2, "5551234567" },
+                    { 4, "López", "AQAAAAEAACcQAAAAEL+0iJ9pS/RkYvX/Z8bTqU2wN1oPz7uIe/jKdLsMvX9bZcRjWnFvQxUeYvA2b7AAA==", "carlos@example.com", new DateTime(2025, 1, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Carlos", 2, "1119876543" }
                 });
 
             migrationBuilder.InsertData(
@@ -413,8 +426,10 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 columns: new[] { "id_perfil", "descripcion", "imagen_perfil", "nombre_perfil", "usuario_id" },
                 values: new object[,]
                 {
-                    { 1, "Perfil administrador del sistema", "admin_profile.jpg", "Administrador", 1 },
-                    { 2, "Me encanta intercambiar productos", "juan_profile.jpg", "JuanP", 2 }
+                    { 1, "Perfil administrador del sistema", "https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?q=80&w=1856&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Administrador", 1 },
+                    { 2, "Me encanta intercambiar productos", "https://images.unsplash.com/photo-1489980557514-251d61e3eeb6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "JuanP", 2 },
+                    { 3, "Busco ofertas interesantes para mi hogar", "https://images.unsplash.com/photo-1577565177023-d0f29c354b69?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "MariaG", 3 },
+                    { 4, "Apasionado por la tecnología y los gadgets", "https://images.unsplash.com/photo-1558203728-00f45181dd84?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "CarlosL", 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -423,7 +438,10 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 values: new object[,]
                 {
                     { 1, "Teléfono inteligente en buen estado", new DateTime(2025, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Smartphone", true, 2 },
-                    { 2, "Mesa de madera para sala", new DateTime(2025, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Mesa de café", false, 2 }
+                    { 2, "Mesa de madera para sala", new DateTime(2025, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Mesa de café", false, 2 },
+                    { 3, "Recetas fáciles y deliciosas", new DateTime(2025, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Libro de cocina", false, 3 },
+                    { 4, "Ideal para aventuras al aire libre", new DateTime(2025, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Bicicleta de montaña", true, 4 },
+                    { 5, "Para disfrutar en familia o con amigos", new DateTime(2025, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Juego de mesa", false, 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -431,8 +449,15 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 columns: new[] { "id_categoria_producto", "categoria_id", "producto_id" },
                 values: new object[,]
                 {
-                    { 1, 1, 2 },
-                    { 2, 2, 2 }
+                    { 1, 1, 1 },
+                    { 2, 2, 2 },
+                    { 3, 2, 3 },
+                    { 4, 4, 3 },
+                    { 5, 5, 4 },
+                    { 6, 6, 5 },
+                    { 7, 2, 5 },
+                    { 8, 1, 1 },
+                    { 9, 7, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -455,7 +480,10 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 values: new object[,]
                 {
                     { 1, 1, 1 },
-                    { 2, 2, 2 }
+                    { 2, 2, 2 },
+                    { 3, 3, 3 },
+                    { 4, 4, 4 },
+                    { 5, 5, 5 }
                 });
 
             migrationBuilder.InsertData(
