@@ -63,7 +63,8 @@ namespace BackendProyectoFinal.Application.DTOs
 
         // Contraseña opcional para actualización
         public string? Contrasenia { get; set; }
-    public bool Baneado { get; set; }
+        public bool Baneado { get; set; }
+        
         [Required(ErrorMessage = "El rol es requerido")]
         public int RolId { get; set; }
     }
