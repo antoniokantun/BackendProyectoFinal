@@ -10,28 +10,19 @@ namespace BackendProyectoFinal.Application.DTOs
     public class UsuarioDTO
     {
         public int IdUsuario { get; set; }
-
-        [Required(ErrorMessage = "El nombre es requerido")]
-        [MaxLength(100, ErrorMessage = "El nombre no puede superar los 100 caracteres")]
+        
         public string Nombre { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "El apellido es requerido")]
-        [MaxLength(100, ErrorMessage = "El apellido no puede superar los 100 caracteres")]
         public string Apellido { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "El correo electrónico es requerido")]
-        [EmailAddress(ErrorMessage = "Formato de correo electrónico inválido")]
+        
         public string CorreoElectronico { get; set; } = string.Empty;
-
-        [MaxLength(50, ErrorMessage = "El teléfono no puede superar los 50 caracteres")]
+        
         public string? Telefono { get; set; }
-
-        [Required(ErrorMessage = "La contraseña es requerida")]
+        
         public string Contrasenia { get; set; } = string.Empty;
 
         public DateTime FechaRegistro { get; set; }
-
-        [Required(ErrorMessage = "El rol es requerido")]
+        
         public int RolId { get; set; }
 
         public string? NombreRol { get; set; }
@@ -40,26 +31,17 @@ namespace BackendProyectoFinal.Application.DTOs
     // DTO para creación y actualización de usuario (sin exponer contraseña en respuestas)
     public class UsuarioCreacionDTO
     {
-        [Required(ErrorMessage = "El nombre es requerido")]
-        [MaxLength(100, ErrorMessage = "El nombre no puede superar los 100 caracteres")]
+        
         public string Nombre { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "El apellido es requerido")]
-        [MaxLength(100, ErrorMessage = "El apellido no puede superar los 100 caracteres")]
+        
         public string Apellido { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "El correo electrónico es requerido")]
-        [EmailAddress(ErrorMessage = "Formato de correo electrónico inválido")]
+        
         public string CorreoElectronico { get; set; } = string.Empty;
-
-        [MaxLength(50, ErrorMessage = "El teléfono no puede superar los 50 caracteres")]
+       
         public string? Telefono { get; set; }
-
-        [Required(ErrorMessage = "La contraseña es requerida")]
-        [MinLength(6, ErrorMessage = "La contraseña debe tener al menos 6 caracteres")]
+        
         public string Contrasenia { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "El rol es requerido")]
+        
         public int RolId { get; set; }
     }
 
@@ -67,26 +49,14 @@ namespace BackendProyectoFinal.Application.DTOs
     public class UsuarioActualizacionDTO
     {
         public int IdUsuario { get; set; }
-
-        [Required(ErrorMessage = "El nombre es requerido")]
-        [MaxLength(100, ErrorMessage = "El nombre no puede superar los 100 caracteres")]
         public string Nombre { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "El apellido es requerido")]
-        [MaxLength(100, ErrorMessage = "El apellido no puede superar los 100 caracteres")]
         public string Apellido { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "El correo electrónico es requerido")]
-        [EmailAddress(ErrorMessage = "Formato de correo electrónico inválido")]
         public string CorreoElectronico { get; set; } = string.Empty;
-
-        [MaxLength(50, ErrorMessage = "El teléfono no puede superar los 50 caracteres")]
         public string? Telefono { get; set; }
 
         // Contraseña opcional para actualización
         public string? Contrasenia { get; set; }
-
-        [Required(ErrorMessage = "El rol es requerido")]
+        
         public int RolId { get; set; }
     }
 
