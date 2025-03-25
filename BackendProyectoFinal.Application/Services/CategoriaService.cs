@@ -26,7 +26,8 @@ namespace BackendProyectoFinal.Application.Services
             return categorias.Select(c => new CategoriaDTO
             {
                 IdCategoria = c.IdCategoria,
-                Nombre = c.Nombre
+                Nombre = c.Nombre,
+                ImagenCategoria = c.ImagenCategoria
             });
         }
 
@@ -40,7 +41,8 @@ namespace BackendProyectoFinal.Application.Services
             return new CategoriaDTO
             {
                 IdCategoria = categoria.IdCategoria,
-                Nombre = categoria.Nombre
+                Nombre = categoria.Nombre,
+                ImagenCategoria = categoria.ImagenCategoria
             };
         }
 
@@ -48,7 +50,8 @@ namespace BackendProyectoFinal.Application.Services
         {
             var categoria = new Categoria
             {
-                Nombre = categoriaDto.Nombre
+                Nombre = categoriaDto.Nombre,
+                ImagenCategoria = categoriaDto.ImagenCategoria
             };
 
             var createdCategoria = await _categoriaRepository.AddAsync(categoria);
@@ -56,7 +59,9 @@ namespace BackendProyectoFinal.Application.Services
             return new CategoriaDTO
             {
                 IdCategoria = createdCategoria.IdCategoria,
-                Nombre = createdCategoria.Nombre
+                Nombre = createdCategoria.Nombre,
+                ImagenCategoria = createdCategoria.ImagenCategoria
+
             };
         }
 
@@ -68,6 +73,7 @@ namespace BackendProyectoFinal.Application.Services
                 throw new KeyNotFoundException($"Categoría con ID {categoriaDto.IdCategoria} no encontrada.");
 
             existingCategoria.Nombre = categoriaDto.Nombre;
+            existingCategoria.ImagenCategoria = categoriaDto.ImagenCategoria;
 
             await _categoriaRepository.UpdateAsync(existingCategoria);
         }

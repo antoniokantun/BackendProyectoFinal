@@ -41,7 +41,9 @@ namespace BackendProyectoFinal.Application.DTOs
         public string? Telefono { get; set; }
         
         public string Contrasenia { get; set; } = string.Empty;
-        
+        public bool Baneado { get; set; }
+
+        [Required(ErrorMessage = "El rol es requerido")]
         public int RolId { get; set; }
     }
 
@@ -49,14 +51,20 @@ namespace BackendProyectoFinal.Application.DTOs
     public class UsuarioActualizacionDTO
     {
         public int IdUsuario { get; set; }
+
+        [Required(ErrorMessage = "El nombre es requerido")]
+        [MaxLength(100, ErrorMessage = "El nombre no puede superar los 100 caracteres")]
         public string Nombre { get; set; } = string.Empty;
         public string Apellido { get; set; } = string.Empty;
         public string CorreoElectronico { get; set; } = string.Empty;
+
+        [MaxLength(50, ErrorMessage = "El teléfono no puede superar los 50 caracteres")]
         public string? Telefono { get; set; }
 
         // Contraseña opcional para actualización
         public string? Contrasenia { get; set; }
-        
+    public bool Baneado { get; set; }
+        [Required(ErrorMessage = "El rol es requerido")]
         public int RolId { get; set; }
     }
 
@@ -69,7 +77,15 @@ namespace BackendProyectoFinal.Application.DTOs
         public string CorreoElectronico { get; set; } = string.Empty;
         public string? Telefono { get; set; }
         public DateTime FechaRegistro { get; set; }
+        public bool Baneado { get; set; }
         public int RolId { get; set; }
         public string NombreRol { get; set; } = string.Empty;
+    }
+
+    public class UpdateUserBanDTO
+    {
+        public int IdUsuario { get; set; }
+
+        public bool Baneado { get; set; }
     }
 }

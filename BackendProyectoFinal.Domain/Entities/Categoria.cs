@@ -19,5 +19,10 @@ namespace BackendProyectoFinal.Domain.Entities
         [Column("nombre_categoria")]
         [MaxLength(100)]
         public string Nombre { get; set; } = string.Empty;
+
+        [Required]
+        [Column("imagen_categoria")]
+        [MaxLength(300)]
+        public string ImagenCategoria { get; set; }
     }
 }
