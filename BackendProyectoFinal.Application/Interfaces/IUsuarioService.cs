@@ -12,9 +12,13 @@ namespace BackendProyectoFinal.Application.Interfaces
         Task<IEnumerable<UsuarioRespuestaDTO>> GetAllAsync();
         Task<UsuarioRespuestaDTO> GetByIdAsync(int id);
         Task<UsuarioRespuestaDTO> CreateAsync(UsuarioCreacionDTO usuarioDto);
-        Task UpdateAsync(UsuarioActualizacionDTO usuarioDto);
+        Task UpdateAsync(int id, UsuarioActualizacionDTO usuarioDto);
         Task DeleteAsync(int id);
         Task<UsuarioRespuestaDTO> GetByEmailAsync(string email);
         Task<bool> VerifyCredentialsAsync(string email, string password);
+
+        //Interfaz para actualizar campo de baneado en tabla Usuarios.
+        Task UpdateBanStatusAsync(UpdateUserBanDTO updateBanDTO);
+
     }
 }

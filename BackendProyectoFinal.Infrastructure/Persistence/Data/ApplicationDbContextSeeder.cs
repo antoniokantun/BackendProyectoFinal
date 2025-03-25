@@ -28,9 +28,10 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     Apellido = "Sistema",
                     CorreoElectronico = "admin@sistema.com",
                     Telefono = "123456789",
-                    Contrasenia = "AQAAAAEAACcQAAAAEJGuO48K7z1Px5f3VTQE9YiuO0xi4A5WyHIjWc2wNpKPMxl35dyz0gEcdGDwgm9kzA==", // Contraseña hasheada (ejemplo)
+                    Contrasenia = "AQAAAAEAACcQAAAAEJGuO48K7z1Px5f3VTQE9YiuO0xi4A5WyHIjWc2wNpKPMxl35dyz0gEcdGDwgm9kzA==",
                     FechaRegistro = new DateTime(2025, 1, 1),
-                    RolId = 1
+                    RolId = 1,
+                    Baneado = false // Valor por defecto
                 },
                 new Usuario
                 {
@@ -41,7 +42,8 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     Telefono = "987654321",
                     Contrasenia = "AQAAAAEAACcQAAAAEDy7P2HKHRAcZpScUPiVTBtLGFpG2XMfqhMHQUYP9l7HNmtfwXwfNnHUMpJ4G7VVAA==", // Contraseña hasheada (ejemplo)
                     FechaRegistro = new DateTime(2025, 1, 2),
-                    RolId = 2
+                    RolId = 2,
+                    Baneado = false // Valor por defecto
                 },
                 new Usuario
                 {
@@ -52,7 +54,8 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     Telefono = "5551234567",
                     Contrasenia = "AQAAAAEAACcQAAAAEFCxR9j/L3Wd7nC0p/W4aLgYg1zMv8zKjEaXbZ9pQoR/sT2uBvC7wYnZqN8u9yFAA==", // Contraseña hasheada (ejemplo)
                     FechaRegistro = new DateTime(2025, 1, 3),
-                    RolId = 2
+                    RolId = 2,
+                    Baneado = false // Valor por defecto
                 },
                 new Usuario
                 {
@@ -63,7 +66,8 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     Telefono = "1119876543",
                     Contrasenia = "AQAAAAEAACcQAAAAEL+0iJ9pS/RkYvX/Z8bTqU2wN1oPz7uIe/jKdLsMvX9bZcRjWnFvQxUeYvA2b7AAA==", // Contraseña hasheada (ejemplo)
                     FechaRegistro = new DateTime(2025, 1, 4),
-                    RolId = 2
+                    RolId = 2,
+                    Baneado = false // Valor por defecto
                 }
             );
 

@@ -114,44 +114,19 @@ namespace BackendProyectoFinal.Presentation.Controllers
         }
 
         // PUT: api/Usuario/5
+        // PUT: api/Usuario/5
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PutUsuario(int id, UsuarioActualizacionDTO usuarioDto)
         {
             try
             {
-                if (id != usuarioDto.IdUsuario)
-                    return BadRequest("El ID no coincide con el ID del usuario proporcionado");
-
                 if (!ModelState.IsValid)
+                {
                     return BadRequest(ModelState);
+                }
 
-                // // Verificar si el usuario está intentando modificar su propio perfil
-                // var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-                // var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
-
-                // // Solo administradores o el propio usuario pueden modificar el perfil
-                // if (userRole != "Administrador" && id != currentUserId)
-                // {
-                //     return Forbid();
-                // }
-
-                // // Si no es administrador, no puede cambiar su propio rol
-                // if (userRole != "Administrador" && id == currentUserId)
-                // {
-                //     var currentUser = await _usuarioService.GetByIdAsync(currentUserId);
-                //     if (currentUser.RolId != usuarioDto.RolId)
-                //     {
-                //         return BadRequest("No tienes permiso para cambiar tu propio rol");
-                //     }
-                // }
-
-                await _usuarioService.UpdateAsync(usuarioDto);
+                // Llamamos al servicio pasando el ID de la ruta y el DTO
+                await _usuarioService.UpdateAsync(id, usuarioDto);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)
@@ -168,7 +143,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar el usuario");
             }
         }
-
         // DELETE: api/Usuario/5
         [HttpDelete("{id}")]
         /*[Authorize(Roles = "Administrador")]*/ // Solo administradores pueden eliminar usuarios
@@ -199,6 +173,36 @@ namespace BackendProyectoFinal.Presentation.Controllers
             {
                 await _errorHandlingService.LogErrorAsync(ex, nameof(DeleteUsuario));
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al eliminar el usuario");
+            }
+        }
+
+        [HttpPut("ban")]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateUserBanStatus(UpdateUserBanDTO updateBanDTO)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                await _usuarioService.UpdateBanStatusAsync(updateBanDTO);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                await _errorHandlingService.LogErrorAsync(ex, nameof(UpdateUserBanStatus));
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar el estado de baneo del usuario.");
             }
         }
     }

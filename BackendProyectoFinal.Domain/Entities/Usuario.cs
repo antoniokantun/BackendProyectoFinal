@@ -44,6 +44,11 @@ namespace BackendProyectoFinal.Domain.Entities
         public DateTime FechaRegistro { get; set; }
 
         [Required]
+        [Column("baneado")]
+
+        public bool Baneado {  get; set; }
+
+        [Required]
         [ForeignKey("Rol")]
         [Column("rol_id")]
         public int RolId { get; set; } 

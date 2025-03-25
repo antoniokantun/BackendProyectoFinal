@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using BackendProyectoFinal.Domain.Entities;
 using BackendProyectoFinal.Application.Services;
 using BackendProyectoFinal.Domain.Interfaces;
-using System.Diagnostics;
 using BackendProyectoFinal.Application.Interfaces;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace BackendProyectoFinal.Presentation.Controllers
 {
@@ -51,8 +51,8 @@ namespace BackendProyectoFinal.Presentation.Controllers
                 return Unauthorized("La contraseña ingresada fue incorrecta.");
             }
 
-            // Generar el access token
-            var accessToken = _jwtService.GenerateToken(usuario.CorreoElectronico, usuario.RolId.ToString());
+            // Generar el access token (ahora incluyendo el ID)
+            var accessToken = _jwtService.GenerateToken(usuario.CorreoElectronico, usuario.RolId.ToString(), usuario.IdUsuario);
 
             // Generar el refresh token
             var refreshToken = _jwtService.GenerateRefreshToken();
@@ -97,8 +97,8 @@ namespace BackendProyectoFinal.Presentation.Controllers
                 return Unauthorized("Usuario no encontrado.");
             }
 
-            // Generar un nuevo access token
-            var newAccessToken = _jwtService.GenerateToken(usuario.CorreoElectronico, usuario.RolId.ToString());
+            // Generar un nuevo access token (ahora incluyendo el ID)
+            var newAccessToken = _jwtService.GenerateToken(usuario.CorreoElectronico, usuario.RolId.ToString(), usuario.IdUsuario);
 
             // Generar un nuevo refresh token
             var newRefreshToken = _jwtService.GenerateRefreshToken();

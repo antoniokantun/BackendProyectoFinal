@@ -24,8 +24,8 @@ namespace BackendProyectoFinal.Application.Services
             _audience = jwtSettings["Audience"];
         }
 
-        // Método para generar el access token
-        public string GenerateToken(string email, string role)
+        // Método para generar el access token (modificado para incluir el ID)
+        public string GenerateToken(string email, string role, int userId)
         {
             var key = Encoding.ASCII.GetBytes(_secretKey);
 
@@ -34,7 +34,8 @@ namespace BackendProyectoFinal.Application.Services
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Email, email),
-                    new Claim(ClaimTypes.Role, role)
+                    new Claim(ClaimTypes.Role, role),
+                    new Claim(ClaimTypes.NameIdentifier, userId.ToString()) // Usamos NameIdentifier para el ID
                 }),
                 Expires = DateTime.UtcNow.AddHours(1), // Expira en 1 hora
                 SigningCredentials = new SigningCredentials(

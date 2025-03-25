@@ -62,6 +62,7 @@ namespace BackendProyectoFinal.Application.Services
                 CorreoElectronico = usuarioDto.CorreoElectronico,
                 Telefono = usuarioDto.Telefono,
                 Contrasenia = hashedPassword,
+                Baneado = usuarioDto.Baneado,
                 FechaRegistro = DateTime.UtcNow,
                 RolId = usuarioDto.RolId
             };
@@ -73,36 +74,38 @@ namespace BackendProyectoFinal.Application.Services
             return MapToRespuestaDTO(usuarioConRol!);
         }
 
-        public async Task UpdateAsync(UsuarioActualizacionDTO usuarioDto)
+        // Modificamos el método UpdateAsync para aceptar el ID
+        public async Task UpdateAsync(int id, UsuarioActualizacionDTO usuarioDtoPut)
         {
-            var existingUsuario = await _usuarioRepository.GetByIdAsync(usuarioDto.IdUsuario);
+            var existingUsuario = await _usuarioRepository.GetByIdAsync(id);
 
             if (existingUsuario == null)
-                throw new KeyNotFoundException($"Usuario con ID {usuarioDto.IdUsuario} no encontrado.");
+                throw new KeyNotFoundException($"Usuario con ID {id} no encontrado.");
 
-            // Verificar si el correo ya está en uso por otro usuario
-            if (existingUsuario.CorreoElectronico != usuarioDto.CorreoElectronico)
+            // Verificar si el correo ya está en uso por otro usuario (y no es el mismo usuario)
+            if (existingUsuario.CorreoElectronico != usuarioDtoPut.CorreoElectronico)
             {
-                var existingUserWithEmail = await _usuarioRepository.FindByEmailAsync(usuarioDto.CorreoElectronico);
-                if (existingUserWithEmail != null && existingUserWithEmail.IdUsuario != usuarioDto.IdUsuario)
-                    throw new InvalidOperationException($"Ya existe un usuario con el correo {usuarioDto.CorreoElectronico}");
+                var existingUserWithEmail = await _usuarioRepository.FindByEmailAsync(usuarioDtoPut.CorreoElectronico);
+                if (existingUserWithEmail != null && existingUserWithEmail.IdUsuario != id)
+                    throw new InvalidOperationException($"Ya existe un usuario con el correo {usuarioDtoPut.CorreoElectronico}");
             }
 
             // Verificar si el rol existe
-            var rol = await _rolRepository.GetByIdAsync(usuarioDto.RolId);
+            var rol = await _rolRepository.GetByIdAsync(usuarioDtoPut.RolId);
             if (rol == null)
-                throw new KeyNotFoundException($"Rol con ID {usuarioDto.RolId} no encontrado.");
+                throw new KeyNotFoundException($"Rol con ID {usuarioDtoPut.RolId} no encontrado.");
 
-            existingUsuario.Nombre = usuarioDto.Nombre;
-            existingUsuario.Apellido = usuarioDto.Apellido;
-            existingUsuario.CorreoElectronico = usuarioDto.CorreoElectronico;
-            existingUsuario.Telefono = usuarioDto.Telefono;
-            existingUsuario.RolId = usuarioDto.RolId;
+            existingUsuario.Nombre = usuarioDtoPut.Nombre;
+            existingUsuario.Apellido = usuarioDtoPut.Apellido;
+            existingUsuario.CorreoElectronico = usuarioDtoPut.CorreoElectronico;
+            existingUsuario.Telefono = usuarioDtoPut.Telefono;
+            existingUsuario.Baneado = usuarioDtoPut.Baneado;
+            existingUsuario.RolId = usuarioDtoPut.RolId;
 
             // Solo actualizar la contraseña si se proporciona una nueva
-            if (!string.IsNullOrEmpty(usuarioDto.Contrasenia))
+            if (!string.IsNullOrEmpty(usuarioDtoPut.Contrasenia))
             {
-                existingUsuario.Contrasenia = _passwordService.HashPassword(usuarioDto.Contrasenia);
+                existingUsuario.Contrasenia = _passwordService.HashPassword(usuarioDtoPut.Contrasenia);
             }
 
             await _usuarioRepository.UpdateAsync(existingUsuario);
@@ -152,6 +155,20 @@ namespace BackendProyectoFinal.Application.Services
                 RolId = usuario.RolId,
                 NombreRol = usuario.Rol?.NombreRol ?? string.Empty
             };
+        }
+
+        public async Task UpdateBanStatusAsync(UpdateUserBanDTO updateBanDTO)
+        {
+            var existingUsuario = await _usuarioRepository.GetByIdAsync(updateBanDTO.IdUsuario);
+
+            if (existingUsuario == null)
+            {
+                throw new KeyNotFoundException($"Usuario con ID {updateBanDTO.IdUsuario} no encontrado.");
+            }
+
+            existingUsuario.Baneado = updateBanDTO.Baneado;
+
+            await _usuarioRepository.UpdateAsync(existingUsuario);
         }
     }
 }
