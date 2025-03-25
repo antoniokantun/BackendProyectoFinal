@@ -2,7 +2,7 @@
 using BackendProyectoFinal.Application.Interfaces;
 using BackendProyectoFinal.Domain.Interfaces.IServices;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 
 namespace BackendProyectoFinal.Presentation.Controllers
 {
@@ -14,11 +14,21 @@ namespace BackendProyectoFinal.Presentation.Controllers
         private readonly IErrorHandlingService _errorHandlingService;
         private readonly ILogger<CategoriaController> _logger;
 
-        public CategoriaController(ICategoriaService categoriaService, IErrorHandlingService errorHandlingService, ILogger<CategoriaController> logger)
+        public CategoriaController(
+            ICategoriaService categoriaService,
+            IErrorHandlingService errorHandlingService,
+            ILogger<CategoriaController> logger)
         {
             _categoriaService = categoriaService;
             _errorHandlingService = errorHandlingService;
             _logger = logger;
+        }
+
+        // Método privado para obtener el ID del usuario actual
+        private int? GetCurrentUserId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return userIdClaim != null ? int.Parse(userIdClaim) : null;
         }
 
         // GET: api/Categoria
@@ -34,8 +44,18 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetCategorias));
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener las categorías");
+                // Registrar el error en la base de datos
+                await _errorHandlingService.LogErrorAsync(
+                    ex,
+                    nameof(GetCategorias),
+                    "Error",
+                    GetCurrentUserId()
+                );
+
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    "Error al obtener las categorías"
+                );
             }
         }
 
@@ -53,12 +73,29 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (KeyNotFoundException ex)
             {
+                // Registrar error de no encontrado con severidad de Advertencia
+                await _errorHandlingService.LogErrorAsync(
+                    ex.Message,
+                    nameof(GetCategoria),
+                    "Advertencia",
+                    GetCurrentUserId()
+                );
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetCategoria));
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener la categoría");
+                // Registrar otros errores en la base de datos
+                await _errorHandlingService.LogErrorAsync(
+                    ex,
+                    nameof(GetCategoria),
+                    "Error",
+                    GetCurrentUserId()
+                );
+
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    "Error al obtener la categoría"
+                );
             }
         }
 
@@ -72,15 +109,34 @@ namespace BackendProyectoFinal.Presentation.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
+                    // Registrar modelo inválido con severidad de Advertencia
+                    await _errorHandlingService.LogErrorAsync(
+                        "Modelo de creación de categoría inválido",
+                        nameof(PostCategoria),
+                        "Advertencia",
+                        GetCurrentUserId()
+                    );
                     return BadRequest(ModelState);
+                }
 
                 var createdCategoria = await _categoriaService.CreateAsync(categoriaDto);
                 return CreatedAtAction(nameof(GetCategoria), new { id = createdCategoria.IdCategoria }, createdCategoria);
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(PostCategoria));
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al crear la categoría");
+                // Registrar otros errores en la base de datos
+                await _errorHandlingService.LogErrorAsync(
+                    ex,
+                    nameof(PostCategoria),
+                    "Error",
+                    GetCurrentUserId()
+                );
+
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    "Error al crear la categoría"
+                );
             }
         }
 
@@ -95,22 +151,57 @@ namespace BackendProyectoFinal.Presentation.Controllers
             try
             {
                 if (id != categoriaDto.IdCategoria)
+                {
+                    // Registrar error de ID no coincidente con severidad de Advertencia
+                    await _errorHandlingService.LogErrorAsync(
+                        "El ID no coincide con el ID de la categoría proporcionada",
+                        nameof(PutCategoria),
+                        "Advertencia",
+                        GetCurrentUserId()
+                    );
                     return BadRequest("El ID no coincide con el ID de la categoría proporcionada");
+                }
 
                 if (!ModelState.IsValid)
+                {
+                    // Registrar modelo inválido con severidad de Advertencia
+                    await _errorHandlingService.LogErrorAsync(
+                        "Modelo de actualización de categoría inválido",
+                        nameof(PutCategoria),
+                        "Advertencia",
+                        GetCurrentUserId()
+                    );
                     return BadRequest(ModelState);
+                }
 
                 await _categoriaService.UpdateAsync(categoriaDto);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)
             {
+                // Registrar error de no encontrado con severidad de Advertencia
+                await _errorHandlingService.LogErrorAsync(
+                    ex.Message,
+                    nameof(PutCategoria),
+                    "Advertencia",
+                    GetCurrentUserId()
+                );
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(PutCategoria));
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar la categoría");
+                // Registrar otros errores en la base de datos
+                await _errorHandlingService.LogErrorAsync(
+                    ex,
+                    nameof(PutCategoria),
+                    "Error",
+                    GetCurrentUserId()
+                );
+
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    "Error al actualizar la categoría"
+                );
             }
         }
 
@@ -128,12 +219,29 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (KeyNotFoundException ex)
             {
+                // Registrar error de no encontrado con severidad de Advertencia
+                await _errorHandlingService.LogErrorAsync(
+                    ex.Message,
+                    nameof(DeleteCategoria),
+                    "Advertencia",
+                    GetCurrentUserId()
+                );
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(DeleteCategoria));
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al eliminar la categoría");
+                // Registrar otros errores en la base de datos
+                await _errorHandlingService.LogErrorAsync(
+                    ex,
+                    nameof(DeleteCategoria),
+                    "Error",
+                    GetCurrentUserId()
+                );
+
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    "Error al eliminar la categoría"
+                );
             }
         }
     }

@@ -31,5 +31,13 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Repositories
                 .Where(ip => ip.ImagenId == imagenId)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<ImagenProducto>> GetByProductoIdWithImagenesAsync(int productoId)
+        {
+            return await _dbSet
+                .Where(ip => ip.ProductoId == productoId)
+                .Include(ip => ip.Imagen)
+                .ToListAsync();
+        }
     }
 }

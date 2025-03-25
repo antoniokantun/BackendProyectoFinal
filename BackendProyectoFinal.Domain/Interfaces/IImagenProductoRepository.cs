@@ -11,5 +11,7 @@ namespace BackendProyectoFinal.Domain.Interfaces
     {
         Task<IEnumerable<ImagenProducto>> GetByProductoIdAsync(int productoId);
         Task<IEnumerable<ImagenProducto>> GetByImagenIdAsync(int imagenId);
+
+        Task<IEnumerable<ImagenProducto>> GetByProductoIdWithImagenesAsync(int productoId);
     }
 }

@@ -41,7 +41,7 @@ namespace BackendProyectoFinal.Application.Services
             foreach (var producto in productos)
             {
                 // Obtener imágenes del producto
-                var imagenesProducto = await _imagenProductoRepository.GetByProductoIdAsync(producto.IdProducto);
+                var imagenesProducto = await _imagenProductoRepository.GetByProductoIdWithImagenesAsync(producto.IdProducto);
                 var imagenes = imagenesProducto.Select(ip => new ImagenDTO
                 {
                     IdImagen = ip.Imagen.IdImagen,
