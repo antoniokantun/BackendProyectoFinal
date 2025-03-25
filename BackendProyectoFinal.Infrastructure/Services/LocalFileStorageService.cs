@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Infrastructure.Services
@@ -13,35 +11,54 @@ namespace BackendProyectoFinal.Infrastructure.Services
     {
         private readonly IWebHostEnvironment _env;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly string _uploadsFolderPath;
+        private readonly string _imagesUrlPrefix = "/images"; // Ruta virtual configurada
 
         public LocalFileStorageService(IWebHostEnvironment env, IHttpContextAccessor httpContextAccessor)
         {
             _env = env;
             _httpContextAccessor = httpContextAccessor;
+            _uploadsFolderPath = Path.Combine(_env.ContentRootPath, "..", "uploads"); // Ruta a la carpeta uploads en la raíz
+            EnsureUploadsFolderExists();
+        }
+
+        private void EnsureUploadsFolderExists()
+        {
+            if (!Directory.Exists(_uploadsFolderPath))
+            {
+                Directory.CreateDirectory(_uploadsFolderPath);
+            }
         }
 
         public async Task<string> SaveFileAsync(IFormFile file, string containerName)
         {
-            var extension = Path.GetExtension(file.FileName);
-            var fileName = $"{Guid.NewGuid()}{extension}";
-            var folder = Path.Combine(_env.WebRootPath, containerName);
-
-            if (!Directory.Exists(folder))
+            if (file == null || file.Length == 0)
             {
-                Directory.CreateDirectory(folder);
+                return null; // O manejar el error como prefieras
             }
 
-            var route = Path.Combine(folder, fileName);
+            var extension = Path.GetExtension(file.FileName);
+            var fileName = $"{Guid.NewGuid()}{extension}";
+            var folderPath = Path.Combine(_uploadsFolderPath, containerName);
+
+            // Asegurar que la subcarpeta exista
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            var filePath = Path.Combine(folderPath, fileName);
+
             using (var ms = new MemoryStream())
             {
                 await file.CopyToAsync(ms);
-                await File.WriteAllBytesAsync(route, ms.ToArray());
+                await File.WriteAllBytesAsync(filePath, ms.ToArray());
             }
 
-            var url = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}";
-            var routeForDB = Path.Combine(url, containerName, fileName).Replace("\\", "/");
-
-            return routeForDB;
+            // Construir la URL completa de acceso
+            var baseUrl = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}";
+            var imageUrl = $"{baseUrl}{_imagesUrlPrefix}/{containerName}/{fileName}";
+            return imageUrl;
         }
 
         public Task DeleteFileAsync(string fileRoute, string containerName)
@@ -51,8 +68,9 @@ namespace BackendProyectoFinal.Infrastructure.Services
                 return Task.CompletedTask;
             }
 
+            // La ruta que guardamos en la base de datos es ahora completa, así que podemos usarla directamente
             var fileName = Path.GetFileName(fileRoute);
-            var fileDirectory = Path.Combine(_env.WebRootPath, containerName, fileName);
+            var fileDirectory = Path.Combine(_uploadsFolderPath, containerName, fileName);
 
             if (File.Exists(fileDirectory))
             {

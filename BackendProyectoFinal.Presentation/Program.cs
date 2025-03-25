@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using BackendProyectoFinal.Domain.Entities;
 using BackendProyectoFinal.Infrastructure.Services;
+using Microsoft.Extensions.FileProviders;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -160,6 +161,15 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader());
 });
 
+
+// Configuración del Logging
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
+
+// Registrar IHttpContextAccessor
+builder.Services.AddHttpContextAccessor();
+
+
 var app = builder.Build();
 
 
@@ -175,7 +185,26 @@ else
     app.UseMiddleware<ErrorHandlingMiddleware>();
 }
 
+//Habilitando para manejo de archivos estáticos a falta de servidor dedicado.
+// En Program.cs o Startup.cs
+var uploadsPath = Path.Combine(builder.Environment.ContentRootPath, "..", "uploads");
+Console.WriteLine($"Ruta configurada para archivos estáticos: {uploadsPath}"); // <--- AGREGAR ESTO
+
+var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger("StaticFilesConfig");
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(uploadsPath),
+    RequestPath = "/images"
+});
+
+logger.LogInformation($"Configurando Static Files para servir desde: {uploadsPath} bajo la ruta: /images");
+
+
+
 app.UseCors("AllowSpecificOrigin");
+
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

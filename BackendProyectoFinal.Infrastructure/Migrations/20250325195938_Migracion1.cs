@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BackendProyectoFinal.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigrationWithSeedData : Migration
+    public partial class Migracion1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
