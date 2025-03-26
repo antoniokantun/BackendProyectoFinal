@@ -492,5 +492,19 @@ namespace BackendProyectoFinal.Application.Services
             // 5. Devolver el producto actualizado con sus nuevas relaciones
             return await GetByIdAsync(id);
         }
+
+        public async Task<ProductoDTO> UpdateProductoFechaCreacionNullAsync(ProductoFechaNull productoFechaNullDto)
+        {
+            var existingProducto = await _productoRepository.GetByIdAsync(productoFechaNullDto.IdProducto);
+            if (existingProducto == null)
+                throw new KeyNotFoundException($"Producto con ID {productoFechaNullDto.IdProducto} no encontrado.");
+
+            existingProducto.FechaCreacion = null;
+
+            await _productoRepository.UpdateAsync(existingProducto);
+
+            
+            return await GetByIdAsync(productoFechaNullDto.IdProducto);
+        }
     }
 }

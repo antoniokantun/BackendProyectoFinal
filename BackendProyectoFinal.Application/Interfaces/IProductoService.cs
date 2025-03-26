@@ -20,5 +20,8 @@ namespace BackendProyectoFinal.Application.Interfaces
         Task DeleteProductoCompletoAsync(int id);
         Task<IEnumerable<ProductoDTO>> GetByUsuarioIdAsync(int usuarioId);
         Task<ProductoDTO> UpdateProductoCompletoConImagenesAsync(int id, List<int> imagenesExistentesIds, List<string> nuevasImagenesUrls, ProductoCreateDTO productoUpdateDto);
+
+        Task<ProductoDTO> UpdateProductoFechaCreacionNullAsync(ProductoFechaNull productoFechaNullDto);
+
     }
 }

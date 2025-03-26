@@ -24,9 +24,9 @@ namespace BackendProyectoFinal.Domain.Entities
         [MaxLength(100)]
         public string? Descripcion { get; set; }
 
-        [Required]
+        
         [Column("fecha_creacion")]
-        public DateTime FechaCreacion { get; set; }
+        public DateTime? FechaCreacion { get; set; }
 
         [Required]
         [Column("proceso_negociacion")]

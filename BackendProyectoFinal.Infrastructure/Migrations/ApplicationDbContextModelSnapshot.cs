@@ -615,7 +615,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("descripcion_producto");
 
-                    b.Property<DateTime>("FechaCreacion")
+                    b.Property<DateTime?>("FechaCreacion")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("fecha_creacion");
 

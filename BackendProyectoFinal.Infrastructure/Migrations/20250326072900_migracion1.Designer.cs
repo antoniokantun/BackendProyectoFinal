@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackendProyectoFinal.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250325195938_Migracion1")]
-    partial class Migracion1
+    [Migration("20250326072900_migracion1")]
+    partial class migracion1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -618,7 +618,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("descripcion_producto");
 
-                    b.Property<DateTime>("FechaCreacion")
+                    b.Property<DateTime?>("FechaCreacion")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("fecha_creacion");
 

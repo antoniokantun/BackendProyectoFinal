@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BackendProyectoFinal.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Migracion1 : Migration
+    public partial class migracion1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -160,7 +160,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     descripcion_producto = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    fecha_creacion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    fecha_creacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     proceso_negociacion = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     intercambio = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     usuario_id = table.Column<int>(type: "int", nullable: false)

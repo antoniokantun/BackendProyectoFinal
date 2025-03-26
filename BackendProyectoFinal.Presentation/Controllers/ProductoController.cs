@@ -288,5 +288,32 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
         }
 
+        // PUT: api/Producto/fecha-creacion-null
+        [HttpPut("fecha-creacion-null")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ProductoDTO>> PutProductoFechaCreacionNull([FromBody] ProductoFechaNull productoFechaNullDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var productoActualizado = await _productoService.UpdateProductoFechaCreacionNullAsync(productoFechaNullDto);
+                return Ok(productoActualizado);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                await _errorHandlingService.LogErrorAsync(ex, nameof(PutProductoFechaCreacionNull));
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar la fecha de creación del producto");
+            }
+        }
+
     }
 }
