@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BackendProyectoFinal.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class migracion1 : Migration
+    public partial class InitialMigrationWithSeedData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -278,7 +278,10 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 {
                     id_evaluacion = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    titulo_evaluacion = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     usuario_id = table.Column<int>(type: "int", nullable: false),
+                    usuario_evaluador_id = table.Column<int>(type: "int", nullable: false),
                     producto_id = table.Column<int>(type: "int", nullable: false),
                     fecha_creacion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     comentario = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: true)
@@ -293,6 +296,12 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         column: x => x.producto_id,
                         principalTable: "productos",
                         principalColumn: "id_producto",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_evaluaciones_usuarios_usuario_evaluador_id",
+                        column: x => x.usuario_evaluador_id,
+                        principalTable: "usuarios",
+                        principalColumn: "id_usuario",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_evaluaciones_usuarios_usuario_id",
@@ -468,11 +477,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "evaluaciones",
-                columns: new[] { "id_evaluacion", "comentario", "fecha_creacion", "producto_id", "puntacion", "usuario_id" },
+                columns: new[] { "id_evaluacion", "comentario", "fecha_creacion", "producto_id", "puntacion", "titulo_evaluacion", "usuario_evaluador_id", "usuario_id" },
                 values: new object[,]
                 {
-                    { 1, "Producto en excelente estado", new DateTime(2025, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 5, 1 },
-                    { 2, "Buena calidad", new DateTime(2025, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 4, 2 }
+                    { 1, "Buen producto", new DateTime(2025, 3, 26, 17, 23, 22, 698, DateTimeKind.Local).AddTicks(5824), 1, 5, "Evaluación del producto 1", 2, 1 },
+                    { 2, "Buena calidad", new DateTime(2025, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 4, "Evaluación del producto 2", 1, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -535,6 +544,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 name: "IX_evaluaciones_producto_id",
                 table: "evaluaciones",
                 column: "producto_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_evaluaciones_usuario_evaluador_id",
+                table: "evaluaciones",
+                column: "usuario_evaluador_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_evaluaciones_usuario_id",

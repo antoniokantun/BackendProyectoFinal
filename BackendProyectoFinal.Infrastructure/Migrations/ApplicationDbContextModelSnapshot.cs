@@ -272,6 +272,16 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("puntacion");
 
+                    b.Property<string>("TituloEvaluacion")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("titulo_evaluacion");
+
+                    b.Property<int>("UsuarioEvaluadorId")
+                        .HasColumnType("int")
+                        .HasColumnName("usuario_evaluador_id");
+
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int")
                         .HasColumnName("usuario_id");
@@ -279,6 +289,8 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.HasKey("IdEvaluacion");
 
                     b.HasIndex("ProductoId");
+
+                    b.HasIndex("UsuarioEvaluadorId");
 
                     b.HasIndex("UsuarioId");
 
@@ -288,10 +300,12 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         new
                         {
                             IdEvaluacion = 1,
-                            Comentario = "Producto en excelente estado",
-                            FechaCreacion = new DateTime(2025, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductoId = 2,
+                            Comentario = "Buen producto",
+                            FechaCreacion = new DateTime(2025, 3, 26, 17, 23, 22, 698, DateTimeKind.Local).AddTicks(5824),
+                            ProductoId = 1,
                             Puntuacion = 5,
+                            TituloEvaluacion = "Evaluación del producto 1",
+                            UsuarioEvaluadorId = 2,
                             UsuarioId = 1
                         },
                         new
@@ -301,6 +315,8 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             FechaCreacion = new DateTime(2025, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ProductoId = 1,
                             Puntuacion = 4,
+                            TituloEvaluacion = "Evaluación del producto 2",
+                            UsuarioEvaluadorId = 1,
                             UsuarioId = 2
                         });
                 });
@@ -931,6 +947,12 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BackendProyectoFinal.Domain.Entities.Usuario", "UsuarioEvaluador")
+                        .WithMany()
+                        .HasForeignKey("UsuarioEvaluadorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BackendProyectoFinal.Domain.Entities.Usuario", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioId")
@@ -940,6 +962,8 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.Navigation("Producto");
 
                     b.Navigation("Usuario");
+
+                    b.Navigation("UsuarioEvaluador");
                 });
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.ImagenProducto", b =>

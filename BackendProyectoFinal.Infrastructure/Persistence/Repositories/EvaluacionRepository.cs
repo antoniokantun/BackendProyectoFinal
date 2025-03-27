@@ -22,6 +22,7 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Repositories
             return await _dbSet
                 .Where(e => e.UsuarioId == usuarioId)
                 .Include(e => e.Usuario)
+                .Include(e => e.UsuarioEvaluador)
                 .Include(e => e.Producto)
                 .ToListAsync();
         }
@@ -31,6 +32,7 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Repositories
             return await _dbSet
                 .Where(e => e.ProductoId == productoId)
                 .Include(e => e.Usuario)
+                .Include(e => e.UsuarioEvaluador)
                 .Include(e => e.Producto)
                 .ToListAsync();
         }
@@ -40,6 +42,7 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Repositories
         {
             return await _dbSet
                 .Include(e => e.Usuario)
+                .Include(e => e.UsuarioEvaluador)
                 .Include(e => e.Producto)
                 .ToListAsync();
         }
@@ -49,6 +52,7 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Repositories
         {
             return await _dbSet
                 .Include(e => e.Usuario)
+                .Include(e => e.UsuarioEvaluador)
                 .Include(e => e.Producto)
                 .FirstOrDefaultAsync(e => e.IdEvaluacion == id);
         }
