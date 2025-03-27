@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Application.DTOs
 {
-    public class ProductoUpdateVisibilityDTO
+    public class ProductReportDTO
     {
         public int IdProducto { get; set; }
-        public bool NoVisible { get; set; }
-
+        public bool Reportado { get; set; }
     }
 }

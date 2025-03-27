@@ -37,8 +37,12 @@ namespace BackendProyectoFinal.Domain.Entities
         public bool Intercambio { get; set; }
 
         [Required]
-        [Column("visible")]
-        public bool Visible { get; set; } = true;
+        [Column("no_visible")]
+        public bool NoVisible { get; set; } = false;
+
+        [Required]
+        [Column("reportado")]
+        public bool Reportado { get; set; } = false;
 
         [Required]
         [ForeignKey("Usuario")]

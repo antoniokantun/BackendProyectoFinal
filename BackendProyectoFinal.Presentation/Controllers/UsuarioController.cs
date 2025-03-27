@@ -302,5 +302,54 @@ namespace BackendProyectoFinal.Presentation.Controllers
                 );
             }
         }
+
+        [HttpPatch("user-report")]
+
+        public async Task<IActionResult> UpdateUserReport(UpdateUserReportDTO updateReportDTO)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    // Registrar modelo inválido con severidad de Advertencia
+                    await _errorHandlingService.LogErrorAsync(
+                        "Modelo de actualización de reporte inválido",
+                        nameof(UpdateUserBanStatus),
+                        "Advertencia",
+                        GetCurrentUserId()
+                    );
+                    return BadRequest(ModelState);
+                }
+
+                await _usuarioService.UpdateUserReport(updateReportDTO);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                // Registrar error de no encontrado con severidad de Advertencia
+                await _errorHandlingService.LogErrorAsync(
+                    ex.Message,
+                    nameof(UpdateUserReport),
+                    "Advertencia",
+                    GetCurrentUserId()
+                );
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Registrar otros errores en la base de datos
+                await _errorHandlingService.LogErrorAsync(
+                    ex,
+                    nameof(UpdateUserReport),
+                    "Error",
+                    GetCurrentUserId()
+                );
+
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    "Error al actualizar el estado de reporte del usuario"
+                );
+            }
+        }
     }
 }

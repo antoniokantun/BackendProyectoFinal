@@ -31,7 +31,9 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     Contrasenia = "AQAAAAEAACcQAAAAEJGuO48K7z1Px5f3VTQE9YiuO0xi4A5WyHIjWc2wNpKPMxl35dyz0gEcdGDwgm9kzA==",
                     FechaRegistro = new DateTime(2025, 1, 1),
                     RolId = 1,
-                    Baneado = false // Valor por defecto
+                    Baneado = false, // Valor por defecto
+                    Reportado = false
+
                 },
                 new Usuario
                 {
@@ -43,7 +45,8 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     Contrasenia = "AQAAAAEAACcQAAAAEDy7P2HKHRAcZpScUPiVTBtLGFpG2XMfqhMHQUYP9l7HNmtfwXwfNnHUMpJ4G7VVAA==", // Contraseña hasheada (ejemplo)
                     FechaRegistro = new DateTime(2025, 1, 2),
                     RolId = 2,
-                    Baneado = false // Valor por defecto
+                    Baneado = false, // Valor por defecto
+                    Reportado = false
                 },
                 new Usuario
                 {
@@ -55,7 +58,9 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     Contrasenia = "AQAAAAEAACcQAAAAEFCxR9j/L3Wd7nC0p/W4aLgYg1zMv8zKjEaXbZ9pQoR/sT2uBvC7wYnZqN8u9yFAA==", // Contraseña hasheada (ejemplo)
                     FechaRegistro = new DateTime(2025, 1, 3),
                     RolId = 2,
-                    Baneado = false // Valor por defecto
+                    Baneado = false, // Valor por defecto
+                    Reportado = false
+
                 },
                 new Usuario
                 {
@@ -67,7 +72,9 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     Contrasenia = "AQAAAAEAACcQAAAAEL+0iJ9pS/RkYvX/Z8bTqU2wN1oPz7uIe/jKdLsMvX9bZcRjWnFvQxUeYvA2b7AAA==", // Contraseña hasheada (ejemplo)
                     FechaRegistro = new DateTime(2025, 1, 4),
                     RolId = 2,
-                    Baneado = false // Valor por defecto
+                    Baneado = false, // Valor por defecto
+                    Reportado = false
+
                 }
             );
 
@@ -129,7 +136,8 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                    FechaCreacion = new DateTime(2025, 2, 15),
                    ProcesoNegociacion = true,
                    Intercambio = true,
-                   Visible = true,
+                   NoVisible = false,
+                   Reportado = false,
                    UsuarioId = 2
                },
                 new Producto
@@ -140,7 +148,9 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     FechaCreacion = new DateTime(2025, 2, 20),
                     ProcesoNegociacion = false,
                     Intercambio = true,
-                    Visible = true,
+                    NoVisible = false,
+                    Reportado = false,
+
                     UsuarioId = 2
                 },
                 new Producto
@@ -151,7 +161,9 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     FechaCreacion = new DateTime(2025, 2, 25),
                     ProcesoNegociacion = false,
                     Intercambio = true,
-                    Visible = true,
+                    NoVisible = false,
+                    Reportado = false,
+
                     UsuarioId = 3
                 },
                 new Producto
@@ -162,7 +174,9 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     FechaCreacion = new DateTime(2025, 3, 1),
                     ProcesoNegociacion = true,
                     Intercambio = true,
-                    Visible = true,
+                    NoVisible = false,
+                    Reportado = false,
+
                     UsuarioId = 4
                 },
                 new Producto
@@ -173,7 +187,9 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     FechaCreacion = new DateTime(2025, 3, 5),
                     ProcesoNegociacion = false,
                     Intercambio = true,
-                    Visible = true,
+                    NoVisible = false,
+                    Reportado = false,
+
                     UsuarioId = 3
                 }
             );

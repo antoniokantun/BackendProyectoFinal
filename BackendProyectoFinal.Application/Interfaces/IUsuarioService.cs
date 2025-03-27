@@ -20,5 +20,9 @@ namespace BackendProyectoFinal.Application.Interfaces
         //Interfaz para actualizar campo de baneado en tabla Usuarios.
         Task UpdateBanStatusAsync(UpdateUserBanDTO updateBanDTO);
 
+        Task UpdateUserReport(UpdateUserReportDTO userReportDTO);
+
+        
+
     }
 }

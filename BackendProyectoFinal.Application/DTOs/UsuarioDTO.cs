@@ -22,7 +22,11 @@ namespace BackendProyectoFinal.Application.DTOs
         public string Contrasenia { get; set; } = string.Empty;
 
         public DateTime FechaRegistro { get; set; }
-        
+        public bool Baneado { get; set; } = false;
+
+        public bool Reportado { get; set; } = false;
+
+
         public int RolId { get; set; }
 
         public string? NombreRol { get; set; }
@@ -41,7 +45,9 @@ namespace BackendProyectoFinal.Application.DTOs
         public string? Telefono { get; set; }
         
         public string Contrasenia { get; set; } = string.Empty;
-        public bool Baneado { get; set; }
+        public bool Baneado { get; set; } = false;
+        public bool Reportado { get; set; } = false;
+
 
         [Required(ErrorMessage = "El rol es requerido")]
         public int RolId { get; set; }
@@ -63,8 +69,10 @@ namespace BackendProyectoFinal.Application.DTOs
 
         // Contraseña opcional para actualización
         public string? Contrasenia { get; set; }
-        public bool Baneado { get; set; }
-        
+        public bool Baneado { get; set; } = false;
+        public bool Reportado { get; set; } = false;
+
+
         [Required(ErrorMessage = "El rol es requerido")]
         public int RolId { get; set; }
     }
@@ -78,7 +86,9 @@ namespace BackendProyectoFinal.Application.DTOs
         public string CorreoElectronico { get; set; } = string.Empty;
         public string? Telefono { get; set; }
         public DateTime FechaRegistro { get; set; }
-        public bool Baneado { get; set; }
+        public bool Baneado { get; set; } = false;
+        public bool Reportado { get; set; }
+
         public int RolId { get; set; }
         public string NombreRol { get; set; } = string.Empty;
     }
@@ -88,5 +98,11 @@ namespace BackendProyectoFinal.Application.DTOs
         public int IdUsuario { get; set; }
 
         public bool Baneado { get; set; }
+    }
+
+    public class UpdateUserReportDTO
+    {
+        public int IdUsuario { get; set; }
+        public bool Reportado { get; set; }
     }
 }

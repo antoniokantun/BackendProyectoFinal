@@ -301,7 +301,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         {
                             IdEvaluacion = 1,
                             Comentario = "Buen producto",
-                            FechaCreacion = new DateTime(2025, 3, 27, 5, 49, 27, 931, DateTimeKind.Local).AddTicks(1627),
+                            FechaCreacion = new DateTime(2025, 3, 27, 8, 37, 36, 942, DateTimeKind.Local).AddTicks(1307),
                             ProductoId = 1,
                             Puntuacion = 5,
                             TituloEvaluacion = "Evaluación del producto 1",
@@ -639,6 +639,10 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("intercambio");
 
+                    b.Property<bool>("NoVisible")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("no_visible");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -649,13 +653,13 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("proceso_negociacion");
 
+                    b.Property<bool>("Reportado")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("reportado");
+
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int")
                         .HasColumnName("usuario_id");
-
-                    b.Property<bool>("Visible")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("visible");
 
                     b.HasKey("IdProducto");
 
@@ -670,10 +674,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             Descripcion = "Teléfono inteligente en buen estado",
                             FechaCreacion = new DateTime(2025, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Intercambio = true,
+                            NoVisible = false,
                             Nombre = "Smartphone",
                             ProcesoNegociacion = true,
-                            UsuarioId = 2,
-                            Visible = true
+                            Reportado = false,
+                            UsuarioId = 2
                         },
                         new
                         {
@@ -681,10 +686,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             Descripcion = "Mesa de madera para sala",
                             FechaCreacion = new DateTime(2025, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Intercambio = true,
+                            NoVisible = false,
                             Nombre = "Mesa de café",
                             ProcesoNegociacion = false,
-                            UsuarioId = 2,
-                            Visible = true
+                            Reportado = false,
+                            UsuarioId = 2
                         },
                         new
                         {
@@ -692,10 +698,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             Descripcion = "Recetas fáciles y deliciosas",
                             FechaCreacion = new DateTime(2025, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Intercambio = true,
+                            NoVisible = false,
                             Nombre = "Libro de cocina",
                             ProcesoNegociacion = false,
-                            UsuarioId = 3,
-                            Visible = true
+                            Reportado = false,
+                            UsuarioId = 3
                         },
                         new
                         {
@@ -703,10 +710,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             Descripcion = "Ideal para aventuras al aire libre",
                             FechaCreacion = new DateTime(2025, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Intercambio = true,
+                            NoVisible = false,
                             Nombre = "Bicicleta de montaña",
                             ProcesoNegociacion = true,
-                            UsuarioId = 4,
-                            Visible = true
+                            Reportado = false,
+                            UsuarioId = 4
                         },
                         new
                         {
@@ -714,10 +722,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             Descripcion = "Para disfrutar en familia o con amigos",
                             FechaCreacion = new DateTime(2025, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Intercambio = true,
+                            NoVisible = false,
                             Nombre = "Juego de mesa",
                             ProcesoNegociacion = false,
-                            UsuarioId = 3,
-                            Visible = true
+                            Reportado = false,
+                            UsuarioId = 3
                         });
                 });
 
@@ -830,6 +839,10 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("nombre_usuario");
 
+                    b.Property<bool>("Reportado")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("reportado");
+
                     b.Property<int>("RolId")
                         .HasColumnType("int")
                         .HasColumnName("rol_id");
@@ -858,6 +871,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             CorreoElectronico = "admin@sistema.com",
                             FechaRegistro = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Nombre = "Admin",
+                            Reportado = false,
                             RolId = 1,
                             Telefono = "123456789"
                         },
@@ -870,6 +884,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             CorreoElectronico = "juan@example.com",
                             FechaRegistro = new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Nombre = "Juan",
+                            Reportado = false,
                             RolId = 2,
                             Telefono = "987654321"
                         },
@@ -882,6 +897,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             CorreoElectronico = "maria@example.com",
                             FechaRegistro = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Nombre = "María",
+                            Reportado = false,
                             RolId = 2,
                             Telefono = "5551234567"
                         },
@@ -894,6 +910,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             CorreoElectronico = "carlos@example.com",
                             FechaRegistro = new DateTime(2025, 1, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Nombre = "Carlos",
+                            Reportado = false,
                             RolId = 2,
                             Telefono = "1119876543"
                         });

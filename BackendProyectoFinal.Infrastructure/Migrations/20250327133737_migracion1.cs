@@ -82,6 +82,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     fecha_registro = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     baneado = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    reportado = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     rol_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -163,7 +164,8 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     fecha_creacion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     proceso_negociacion = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     intercambio = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    visible = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    no_visible = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    reportado = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     usuario_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -418,13 +420,13 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "usuarios",
-                columns: new[] { "id_usuario", "apellido_usuario", "baneado", "contrasenia", "correo_electronico", "fecha_registro", "nombre_usuario", "rol_id", "telefono" },
+                columns: new[] { "id_usuario", "apellido_usuario", "baneado", "contrasenia", "correo_electronico", "fecha_registro", "nombre_usuario", "reportado", "rol_id", "telefono" },
                 values: new object[,]
                 {
-                    { 1, "Sistema", false, "AQAAAAEAACcQAAAAEJGuO48K7z1Px5f3VTQE9YiuO0xi4A5WyHIjWc2wNpKPMxl35dyz0gEcdGDwgm9kzA==", "admin@sistema.com", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Admin", 1, "123456789" },
-                    { 2, "Pérez", false, "AQAAAAEAACcQAAAAEDy7P2HKHRAcZpScUPiVTBtLGFpG2XMfqhMHQUYP9l7HNmtfwXwfNnHUMpJ4G7VVAA==", "juan@example.com", new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Juan", 2, "987654321" },
-                    { 3, "Gómez", false, "AQAAAAEAACcQAAAAEFCxR9j/L3Wd7nC0p/W4aLgYg1zMv8zKjEaXbZ9pQoR/sT2uBvC7wYnZqN8u9yFAA==", "maria@example.com", new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "María", 2, "5551234567" },
-                    { 4, "López", false, "AQAAAAEAACcQAAAAEL+0iJ9pS/RkYvX/Z8bTqU2wN1oPz7uIe/jKdLsMvX9bZcRjWnFvQxUeYvA2b7AAA==", "carlos@example.com", new DateTime(2025, 1, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Carlos", 2, "1119876543" }
+                    { 1, "Sistema", false, "AQAAAAEAACcQAAAAEJGuO48K7z1Px5f3VTQE9YiuO0xi4A5WyHIjWc2wNpKPMxl35dyz0gEcdGDwgm9kzA==", "admin@sistema.com", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Admin", false, 1, "123456789" },
+                    { 2, "Pérez", false, "AQAAAAEAACcQAAAAEDy7P2HKHRAcZpScUPiVTBtLGFpG2XMfqhMHQUYP9l7HNmtfwXwfNnHUMpJ4G7VVAA==", "juan@example.com", new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Juan", false, 2, "987654321" },
+                    { 3, "Gómez", false, "AQAAAAEAACcQAAAAEFCxR9j/L3Wd7nC0p/W4aLgYg1zMv8zKjEaXbZ9pQoR/sT2uBvC7wYnZqN8u9yFAA==", "maria@example.com", new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "María", false, 2, "5551234567" },
+                    { 4, "López", false, "AQAAAAEAACcQAAAAEL+0iJ9pS/RkYvX/Z8bTqU2wN1oPz7uIe/jKdLsMvX9bZcRjWnFvQxUeYvA2b7AAA==", "carlos@example.com", new DateTime(2025, 1, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Carlos", false, 2, "1119876543" }
                 });
 
             migrationBuilder.InsertData(
@@ -445,14 +447,14 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "productos",
-                columns: new[] { "id_producto", "descripcion_producto", "fecha_creacion", "intercambio", "nombre_producto", "proceso_negociacion", "usuario_id", "visible" },
+                columns: new[] { "id_producto", "descripcion_producto", "fecha_creacion", "intercambio", "no_visible", "nombre_producto", "proceso_negociacion", "reportado", "usuario_id" },
                 values: new object[,]
                 {
-                    { 1, "Teléfono inteligente en buen estado", new DateTime(2025, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Smartphone", true, 2, true },
-                    { 2, "Mesa de madera para sala", new DateTime(2025, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Mesa de café", false, 2, true },
-                    { 3, "Recetas fáciles y deliciosas", new DateTime(2025, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Libro de cocina", false, 3, true },
-                    { 4, "Ideal para aventuras al aire libre", new DateTime(2025, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Bicicleta de montaña", true, 4, true },
-                    { 5, "Para disfrutar en familia o con amigos", new DateTime(2025, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Juego de mesa", false, 3, true }
+                    { 1, "Teléfono inteligente en buen estado", new DateTime(2025, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Smartphone", true, false, 2 },
+                    { 2, "Mesa de madera para sala", new DateTime(2025, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Mesa de café", false, false, 2 },
+                    { 3, "Recetas fáciles y deliciosas", new DateTime(2025, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Libro de cocina", false, false, 3 },
+                    { 4, "Ideal para aventuras al aire libre", new DateTime(2025, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Bicicleta de montaña", true, false, 4 },
+                    { 5, "Para disfrutar en familia o con amigos", new DateTime(2025, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), true, false, "Juego de mesa", false, false, 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -481,7 +483,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 columns: new[] { "id_evaluacion", "comentario", "fecha_creacion", "producto_id", "puntacion", "titulo_evaluacion", "usuario_evaluador_id", "usuario_id" },
                 values: new object[,]
                 {
-                    { 1, "Buen producto", new DateTime(2025, 3, 27, 5, 49, 27, 931, DateTimeKind.Local).AddTicks(1627), 1, 5, "Evaluación del producto 1", 2, 1 },
+                    { 1, "Buen producto", new DateTime(2025, 3, 27, 8, 37, 36, 942, DateTimeKind.Local).AddTicks(1307), 1, 5, "Evaluación del producto 1", 2, 1 },
                     { 2, "Buena calidad", new DateTime(2025, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 4, "Evaluación del producto 2", 1, 2 }
                 });
 

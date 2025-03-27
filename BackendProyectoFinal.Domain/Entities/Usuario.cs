@@ -47,6 +47,10 @@ namespace BackendProyectoFinal.Domain.Entities
         [Column("baneado")]
 
         public bool Baneado {  get; set; }
+        [Required]
+        [Column("reportado")]
+
+        public bool Reportado { get; set; }
 
         [Required]
         [ForeignKey("Rol")]

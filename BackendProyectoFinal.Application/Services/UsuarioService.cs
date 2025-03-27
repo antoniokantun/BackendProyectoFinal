@@ -62,7 +62,8 @@ namespace BackendProyectoFinal.Application.Services
                 CorreoElectronico = usuarioDto.CorreoElectronico,
                 Telefono = usuarioDto.Telefono,
                 Contrasenia = hashedPassword,
-                Baneado = usuarioDto.Baneado,
+                Baneado = false,
+                Reportado = false,
                 FechaRegistro = DateTime.UtcNow,
                 RolId = usuarioDto.RolId
             };
@@ -100,6 +101,7 @@ namespace BackendProyectoFinal.Application.Services
             existingUsuario.CorreoElectronico = usuarioDtoPut.CorreoElectronico;
             existingUsuario.Telefono = usuarioDtoPut.Telefono;
             existingUsuario.Baneado = usuarioDtoPut.Baneado;
+            existingUsuario.Reportado = usuarioDtoPut.Reportado;
             existingUsuario.RolId = usuarioDtoPut.RolId;
 
             // Solo actualizar la contraseña si se proporciona una nueva
@@ -153,6 +155,7 @@ namespace BackendProyectoFinal.Application.Services
                 Telefono = usuario.Telefono,
                 FechaRegistro = usuario.FechaRegistro,
                 Baneado = usuario.Baneado,
+                Reportado= usuario.Reportado,
                 RolId = usuario.RolId,
                 NombreRol = usuario.Rol?.NombreRol ?? string.Empty
             };
@@ -170,6 +173,21 @@ namespace BackendProyectoFinal.Application.Services
             existingUsuario.Baneado = updateBanDTO.Baneado;
 
             await _usuarioRepository.UpdateAsync(existingUsuario);
+        }
+
+        public async Task UpdateUserReport(UpdateUserReportDTO userReportDTO) 
+        {
+            var existingUsuario = await _usuarioRepository.GetByIdAsync(userReportDTO.IdUsuario);
+
+            if (existingUsuario == null)
+            {
+                throw new KeyNotFoundException($"Usuario con ID {userReportDTO.IdUsuario} no encontrado.");
+            }
+
+            existingUsuario.Reportado = userReportDTO.Reportado;
+
+            await _usuarioRepository.UpdateAsync(existingUsuario);
+
         }
     }
 }

@@ -23,6 +23,8 @@ namespace BackendProyectoFinal.Application.Interfaces
 
         Task UpdateProductVisibility(ProductoUpdateVisibilityDTO productoUpdateVisibilityDTO);
 
+        Task UpdateProductReport(ProductReportDTO productReportDTO);
+
         
     }
 }

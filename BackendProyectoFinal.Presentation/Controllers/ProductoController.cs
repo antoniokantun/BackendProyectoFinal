@@ -150,7 +150,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
                     Descripcion = productoForm.Descripcion,
                     ProcesoNegociacion = productoForm.ProcesoNegociacion,
                     Intercambio = productoForm.Intercambio,
-                    Visible=true,
+                    NoVisible=false,
                     UsuarioId = productoForm.UsuarioId,
                     CategoriasIds = productoForm.CategoriasIds
                 };
@@ -305,6 +305,24 @@ namespace BackendProyectoFinal.Presentation.Controllers
             {
                 // Log the error
                 return StatusCode(500, "Error interno del servidor."); 
+            }
+        }
+        [HttpPatch("patch-producto-report")]
+        public async Task<IActionResult> UpdateProductReport([FromBody] ProductReportDTO productReportDTO)
+        {
+            try
+            {
+                await _productoService.UpdateProductReport(productReportDTO);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                return StatusCode(500, "Error interno del servidor.");
             }
         }
 

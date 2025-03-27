@@ -65,7 +65,8 @@ namespace BackendProyectoFinal.Application.Services
                     FechaCreacion = producto.FechaCreacion,
                     ProcesoNegociacion = producto.ProcesoNegociacion,
                     Intercambio = producto.Intercambio,
-                    Visible= producto.Visible,
+                    NoVisible= producto.NoVisible,
+                    Reportado = producto.Reportado,
                     UsuarioId = producto.UsuarioId,
                     Imagenes = imagenes,
                     Categorias = categorias
@@ -106,7 +107,8 @@ namespace BackendProyectoFinal.Application.Services
                 FechaCreacion = producto.FechaCreacion,
                 ProcesoNegociacion = producto.ProcesoNegociacion,
                 Intercambio = producto.Intercambio,
-                Visible = producto.Visible,
+                NoVisible = producto.NoVisible,
+                Reportado = producto.Reportado,
                 UsuarioId = producto.UsuarioId,
                 Imagenes = imagenes,
                 Categorias = categorias
@@ -128,7 +130,8 @@ namespace BackendProyectoFinal.Application.Services
                 FechaCreacion = producto.FechaCreacion,
                 ProcesoNegociacion = producto.ProcesoNegociacion,
                 Intercambio = producto.Intercambio,
-                Visible     = producto.Visible,
+                NoVisible     = producto.NoVisible,
+                Reportado = producto.Reportado,
                 UsuarioId = producto.UsuarioId,
                 NombreUsuario = producto.Usuario?.Nombre ?? "Usuario no disponible",
                 Imagenes = producto.ImagenProductos?.Select(ip => new ImagenDTO
@@ -155,7 +158,8 @@ namespace BackendProyectoFinal.Application.Services
                 FechaCreacion = productoDto.FechaCreacion,
                 ProcesoNegociacion = productoDto.ProcesoNegociacion,
                 Intercambio = productoDto.Intercambio,
-                Visible = productoDto.Visible,
+                NoVisible = productoDto.NoVisible,
+                Reportado = productoDto.Reportado,
                 UsuarioId = productoDto.UsuarioId
             };
 
@@ -169,6 +173,8 @@ namespace BackendProyectoFinal.Application.Services
                 FechaCreacion = createdProducto.FechaCreacion,
                 ProcesoNegociacion = createdProducto.ProcesoNegociacion,
                 Intercambio = createdProducto.Intercambio,
+                NoVisible = productoDto.NoVisible,
+                Reportado = productoDto.Reportado,
                 UsuarioId = createdProducto.UsuarioId
             };
         }
@@ -183,7 +189,8 @@ namespace BackendProyectoFinal.Application.Services
                 FechaCreacion = DateTime.Now,
                 ProcesoNegociacion = productoCreateDto.ProcesoNegociacion,
                 Intercambio = productoCreateDto.Intercambio,
-                Visible = productoCreateDto.Visible,
+                NoVisible = productoCreateDto.NoVisible,
+                Reportado = productoCreateDto.Reportado,
                 UsuarioId = productoCreateDto.UsuarioId
             };
 
@@ -248,7 +255,8 @@ namespace BackendProyectoFinal.Application.Services
                 FechaCreacion = createdProducto.FechaCreacion,
                 ProcesoNegociacion = createdProducto.ProcesoNegociacion,
                 Intercambio = createdProducto.Intercambio,
-                Visible = createdProducto.Visible,
+                NoVisible = createdProducto.NoVisible,
+                Reportado = createdProducto.Reportado,
                 UsuarioId = createdProducto.UsuarioId,
                 Imagenes = imagenes,
                 Categorias = categorias
@@ -266,7 +274,8 @@ namespace BackendProyectoFinal.Application.Services
             existingProducto.Descripcion = productoDto.Descripcion;
             existingProducto.ProcesoNegociacion = productoDto.ProcesoNegociacion;
             existingProducto.Intercambio = productoDto.Intercambio;
-            existingProducto.Visible = productoDto.Visible;
+            existingProducto.NoVisible = productoDto.NoVisible;
+            existingProducto.Reportado = productoDto.Reportado;
             existingProducto.UsuarioId = productoDto.UsuarioId;
 
             await _productoRepository.UpdateAsync(existingProducto);
@@ -284,7 +293,8 @@ namespace BackendProyectoFinal.Application.Services
             existingProducto.Descripcion = productoUpdateDto.Descripcion;
             existingProducto.ProcesoNegociacion = productoUpdateDto.ProcesoNegociacion;
             existingProducto.Intercambio = productoUpdateDto.Intercambio;
-            existingProducto.Visible = productoUpdateDto.Visible;
+            existingProducto.NoVisible = productoUpdateDto.NoVisible;
+            existingProducto.Reportado= productoUpdateDto.Reportado;
             existingProducto.UsuarioId = productoUpdateDto.UsuarioId;
 
             await _productoRepository.UpdateAsync(existingProducto);
@@ -417,6 +427,8 @@ namespace BackendProyectoFinal.Application.Services
                     FechaCreacion = producto.FechaCreacion,
                     ProcesoNegociacion = producto.ProcesoNegociacion,
                     Intercambio = producto.Intercambio,
+                    NoVisible= producto.NoVisible,
+                    Reportado= producto.Reportado,
                     UsuarioId = producto.UsuarioId,
                     Imagenes = imagenes,
                     Categorias = categorias
@@ -440,7 +452,8 @@ namespace BackendProyectoFinal.Application.Services
             existingProducto.Descripcion = productoUpdateDto.Descripcion;
             existingProducto.ProcesoNegociacion = productoUpdateDto.ProcesoNegociacion;
             existingProducto.Intercambio = productoUpdateDto.Intercambio;
-            existingProducto.Visible = productoUpdateDto.Visible;
+            existingProducto.NoVisible = productoUpdateDto.NoVisible;
+            existingProducto.Reportado = productoUpdateDto.Reportado;
             existingProducto.UsuarioId = productoUpdateDto.UsuarioId;
 
             await _productoRepository.UpdateAsync(existingProducto);
@@ -514,9 +527,27 @@ namespace BackendProyectoFinal.Application.Services
                 throw new KeyNotFoundException($"Producto con ID {productoUpdateVisibilityDTO.IdProducto} no encontrado.");
             }
 
-            producto.Visible = productoUpdateVisibilityDTO.Visible;
+            producto.NoVisible = productoUpdateVisibilityDTO.NoVisible;
 
             await _productoRepository.UpdateAsync(producto);
+        }
+
+        //Servicio para actualizar productos reportados
+
+        public async Task UpdateProductReport(ProductReportDTO productReportDTO)
+        {
+            var producto = await _productoRepository.GetProductoCompletoByIdAsync(productReportDTO.IdProducto);
+
+            if (producto == null)
+            {
+                // Manejar el caso donde el producto no existe.
+                throw new KeyNotFoundException($"Producto con ID {productReportDTO.IdProducto} no encontrado.");
+            }
+
+            producto.Reportado = productReportDTO.Reportado;
+
+            await _productoRepository.UpdateAsync(producto);
+
         }
 
     }
