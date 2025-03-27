@@ -150,6 +150,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
                     Descripcion = productoForm.Descripcion,
                     ProcesoNegociacion = productoForm.ProcesoNegociacion,
                     Intercambio = productoForm.Intercambio,
+                    Visible=true,
                     UsuarioId = productoForm.UsuarioId,
                     CategoriasIds = productoForm.CategoriasIds
                 };
@@ -288,30 +289,22 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
         }
 
-        // PUT: api/Producto/fecha-creacion-null
-        [HttpPut("fecha-creacion-null")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ProductoDTO>> PutProductoFechaCreacionNull([FromBody] ProductoFechaNull productoFechaNullDto)
+        [HttpPatch("patch-producto-visible")] 
+        public async Task<IActionResult> UpdateVisibility([FromBody] ProductoUpdateVisibilityDTO productoUpdateVisibilityDTO)
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-
-                var productoActualizado = await _productoService.UpdateProductoFechaCreacionNullAsync(productoFechaNullDto);
-                return Ok(productoActualizado);
+                await _productoService.UpdateProductVisibility(productoUpdateVisibilityDTO);
+                return NoContent(); 
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(ex.Message); 
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(PutProductoFechaCreacionNull));
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar la fecha de creación del producto");
+                // Log the error
+                return StatusCode(500, "Error interno del servidor."); 
             }
         }
 

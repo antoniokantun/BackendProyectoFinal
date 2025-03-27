@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Application.DTOs
 {
-     public class ProductoFechaNull
+    public class ProductoUpdateVisibilityDTO
     {
         public int IdProducto { get; set; }
-
-        public DateTime? FechaCreacion { get; set; }
+        public bool Visible { get; set; }
 
     }
 }

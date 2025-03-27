@@ -3,6 +3,7 @@ using BackendProyectoFinal.Application.Interfaces;
 using BackendProyectoFinal.Domain.Entities;
 using BackendProyectoFinal.Domain.Interfaces;
 using BackendProyectoFinal.Domain.Interfaces.IServices;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,6 +65,7 @@ namespace BackendProyectoFinal.Application.Services
                     FechaCreacion = producto.FechaCreacion,
                     ProcesoNegociacion = producto.ProcesoNegociacion,
                     Intercambio = producto.Intercambio,
+                    Visible= producto.Visible,
                     UsuarioId = producto.UsuarioId,
                     Imagenes = imagenes,
                     Categorias = categorias
@@ -104,6 +106,7 @@ namespace BackendProyectoFinal.Application.Services
                 FechaCreacion = producto.FechaCreacion,
                 ProcesoNegociacion = producto.ProcesoNegociacion,
                 Intercambio = producto.Intercambio,
+                Visible = producto.Visible,
                 UsuarioId = producto.UsuarioId,
                 Imagenes = imagenes,
                 Categorias = categorias
@@ -125,6 +128,7 @@ namespace BackendProyectoFinal.Application.Services
                 FechaCreacion = producto.FechaCreacion,
                 ProcesoNegociacion = producto.ProcesoNegociacion,
                 Intercambio = producto.Intercambio,
+                Visible     = producto.Visible,
                 UsuarioId = producto.UsuarioId,
                 NombreUsuario = producto.Usuario?.Nombre ?? "Usuario no disponible",
                 Imagenes = producto.ImagenProductos?.Select(ip => new ImagenDTO
@@ -151,6 +155,7 @@ namespace BackendProyectoFinal.Application.Services
                 FechaCreacion = productoDto.FechaCreacion,
                 ProcesoNegociacion = productoDto.ProcesoNegociacion,
                 Intercambio = productoDto.Intercambio,
+                Visible = productoDto.Visible,
                 UsuarioId = productoDto.UsuarioId
             };
 
@@ -178,6 +183,7 @@ namespace BackendProyectoFinal.Application.Services
                 FechaCreacion = DateTime.Now,
                 ProcesoNegociacion = productoCreateDto.ProcesoNegociacion,
                 Intercambio = productoCreateDto.Intercambio,
+                Visible = productoCreateDto.Visible,
                 UsuarioId = productoCreateDto.UsuarioId
             };
 
@@ -242,6 +248,7 @@ namespace BackendProyectoFinal.Application.Services
                 FechaCreacion = createdProducto.FechaCreacion,
                 ProcesoNegociacion = createdProducto.ProcesoNegociacion,
                 Intercambio = createdProducto.Intercambio,
+                Visible = createdProducto.Visible,
                 UsuarioId = createdProducto.UsuarioId,
                 Imagenes = imagenes,
                 Categorias = categorias
@@ -259,6 +266,7 @@ namespace BackendProyectoFinal.Application.Services
             existingProducto.Descripcion = productoDto.Descripcion;
             existingProducto.ProcesoNegociacion = productoDto.ProcesoNegociacion;
             existingProducto.Intercambio = productoDto.Intercambio;
+            existingProducto.Visible = productoDto.Visible;
             existingProducto.UsuarioId = productoDto.UsuarioId;
 
             await _productoRepository.UpdateAsync(existingProducto);
@@ -276,6 +284,7 @@ namespace BackendProyectoFinal.Application.Services
             existingProducto.Descripcion = productoUpdateDto.Descripcion;
             existingProducto.ProcesoNegociacion = productoUpdateDto.ProcesoNegociacion;
             existingProducto.Intercambio = productoUpdateDto.Intercambio;
+            existingProducto.Visible = productoUpdateDto.Visible;
             existingProducto.UsuarioId = productoUpdateDto.UsuarioId;
 
             await _productoRepository.UpdateAsync(existingProducto);
@@ -426,11 +435,12 @@ namespace BackendProyectoFinal.Application.Services
             if (existingProducto == null)
                 throw new KeyNotFoundException($"Producto con ID {id} no encontrado.");
 
-            // 2. Actualizar datos básicos del producto
+            // 2. Actualizar datos básicos del producto¿'¿'
             existingProducto.Nombre = productoUpdateDto.Nombre;
             existingProducto.Descripcion = productoUpdateDto.Descripcion;
             existingProducto.ProcesoNegociacion = productoUpdateDto.ProcesoNegociacion;
             existingProducto.Intercambio = productoUpdateDto.Intercambio;
+            existingProducto.Visible = productoUpdateDto.Visible;
             existingProducto.UsuarioId = productoUpdateDto.UsuarioId;
 
             await _productoRepository.UpdateAsync(existingProducto);
@@ -493,18 +503,21 @@ namespace BackendProyectoFinal.Application.Services
             return await GetByIdAsync(id);
         }
 
-        public async Task<ProductoDTO> UpdateProductoFechaCreacionNullAsync(ProductoFechaNull productoFechaNullDto)
+        //Servicio para actualizar 
+        public async Task UpdateProductVisibility(ProductoUpdateVisibilityDTO productoUpdateVisibilityDTO)
         {
-            var existingProducto = await _productoRepository.GetByIdAsync(productoFechaNullDto.IdProducto);
-            if (existingProducto == null)
-                throw new KeyNotFoundException($"Producto con ID {productoFechaNullDto.IdProducto} no encontrado.");
+            var producto = await _productoRepository.GetProductoCompletoByIdAsync(productoUpdateVisibilityDTO.IdProducto);
 
-            existingProducto.FechaCreacion = null;
+            if (producto == null)
+            {
+                // Manejar el caso donde el producto no existe.
+                throw new KeyNotFoundException($"Producto con ID {productoUpdateVisibilityDTO.IdProducto} no encontrado.");
+            }
 
-            await _productoRepository.UpdateAsync(existingProducto);
+            producto.Visible = productoUpdateVisibilityDTO.Visible;
 
-            
-            return await GetByIdAsync(productoFechaNullDto.IdProducto);
+            await _productoRepository.UpdateAsync(producto);
         }
+
     }
 }

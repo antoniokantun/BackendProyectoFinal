@@ -160,9 +160,10 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     descripcion_producto = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    fecha_creacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    fecha_creacion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     proceso_negociacion = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     intercambio = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    visible = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     usuario_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -435,14 +436,14 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "productos",
-                columns: new[] { "id_producto", "descripcion_producto", "fecha_creacion", "intercambio", "nombre_producto", "proceso_negociacion", "usuario_id" },
+                columns: new[] { "id_producto", "descripcion_producto", "fecha_creacion", "intercambio", "nombre_producto", "proceso_negociacion", "usuario_id", "visible" },
                 values: new object[,]
                 {
-                    { 1, "Teléfono inteligente en buen estado", new DateTime(2025, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Smartphone", true, 2 },
-                    { 2, "Mesa de madera para sala", new DateTime(2025, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Mesa de café", false, 2 },
-                    { 3, "Recetas fáciles y deliciosas", new DateTime(2025, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Libro de cocina", false, 3 },
-                    { 4, "Ideal para aventuras al aire libre", new DateTime(2025, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Bicicleta de montaña", true, 4 },
-                    { 5, "Para disfrutar en familia o con amigos", new DateTime(2025, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Juego de mesa", false, 3 }
+                    { 1, "Teléfono inteligente en buen estado", new DateTime(2025, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Smartphone", true, 2, true },
+                    { 2, "Mesa de madera para sala", new DateTime(2025, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Mesa de café", false, 2, true },
+                    { 3, "Recetas fáciles y deliciosas", new DateTime(2025, 2, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Libro de cocina", false, 3, true },
+                    { 4, "Ideal para aventuras al aire libre", new DateTime(2025, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Bicicleta de montaña", true, 4, true },
+                    { 5, "Para disfrutar en familia o con amigos", new DateTime(2025, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), true, "Juego de mesa", false, 3, true }
                 });
 
             migrationBuilder.InsertData(

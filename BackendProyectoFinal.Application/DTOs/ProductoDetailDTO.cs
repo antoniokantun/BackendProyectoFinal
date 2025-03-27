@@ -14,6 +14,8 @@ namespace BackendProyectoFinal.Application.DTOs
         public DateTime? FechaCreacion { get; set; }
         public bool ProcesoNegociacion { get; set; }
         public bool Intercambio { get; set; }
+        public bool Visible { get; set; }
+
         public int UsuarioId { get; set; }
         public string NombreUsuario { get; set; } = string.Empty;
 

@@ -129,6 +129,7 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                    FechaCreacion = new DateTime(2025, 2, 15),
                    ProcesoNegociacion = true,
                    Intercambio = true,
+                   Visible = true,
                    UsuarioId = 2
                },
                 new Producto
@@ -139,6 +140,7 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     FechaCreacion = new DateTime(2025, 2, 20),
                     ProcesoNegociacion = false,
                     Intercambio = true,
+                    Visible = true,
                     UsuarioId = 2
                 },
                 new Producto
@@ -149,6 +151,7 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     FechaCreacion = new DateTime(2025, 2, 25),
                     ProcesoNegociacion = false,
                     Intercambio = true,
+                    Visible = true,
                     UsuarioId = 3
                 },
                 new Producto
@@ -159,6 +162,7 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     FechaCreacion = new DateTime(2025, 3, 1),
                     ProcesoNegociacion = true,
                     Intercambio = true,
+                    Visible = true,
                     UsuarioId = 4
                 },
                 new Producto
@@ -169,6 +173,7 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     FechaCreacion = new DateTime(2025, 3, 5),
                     ProcesoNegociacion = false,
                     Intercambio = true,
+                    Visible = true,
                     UsuarioId = 3
                 }
             );

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackendProyectoFinal.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250326072900_migracion1")]
+    [Migration("20250327090530_migracion1")]
     partial class migracion1
     {
         /// <inheritdoc />
@@ -618,7 +618,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("descripcion_producto");
 
-                    b.Property<DateTime?>("FechaCreacion")
+                    b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("fecha_creacion");
 
@@ -640,6 +640,10 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("usuario_id");
 
+                    b.Property<bool>("Visible")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("visible");
+
                     b.HasKey("IdProducto");
 
                     b.HasIndex("UsuarioId");
@@ -655,7 +659,8 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             Intercambio = true,
                             Nombre = "Smartphone",
                             ProcesoNegociacion = true,
-                            UsuarioId = 2
+                            UsuarioId = 2,
+                            Visible = true
                         },
                         new
                         {
@@ -665,7 +670,8 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             Intercambio = true,
                             Nombre = "Mesa de café",
                             ProcesoNegociacion = false,
-                            UsuarioId = 2
+                            UsuarioId = 2,
+                            Visible = true
                         },
                         new
                         {
@@ -675,7 +681,8 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             Intercambio = true,
                             Nombre = "Libro de cocina",
                             ProcesoNegociacion = false,
-                            UsuarioId = 3
+                            UsuarioId = 3,
+                            Visible = true
                         },
                         new
                         {
@@ -685,7 +692,8 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             Intercambio = true,
                             Nombre = "Bicicleta de montaña",
                             ProcesoNegociacion = true,
-                            UsuarioId = 4
+                            UsuarioId = 4,
+                            Visible = true
                         },
                         new
                         {
@@ -695,7 +703,8 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             Intercambio = true,
                             Nombre = "Juego de mesa",
                             ProcesoNegociacion = false,
-                            UsuarioId = 3
+                            UsuarioId = 3,
+                            Visible = true
                         });
                 });
 
