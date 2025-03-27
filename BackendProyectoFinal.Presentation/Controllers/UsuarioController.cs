@@ -255,7 +255,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
         }
 
         // Método para actualizar estado de baneo
-        [HttpPut("ban")]
+        [HttpPatch("ban-usuario")]
         public async Task<IActionResult> UpdateUserBanStatus(UpdateUserBanDTO updateBanDTO)
         {
             try

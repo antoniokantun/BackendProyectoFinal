@@ -152,6 +152,7 @@ namespace BackendProyectoFinal.Application.Services
                 CorreoElectronico = usuario.CorreoElectronico,
                 Telefono = usuario.Telefono,
                 FechaRegistro = usuario.FechaRegistro,
+                Baneado = usuario.Baneado,
                 RolId = usuario.RolId,
                 NombreRol = usuario.Rol?.NombreRol ?? string.Empty
             };
