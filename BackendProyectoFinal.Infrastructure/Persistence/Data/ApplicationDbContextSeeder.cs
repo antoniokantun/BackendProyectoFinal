@@ -327,16 +327,20 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                 new Evaluacion
                 {
                     IdEvaluacion = 1,
+                    TituloEvaluacion = "Evaluación del producto 1", // Añadir este campo
                     UsuarioId = 1,
-                    ProductoId = 2,
-                    FechaCreacion = new DateTime(2025, 2, 25),
-                    Comentario = "Producto en excelente estado",
+                    UsuarioEvaluadorId = 2, // Si has añadido este campo también
+                    ProductoId = 1,
+                    FechaCreacion = DateTime.Now,
+                    Comentario = "Buen producto",
                     Puntuacion = 5
                 },
                 new Evaluacion
                 {
                     IdEvaluacion = 2,
+                    TituloEvaluacion = "Evaluación del producto 2", // Añadir este campo
                     UsuarioId = 2,
+                    UsuarioEvaluadorId = 1, // Si has añadido este campo también
                     ProductoId = 1,
                     FechaCreacion = new DateTime(2025, 2, 26),
                     Comentario = "Buena calidad",

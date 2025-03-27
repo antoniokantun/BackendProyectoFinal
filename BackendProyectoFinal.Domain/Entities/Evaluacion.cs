@@ -16,10 +16,21 @@ namespace BackendProyectoFinal.Domain.Entities
         public int IdEvaluacion { get; set; }
 
         [Required]
+        [Column("titulo_evaluacion")]
+        [MaxLength(100)]
+        public string TituloEvaluacion { get; set; } = null!;
+
+        [Required]
         [ForeignKey("Usuario")]
         [Column("usuario_id")]
         public int UsuarioId { get; set; }
         public Usuario Usuario { get; set; } = null!;
+
+        [Required]
+        [ForeignKey("UsuarioEvaluador")]
+        [Column("usuario_evaluador_id")]
+        public int UsuarioEvaluadorId { get; set; }
+        public Usuario UsuarioEvaluador { get; set; } = null!;
 
         [Required]
         [ForeignKey("Producto")]

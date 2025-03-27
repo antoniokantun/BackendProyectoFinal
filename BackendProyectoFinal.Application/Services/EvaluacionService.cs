@@ -52,7 +52,9 @@ namespace BackendProyectoFinal.Application.Services
         {
             var evaluacion = new Evaluacion
             {
+                TituloEvaluacion = createEvaluacionDto.TituloEvaluacion,
                 UsuarioId = createEvaluacionDto.UsuarioId,
+                UsuarioEvaluadorId = createEvaluacionDto.UsuarioEvaluadorId,
                 ProductoId = createEvaluacionDto.ProductoId,
                 FechaCreacion = DateTime.Now, // Utilizar la fecha actual para nuevas evaluaciones
                 Comentario = createEvaluacionDto.Comentario,
@@ -74,8 +76,8 @@ namespace BackendProyectoFinal.Application.Services
             if (existingEvaluacion == null)
                 throw new KeyNotFoundException($"Evaluación con ID {id} no encontrada.");
 
-            // No actualizamos UsuarioId ni ProductoId para mantener la integridad
-            // Tampoco actualizamos FechaCreacion
+            // Actualizamos solo los campos permitidos
+            existingEvaluacion.TituloEvaluacion = updateEvaluacionDto.TituloEvaluacion;
             existingEvaluacion.Comentario = updateEvaluacionDto.Comentario;
             existingEvaluacion.Puntuacion = updateEvaluacionDto.Puntuacion;
 
@@ -98,13 +100,16 @@ namespace BackendProyectoFinal.Application.Services
             return new EvaluacionDTO
             {
                 IdEvaluacion = evaluacion.IdEvaluacion,
+                TituloEvaluacion = evaluacion.TituloEvaluacion,
                 UsuarioId = evaluacion.UsuarioId,
+                UsuarioEvaluadorId = evaluacion.UsuarioEvaluadorId,
                 ProductoId = evaluacion.ProductoId,
                 FechaCreacion = evaluacion.FechaCreacion,
                 Comentario = evaluacion.Comentario,
                 Puntuacion = evaluacion.Puntuacion,
-                NombreUsuario = evaluacion.Usuario?.Nombre, // Suponiendo que Usuario tiene una propiedad NombreUsuario
-                NombreProducto = evaluacion.Producto?.Nombre // Suponiendo que Producto tiene una propiedad Nombre
+                NombreUsuario = evaluacion.Usuario?.Nombre,
+                NombreUsuarioEvaluador = evaluacion.UsuarioEvaluador?.Nombre,
+                NombreProducto = evaluacion.Producto?.Nombre
             };
         }
     }
