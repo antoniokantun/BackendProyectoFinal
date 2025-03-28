@@ -14,5 +14,11 @@ namespace BackendProyectoFinal.Application.Interfaces
         Task<CategoriaDTO> CreateAsync(CategoriaDTO categoriaDto);
         Task UpdateAsync(CategoriaDTO categoriaDto);
         Task DeleteAsync(int id);
+
+
+        // Nuevos métodos para manejo de imágenes
+        Task<CategoriaDTO> CreateWithImageAsync(CategoriaCreateForm categoriaForm);
+        Task<CategoriaDTO> UpdateWithImageAsync(CategoriaEditForm categoriaForm);
+
     }
 }

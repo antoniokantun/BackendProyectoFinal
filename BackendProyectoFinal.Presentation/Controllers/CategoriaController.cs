@@ -13,15 +13,18 @@ namespace BackendProyectoFinal.Presentation.Controllers
         private readonly ICategoriaService _categoriaService;
         private readonly IErrorHandlingService _errorHandlingService;
         private readonly ILogger<CategoriaController> _logger;
+        private readonly IFileStorageService _fileStorageService;
 
         public CategoriaController(
             ICategoriaService categoriaService,
             IErrorHandlingService errorHandlingService,
-            ILogger<CategoriaController> logger)
+            ILogger<CategoriaController> logger,
+            IFileStorageService fileStorageService)
         {
             _categoriaService = categoriaService;
             _errorHandlingService = errorHandlingService;
             _logger = logger;
+            _fileStorageService = fileStorageService;
         }
 
         // Método privado para obtener el ID del usuario actual
@@ -31,6 +34,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
             return userIdClaim != null ? int.Parse(userIdClaim) : null;
         }
 
+        // Endpoints existentes...
         // GET: api/Categoria
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -99,90 +103,112 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
         }
 
-        // POST: api/Categoria
-        [HttpPost]
+        // Nuevo endpoint para crear categoría con imagen
+        // POST: api/Categoria/con-imagen
+        [HttpPost("con-imagen")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<CategoriaDTO>> PostCategoria(CategoriaDTO categoriaDto)
+        public async Task<ActionResult<CategoriaDTO>> PostCategoriaConImagen([FromForm] CategoriaCreateForm categoriaForm)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    // Registrar modelo inválido con severidad de Advertencia
                     await _errorHandlingService.LogErrorAsync(
                         "Modelo de creación de categoría inválido",
-                        nameof(PostCategoria),
+                        nameof(PostCategoriaConImagen),
                         "Advertencia",
                         GetCurrentUserId()
                     );
                     return BadRequest(ModelState);
                 }
 
-                var createdCategoria = await _categoriaService.CreateAsync(categoriaDto);
+                // Verificar que el archivo sea una imagen válida
+                if (categoriaForm.Imagen != null)
+                {
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                    var extension = Path.GetExtension(categoriaForm.Imagen.FileName).ToLowerInvariant();
+
+                    if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
+                    {
+                        return BadRequest("El archivo debe ser una imagen (jpg, jpeg, png o gif).");
+                    }
+
+                    // Verificar tamaño máximo (por ejemplo, 5MB)
+                    if (categoriaForm.Imagen.Length > 5 * 1024 * 1024)
+                    {
+                        return BadRequest("La imagen no puede exceder los 5MB.");
+                    }
+                }
+
+                var createdCategoria = await _categoriaService.CreateWithImageAsync(categoriaForm);
                 return CreatedAtAction(nameof(GetCategoria), new { id = createdCategoria.IdCategoria }, createdCategoria);
             }
             catch (Exception ex)
             {
-                // Registrar otros errores en la base de datos
                 await _errorHandlingService.LogErrorAsync(
                     ex,
-                    nameof(PostCategoria),
+                    nameof(PostCategoriaConImagen),
                     "Error",
                     GetCurrentUserId()
                 );
 
                 return StatusCode(
                     StatusCodes.Status500InternalServerError,
-                    "Error al crear la categoría"
+                    "Error al crear la categoría con imagen"
                 );
             }
         }
 
-        // PUT: api/Categoria/5
-        [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        // Nuevo endpoint para actualizar categoría con imagen
+        // PUT: api/Categoria/con-imagen/5
+        [HttpPut("con-imagen/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> PutCategoria(int id, CategoriaDTO categoriaDto)
+        public async Task<ActionResult<CategoriaDTO>> PutCategoriaConImagen([FromForm] CategoriaEditForm categoriaForm)
         {
             try
             {
-                if (id != categoriaDto.IdCategoria)
-                {
-                    // Registrar error de ID no coincidente con severidad de Advertencia
-                    await _errorHandlingService.LogErrorAsync(
-                        "El ID no coincide con el ID de la categoría proporcionada",
-                        nameof(PutCategoria),
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
-                    return BadRequest("El ID no coincide con el ID de la categoría proporcionada");
-                }
-
                 if (!ModelState.IsValid)
                 {
-                    // Registrar modelo inválido con severidad de Advertencia
                     await _errorHandlingService.LogErrorAsync(
                         "Modelo de actualización de categoría inválido",
-                        nameof(PutCategoria),
+                        nameof(PutCategoriaConImagen),
                         "Advertencia",
                         GetCurrentUserId()
                     );
                     return BadRequest(ModelState);
                 }
 
-                await _categoriaService.UpdateAsync(categoriaDto);
-                return NoContent();
+                // Verificar que el archivo sea una imagen válida (si se proporciona)
+                if (categoriaForm.NuevaImagen != null)
+                {
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                    var extension = Path.GetExtension(categoriaForm.NuevaImagen.FileName).ToLowerInvariant();
+
+                    if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
+                    {
+                        return BadRequest("El archivo debe ser una imagen (jpg, jpeg, png o gif).");
+                    }
+
+                    // Verificar tamaño máximo (por ejemplo, 5MB)
+                    if (categoriaForm.NuevaImagen.Length > 5 * 1024 * 1024)
+                    {
+                        return BadRequest("La imagen no puede exceder los 5MB.");
+                    }
+                }
+
+                var updatedCategoria = await _categoriaService.UpdateWithImageAsync(categoriaForm);
+                return Ok(updatedCategoria);
             }
             catch (KeyNotFoundException ex)
             {
-                // Registrar error de no encontrado con severidad de Advertencia
                 await _errorHandlingService.LogErrorAsync(
                     ex.Message,
-                    nameof(PutCategoria),
+                    nameof(PutCategoriaConImagen),
                     "Advertencia",
                     GetCurrentUserId()
                 );
@@ -190,57 +216,16 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                // Registrar otros errores en la base de datos
                 await _errorHandlingService.LogErrorAsync(
                     ex,
-                    nameof(PutCategoria),
+                    nameof(PutCategoriaConImagen),
                     "Error",
                     GetCurrentUserId()
                 );
 
                 return StatusCode(
                     StatusCodes.Status500InternalServerError,
-                    "Error al actualizar la categoría"
-                );
-            }
-        }
-
-        // DELETE: api/Categoria/5
-        [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> DeleteCategoria(int id)
-        {
-            try
-            {
-                await _categoriaService.DeleteAsync(id);
-                return NoContent();
-            }
-            catch (KeyNotFoundException ex)
-            {
-                // Registrar error de no encontrado con severidad de Advertencia
-                await _errorHandlingService.LogErrorAsync(
-                    ex.Message,
-                    nameof(DeleteCategoria),
-                    "Advertencia",
-                    GetCurrentUserId()
-                );
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                // Registrar otros errores en la base de datos
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(DeleteCategoria),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al eliminar la categoría"
+                    "Error al actualizar la categoría con imagen"
                 );
             }
         }

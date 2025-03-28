@@ -42,6 +42,5 @@ namespace BackendProyectoFinal.Domain.Entities
 
         [ForeignKey("UsuarioId")]
         public Usuario? Usuario { get; set; } // Relación con la entidad Usuario
-
     }
 }

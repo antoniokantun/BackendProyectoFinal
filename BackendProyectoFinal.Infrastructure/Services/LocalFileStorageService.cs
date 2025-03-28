@@ -61,23 +61,48 @@ namespace BackendProyectoFinal.Infrastructure.Services
             return imageUrl;
         }
 
-        public Task DeleteFileAsync(string fileRoute, string containerName)
+        public async Task<bool> DeleteFileAsync(string fileUrl, string subFolderName)
         {
-            if (string.IsNullOrEmpty(fileRoute))
+            if (string.IsNullOrEmpty(fileUrl))
             {
-                return Task.CompletedTask;
+                return false;
             }
 
-            // La ruta que guardamos en la base de datos es ahora completa, así que podemos usarla directamente
-            var fileName = Path.GetFileName(fileRoute);
-            var fileDirectory = Path.Combine(_uploadsFolderPath, containerName, fileName);
-
-            if (File.Exists(fileDirectory))
+            try
             {
-                File.Delete(fileDirectory);
+                // Obtener el nombre del archivo de la URL
+                string fileName = Path.GetFileName(fileUrl);
+
+                // Si la URL tiene el formato completo (con el prefijo)
+                if (fileUrl.StartsWith(_imagesUrlPrefix))
+                {
+                    // Quitar el prefijo y el subfolder de la URL para obtener solo el nombre del archivo
+                    string relativePath = fileUrl.Replace(_imagesUrlPrefix, string.Empty).TrimStart('/');
+                    fileName = Path.GetFileName(relativePath);
+                }
+
+                string filePath = Path.Combine(_uploadsFolderPath, subFolderName, fileName);
+
+                // Verificar si el archivo existe antes de eliminarlo
+                if (File.Exists(filePath))
+                {
+                    // Eliminar el archivo físicamente
+                    File.Delete(filePath);
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception)
+            {
+                // Manejar la excepción según tus necesidades
+                return false;
             }
 
-            return Task.CompletedTask;
+            // El método es async para mantener consistencia con otros métodos,
+            // pero realmente no necesita ser async ya que File.Delete es sincrónico.
+            // Añadimos esta línea para satisfacer el compilador.
+            return await Task.FromResult(false);
         }
     }
 }
