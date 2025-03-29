@@ -37,8 +37,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
         // Endpoints existentes...
         // GET: api/Categoria
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategorias()
         {
             try
@@ -65,9 +63,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Categoria/5
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CategoriaDTO>> GetCategoria(int id)
         {
             try
@@ -106,9 +101,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
         // Nuevo endpoint para crear categoría con imagen
         // POST: api/Categoria/con-imagen
         [HttpPost("con-imagen")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CategoriaDTO>> PostCategoriaConImagen([FromForm] CategoriaCreateForm categoriaForm)
         {
             try
@@ -164,10 +156,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
         // Nuevo endpoint para actualizar categoría con imagen
         // PUT: api/Categoria/con-imagen/5
         [HttpPut("con-imagen/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CategoriaDTO>> PutCategoriaConImagen([FromForm] CategoriaEditForm categoriaForm)
         {
             try

@@ -20,8 +20,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/LogErrores
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<LogErrorDTO>>> GetLogErrores()
         {
             try
@@ -38,9 +36,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/LogErrores/5
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<LogErrorDTO>> GetLogError(int id)
         {
             try
@@ -61,8 +56,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/LogErrores/usuario/5
         [HttpGet("usuario/{userId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<LogErrorDTO>>> GetLogErroresByUsuario(int userId)
         {
             try

@@ -51,8 +51,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Rol
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<RolDTO>>> GetRoles()
         {
             try
@@ -78,10 +76,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Rol/5
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<RolDTO>> GetRol(int id)
         {
             try
@@ -130,9 +124,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // POST: api/Rol
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<RolDTO>> PostRol(RolDTO rolDto)
         {
             try
@@ -186,10 +177,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // PUT: api/Rol/5
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PutRol(int id, RolDTO rolDto)
         {
             try
@@ -265,10 +252,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // DELETE: api/Rol/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteRol(int id)
         {
             try

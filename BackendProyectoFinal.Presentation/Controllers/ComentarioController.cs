@@ -22,8 +22,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Comentario
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentarios()
         {
             _logger.LogInformation("Obteniendo comentarios");
@@ -42,9 +40,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Comentario/5
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ComentarioDTO>> GetComentario(int id)
         {
             try
@@ -65,8 +60,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Comentario/Producto/5
         [HttpGet("Producto/{productoId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosByProducto(int productoId)
         {
             try
@@ -83,8 +76,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Comentario/Usuario/5
         [HttpGet("Usuario/{usuarioId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<ComentarioDTO>>> GetComentariosByUsuario(int usuarioId)
         {
             try
@@ -101,9 +92,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // POST: api/Comentario
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ComentarioDTO>> PostComentario(CreateComentarioDTO comentarioDto)
         {
             try
@@ -128,10 +116,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // PUT: api/Comentario/5
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PutComentario(int id, UpdateComentarioDTO comentarioDto)
         {
             try
@@ -152,9 +136,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // DELETE: api/Comentario/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteComentario(int id)
         {
             try

@@ -24,8 +24,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Producto
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<ProductoDTO>>> GetProductos()
         {
             try
@@ -42,9 +40,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Producto/5
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ProductoDTO>> GetProducto(int id)
         {
             try
@@ -65,9 +60,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Producto/detail/5
         [HttpGet("detail/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ProductoDetailDTO>> GetProductoDetail(int id)
         {
             try
@@ -88,8 +80,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Producto/usuario/5
         [HttpGet("usuario/{usuarioId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<ProductoDTO>>> GetProductosByUsuarioId(int usuarioId)
         {
             try
@@ -106,9 +96,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // POST: api/Producto
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ProductoDTO>> PostProducto(ProductoDTO productoDto)
         {
             try
@@ -134,9 +121,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // POST: api/Producto/completo-con-imagenes
         [HttpPost("completo-con-imagenes")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ProductoDTO>> PostProductoCompletoConImagenes([FromForm] ProductoCreateForm productoForm)
         {
             try
@@ -182,10 +166,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // PUT: api/Producto/edicion-completa/{id}
         [HttpPut("edicion-completa/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ProductoDTO>> PutProductoEdicionCompleta(int id, [FromForm] ProductoEditForm productoForm)
         {
             try
@@ -241,10 +221,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // PUT: api/Producto/completo/5
         [HttpPut("completo/{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PutProductoCompleto(int id, ProductoCreateDTO productoUpdateDto)
         {
             try
@@ -268,9 +244,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // DELETE: api/Producto/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteProducto(int id)
         {
             try

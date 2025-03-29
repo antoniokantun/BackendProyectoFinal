@@ -25,8 +25,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Intercambio
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<IntercambioDTO>>> GetIntercambios()
         {
             try
@@ -43,9 +41,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Intercambio/5
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IntercambioDTO>> GetIntercambio(int id)
         {
             try
@@ -66,8 +61,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Intercambio/solicitante/5
         [HttpGet("solicitante/{usuarioSolicitanteId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<IntercambioDTO>>> GetIntercambiosPorSolicitante(int usuarioSolicitanteId)
         {
             try
@@ -84,8 +77,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Intercambio/ofertante/5
         [HttpGet("ofertante/{usuarioOfertanteId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<IntercambioDTO>>> GetIntercambiosPorOfertante(int usuarioOfertanteId)
         {
             try
@@ -102,8 +93,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Intercambio/producto/5
         [HttpGet("producto/{productoId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<IntercambioDTO>>> GetIntercambiosPorProducto(int productoId)
         {
             try
@@ -120,9 +109,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // POST: api/Intercambio
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IntercambioDTO>> PostIntercambio(CreateIntercambioDTO createDto)
         {
             try
@@ -142,10 +128,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // PUT: api/Intercambio/5
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PutIntercambio(int id, UpdateIntercambioDTO updateDto)
         {
             try
@@ -169,9 +151,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // DELETE: api/Intercambio/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteIntercambio(int id)
         {
             try

@@ -22,8 +22,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Perfil
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<PerfilDTO>>> GetPerfiles()
         {
             try
@@ -40,9 +38,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Perfil/5
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<PerfilDTO>> GetPerfil(int id)
         {
             try
@@ -63,8 +58,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Perfil/usuario/5
         [HttpGet("usuario/{usuarioId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<PerfilDTO>>> GetPerfilesByUsuario(int usuarioId)
         {
             try
@@ -81,9 +74,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // POST: api/Perfil
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<PerfilDTO>> PostPerfil(CreatePerfilDTO perfilDto)
         {
             try
@@ -103,10 +93,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // PUT: api/Perfil/5
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PutPerfil(int id, UpdatePerfilDTO perfilDto)
         {
             try
@@ -130,9 +116,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // DELETE: api/Perfil/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeletePerfil(int id)
         {
             try

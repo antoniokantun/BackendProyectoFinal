@@ -22,8 +22,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Evaluacion
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<EvaluacionDTO>>> GetEvaluaciones()
         {
             try
@@ -40,9 +38,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Evaluacion/5
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<EvaluacionDTO>> GetEvaluacion(int id)
         {
             try
@@ -63,9 +58,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Evaluacion/Usuario/5
         [HttpGet("Usuario/{usuarioId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<EvaluacionDTO>>> GetEvaluacionesPorUsuario(int usuarioId)
         {
             try
@@ -82,9 +74,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // GET: api/Evaluacion/Producto/5
         [HttpGet("Producto/{productoId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<EvaluacionDTO>>> GetEvaluacionesPorProducto(int productoId)
         {
             try
@@ -101,9 +90,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // POST: api/Evaluacion
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<EvaluacionDTO>> PostEvaluacion(CreateEvaluacionDTO createEvaluacionDto)
         {
             try
@@ -123,10 +109,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // PUT: api/Evaluacion/5
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PutEvaluacion(int id, UpdateEvaluacionDTO updateEvaluacionDto)
         {
             try
@@ -150,9 +132,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
         // DELETE: api/Evaluacion/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteEvaluacion(int id)
         {
             try
