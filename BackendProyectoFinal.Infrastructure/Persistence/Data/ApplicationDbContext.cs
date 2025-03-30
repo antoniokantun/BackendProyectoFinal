@@ -25,6 +25,10 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
         public DbSet<Evaluacion> Evaluaciones { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
+        public DbSet<Reporte> Reportes { get; set; }
+        public DbSet<UsuarioReporte> UsuarioReportes { get; set; }
+        public DbSet<ProductoReporte> ProductoReportes { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -137,6 +141,19 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                 .HasOne(c => c.Producto)
                 .WithMany()
                 .HasForeignKey(c => c.ProductoId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configuración de Reporte
+            modelBuilder.Entity<Reporte>()
+                .HasMany(r => r.UsuarioReportes)
+                .WithOne(ur => ur.Reporte)
+                .HasForeignKey(ur => ur.ReporteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Reporte>()
+                .HasMany(r => r.ProductoReportes)
+                .WithOne(pr => pr.Reporte)
+                .HasForeignKey(pr => pr.ReporteId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Agregar datos semilla (seed data)

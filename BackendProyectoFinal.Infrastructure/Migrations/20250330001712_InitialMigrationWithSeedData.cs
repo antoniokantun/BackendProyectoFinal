@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BackendProyectoFinal.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class migracion1 : Migration
+    public partial class InitialMigrationWithSeedData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,6 +46,22 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_imagenes", x => x.id_imagen);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "reportes",
+                columns: table => new
+                {
+                    id_reporte = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    motivo_reporte = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    fecha_reporte = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_reportes", x => x.id_reporte);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -198,6 +214,33 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     table.PrimaryKey("PK_refresh_tokens", x => x.id_token);
                     table.ForeignKey(
                         name: "FK_refresh_tokens_usuarios_usuario_id",
+                        column: x => x.usuario_id,
+                        principalTable: "usuarios",
+                        principalColumn: "id_usuario",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "usuario_reporte",
+                columns: table => new
+                {
+                    id_usuario_reporte = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    usuario_id = table.Column<int>(type: "int", nullable: false),
+                    reporte_id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_usuario_reporte", x => x.id_usuario_reporte);
+                    table.ForeignKey(
+                        name: "FK_usuario_reporte_reportes_reporte_id",
+                        column: x => x.reporte_id,
+                        principalTable: "reportes",
+                        principalColumn: "id_reporte",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_usuario_reporte_usuarios_usuario_id",
                         column: x => x.usuario_id,
                         principalTable: "usuarios",
                         principalColumn: "id_usuario",
@@ -377,6 +420,33 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "producto_reporte",
+                columns: table => new
+                {
+                    id_producto_reporte = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    producto_id = table.Column<int>(type: "int", nullable: false),
+                    reporte_id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_producto_reporte", x => x.id_producto_reporte);
+                    table.ForeignKey(
+                        name: "FK_producto_reporte_productos_producto_id",
+                        column: x => x.producto_id,
+                        principalTable: "productos",
+                        principalColumn: "id_producto",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_producto_reporte_reportes_reporte_id",
+                        column: x => x.reporte_id,
+                        principalTable: "reportes",
+                        principalColumn: "id_reporte",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.InsertData(
                 table: "categorias",
                 columns: new[] { "id_categoria", "imagen_categoria", "nombre_categoria" },
@@ -408,6 +478,17 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 table: "log_errores",
                 columns: new[] { "id_log_error", "fecha_ocurrencia", "mensaje_error", "origen_error", "severidad", "stack_trace", "usuario_id" },
                 values: new object[] { 2, new DateTime(2025, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "Error de autenticación", "AuthService.Authenticate", "Advertencia", "System.UnauthorizedAccessException: Error de autenticación...", null });
+
+            migrationBuilder.InsertData(
+                table: "reportes",
+                columns: new[] { "id_reporte", "fecha_reporte", "motivo_reporte" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 3, 15, 10, 30, 0, 0, DateTimeKind.Utc), "Contenido inapropiado" },
+                    { 2, new DateTime(2024, 3, 16, 14, 45, 0, 0, DateTimeKind.Utc), "Información engañosa o fraudulenta" },
+                    { 3, new DateTime(2024, 3, 17, 9, 15, 0, 0, DateTimeKind.Utc), "Comportamiento sospechoso" },
+                    { 4, new DateTime(2024, 3, 18, 16, 20, 0, 0, DateTimeKind.Utc), "Producto no coincide con la descripción" }
+                });
 
             migrationBuilder.InsertData(
                 table: "roles",
@@ -458,6 +539,15 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "usuario_reporte",
+                columns: new[] { "id_usuario_reporte", "reporte_id", "usuario_id" },
+                values: new object[,]
+                {
+                    { 1, 1, 1 },
+                    { 2, 3, 2 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "categorias_producto",
                 columns: new[] { "id_categoria_producto", "categoria_id", "producto_id" },
                 values: new object[,]
@@ -483,7 +573,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 columns: new[] { "id_evaluacion", "comentario", "fecha_creacion", "producto_id", "puntacion", "titulo_evaluacion", "usuario_evaluador_id", "usuario_id" },
                 values: new object[,]
                 {
-                    { 1, "Buen producto", new DateTime(2025, 3, 27, 8, 37, 36, 942, DateTimeKind.Local).AddTicks(1307), 1, 5, "Evaluación del producto 1", 2, 1 },
+                    { 1, "Buen producto", new DateTime(2025, 3, 29, 19, 17, 12, 43, DateTimeKind.Local).AddTicks(2788), 1, 5, "Evaluación del producto 1", 2, 1 },
                     { 2, "Buena calidad", new DateTime(2025, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 4, "Evaluación del producto 2", 1, 2 }
                 });
 
@@ -506,6 +596,15 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 {
                     { 1, new DateTime(2025, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 2, 1 },
                     { 2, new DateTime(2025, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 1, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "producto_reporte",
+                columns: new[] { "id_producto_reporte", "producto_id", "reporte_id" },
+                values: new object[,]
+                {
+                    { 1, 1, 2 },
+                    { 2, 3, 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -595,6 +694,16 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_producto_reporte_producto_id",
+                table: "producto_reporte",
+                column: "producto_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_producto_reporte_reporte_id",
+                table: "producto_reporte",
+                column: "reporte_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_productos_usuario_id",
                 table: "productos",
                 column: "usuario_id");
@@ -602,6 +711,16 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_refresh_tokens_usuario_id",
                 table: "refresh_tokens",
+                column: "usuario_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_usuario_reporte_reporte_id",
+                table: "usuario_reporte",
+                column: "reporte_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_usuario_reporte_usuario_id",
+                table: "usuario_reporte",
                 column: "usuario_id");
 
             migrationBuilder.CreateIndex(
@@ -641,7 +760,13 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 name: "perfiles");
 
             migrationBuilder.DropTable(
+                name: "producto_reporte");
+
+            migrationBuilder.DropTable(
                 name: "refresh_tokens");
+
+            migrationBuilder.DropTable(
+                name: "usuario_reporte");
 
             migrationBuilder.DropTable(
                 name: "categorias");
@@ -651,6 +776,9 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "productos");
+
+            migrationBuilder.DropTable(
+                name: "reportes");
 
             migrationBuilder.DropTable(
                 name: "usuarios");

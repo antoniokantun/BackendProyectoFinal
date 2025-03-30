@@ -1,10 +1,5 @@
 ﻿using BackendProyectoFinal.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Infrastructure.Persistence.Data
 {
@@ -384,6 +379,65 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                 }
             );
 
+            // Seed para Reportes
+            modelBuilder.Entity<Reporte>().HasData(
+                new Reporte
+                {
+                    IdReporte = 1,
+                    MotivoReporte = "Contenido inapropiado",
+                    FechaReporte = new DateTime(2024, 3, 15, 10, 30, 0, DateTimeKind.Utc)
+                },
+                new Reporte
+                {
+                    IdReporte = 2,
+                    MotivoReporte = "Información engañosa o fraudulenta",
+                    FechaReporte = new DateTime(2024, 3, 16, 14, 45, 0, DateTimeKind.Utc)
+                },
+                new Reporte
+                {
+                    IdReporte = 3,
+                    MotivoReporte = "Comportamiento sospechoso",
+                    FechaReporte = new DateTime(2024, 3, 17, 9, 15, 0, DateTimeKind.Utc)
+                },
+                new Reporte
+                {
+                    IdReporte = 4,
+                    MotivoReporte = "Producto no coincide con la descripción",
+                    FechaReporte = new DateTime(2024, 3, 18, 16, 20, 0, DateTimeKind.Utc)
+                }
+            );
+
+            // Seed para UsuarioReporte (asumiendo que ya tienes usuarios con IDs 1 y 2)
+            modelBuilder.Entity<UsuarioReporte>().HasData(
+                new UsuarioReporte
+                {
+                    IdUsuarioReporte = 1,
+                    UsuarioId = 1, // Asegúrate de que exista un usuario con ID 1
+                    ReporteId = 1
+                },
+                new UsuarioReporte
+                {
+                    IdUsuarioReporte = 2,
+                    UsuarioId = 2, // Asegúrate de que exista un usuario con ID 2
+                    ReporteId = 3
+                }
+            );
+
+            // Seed para ProductoReporte (asumiendo que ya tienes productos con IDs 1 y 3)
+            modelBuilder.Entity<ProductoReporte>().HasData(
+                new ProductoReporte
+                {
+                    IdProductoReporte = 1,
+                    ProductoId = 1, // Asegúrate de que exista un producto con ID 1
+                    ReporteId = 2
+                },
+                new ProductoReporte
+                {
+                    IdProductoReporte = 2,
+                    ProductoId = 3, // Asegúrate de que exista un producto con ID 3
+                    ReporteId = 4
+                }
+            );
 
             // Seed LogErrores
             modelBuilder.Entity<LogError>().HasData(

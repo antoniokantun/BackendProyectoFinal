@@ -119,10 +119,11 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IImagenRepository, ImagenRepository>();
 builder.Services.AddScoped<IImagenProductoRepository, ImagenProductoRepository>();
 builder.Services.AddScoped<ICategoriaProductoRepository, CategoriaProductoRepository>();
-
-
-
+builder.Services.AddScoped<IReporteRepository, ReporteRepository>();
+builder.Services.AddScoped<IProductoReporteRepository, ProductoReporteRepository>();
+builder.Services.AddScoped<IUsuarioReporteRepository, UsuarioReporteRepository>();
 builder.Services.AddScoped<ILogErrorRepository, LogErrorRepository>();
+
 
 
 // Register application services
@@ -134,12 +135,11 @@ builder.Services.AddScoped<IProductoService, ProductoService>();
 builder.Services.AddScoped<IEvaluacionService, EvaluacionService>();
 builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IReporteService, ReporteService>();
+
 
 builder.Services.AddScoped<IGenericRepository<RefreshToken>, GenericRepository<RefreshToken>>();
-
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 //builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ILogErrorService, LogErrorService>();

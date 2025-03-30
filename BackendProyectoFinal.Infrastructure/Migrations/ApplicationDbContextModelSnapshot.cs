@@ -301,7 +301,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         {
                             IdEvaluacion = 1,
                             Comentario = "Buen producto",
-                            FechaCreacion = new DateTime(2025, 3, 27, 8, 37, 36, 942, DateTimeKind.Local).AddTicks(1307),
+                            FechaCreacion = new DateTime(2025, 3, 29, 19, 17, 12, 43, DateTimeKind.Local).AddTicks(2788),
                             ProductoId = 1,
                             Puntuacion = 5,
                             TituloEvaluacion = "Evaluación del producto 1",
@@ -730,6 +730,46 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.ProductoReporte", b =>
+                {
+                    b.Property<int>("IdProductoReporte")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id_producto_reporte");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IdProductoReporte"));
+
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("int")
+                        .HasColumnName("producto_id");
+
+                    b.Property<int>("ReporteId")
+                        .HasColumnType("int")
+                        .HasColumnName("reporte_id");
+
+                    b.HasKey("IdProductoReporte");
+
+                    b.HasIndex("ProductoId");
+
+                    b.HasIndex("ReporteId");
+
+                    b.ToTable("producto_reporte");
+
+                    b.HasData(
+                        new
+                        {
+                            IdProductoReporte = 1,
+                            ProductoId = 1,
+                            ReporteId = 2
+                        },
+                        new
+                        {
+                            IdProductoReporte = 2,
+                            ProductoId = 3,
+                            ReporteId = 4
+                        });
+                });
+
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.RefreshToken", b =>
                 {
                     b.Property<int>("IdToken")
@@ -765,6 +805,56 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("refresh_tokens");
+                });
+
+            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Reporte", b =>
+                {
+                    b.Property<int>("IdReporte")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id_reporte");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IdReporte"));
+
+                    b.Property<DateTime>("FechaReporte")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("fecha_reporte");
+
+                    b.Property<string>("MotivoReporte")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)")
+                        .HasColumnName("motivo_reporte");
+
+                    b.HasKey("IdReporte");
+
+                    b.ToTable("reportes");
+
+                    b.HasData(
+                        new
+                        {
+                            IdReporte = 1,
+                            FechaReporte = new DateTime(2024, 3, 15, 10, 30, 0, 0, DateTimeKind.Utc),
+                            MotivoReporte = "Contenido inapropiado"
+                        },
+                        new
+                        {
+                            IdReporte = 2,
+                            FechaReporte = new DateTime(2024, 3, 16, 14, 45, 0, 0, DateTimeKind.Utc),
+                            MotivoReporte = "Información engañosa o fraudulenta"
+                        },
+                        new
+                        {
+                            IdReporte = 3,
+                            FechaReporte = new DateTime(2024, 3, 17, 9, 15, 0, 0, DateTimeKind.Utc),
+                            MotivoReporte = "Comportamiento sospechoso"
+                        },
+                        new
+                        {
+                            IdReporte = 4,
+                            FechaReporte = new DateTime(2024, 3, 18, 16, 20, 0, 0, DateTimeKind.Utc),
+                            MotivoReporte = "Producto no coincide con la descripción"
+                        });
                 });
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Rol", b =>
@@ -913,6 +1003,46 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                             Reportado = false,
                             RolId = 2,
                             Telefono = "1119876543"
+                        });
+                });
+
+            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.UsuarioReporte", b =>
+                {
+                    b.Property<int>("IdUsuarioReporte")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id_usuario_reporte");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IdUsuarioReporte"));
+
+                    b.Property<int>("ReporteId")
+                        .HasColumnType("int")
+                        .HasColumnName("reporte_id");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int")
+                        .HasColumnName("usuario_id");
+
+                    b.HasKey("IdUsuarioReporte");
+
+                    b.HasIndex("ReporteId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("usuario_reporte");
+
+                    b.HasData(
+                        new
+                        {
+                            IdUsuarioReporte = 1,
+                            ReporteId = 1,
+                            UsuarioId = 1
+                        },
+                        new
+                        {
+                            IdUsuarioReporte = 2,
+                            ReporteId = 3,
+                            UsuarioId = 2
                         });
                 });
 
@@ -1069,6 +1199,25 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.ProductoReporte", b =>
+                {
+                    b.HasOne("BackendProyectoFinal.Domain.Entities.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BackendProyectoFinal.Domain.Entities.Reporte", "Reporte")
+                        .WithMany("ProductoReportes")
+                        .HasForeignKey("ReporteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Producto");
+
+                    b.Navigation("Reporte");
+                });
+
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.RefreshToken", b =>
                 {
                     b.HasOne("BackendProyectoFinal.Domain.Entities.Usuario", "Usuario")
@@ -1091,6 +1240,25 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.Navigation("Rol");
                 });
 
+            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.UsuarioReporte", b =>
+                {
+                    b.HasOne("BackendProyectoFinal.Domain.Entities.Reporte", "Reporte")
+                        .WithMany("UsuarioReportes")
+                        .HasForeignKey("ReporteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BackendProyectoFinal.Domain.Entities.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Reporte");
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Comentario", b =>
                 {
                     b.Navigation("ComentariosHijos");
@@ -1101,6 +1269,13 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.Navigation("CategoriaProductos");
 
                     b.Navigation("ImagenProductos");
+                });
+
+            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Reporte", b =>
+                {
+                    b.Navigation("ProductoReportes");
+
+                    b.Navigation("UsuarioReportes");
                 });
 #pragma warning restore 612, 618
         }
