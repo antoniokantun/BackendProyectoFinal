@@ -7,6 +7,13 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
     {
         public static void Seed(ModelBuilder modelBuilder)
         {
+            // Seed Estados
+            modelBuilder.Entity<Estado>().HasData(
+                new Estado { IdEstado = 1, Nombre = "Pendiente" },
+                new Estado { IdEstado = 2, Nombre = "Completado" },
+                new Estado { IdEstado = 3, Nombre = "Cancelado" }
+            );
+
             // Seed Roles
             modelBuilder.Entity<Rol>().HasData(
                 new Rol { IdRol = 1, NombreRol = "Administrador" },
@@ -367,7 +374,8 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     UsuarioSolicitanteId = 1,
                     UsuarioOfertanteId = 2,
                     ProductoId = 1,
-                    FechaRegistro = new DateTime(2025, 3, 1)
+                    FechaRegistro = new DateTime(2025, 3, 1),
+                    EstadoId = 1
                 },
                 new Intercambio
                 {
@@ -375,7 +383,8 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                     UsuarioSolicitanteId = 2,
                     UsuarioOfertanteId = 1,
                     ProductoId = 2,
-                    FechaRegistro = new DateTime(2025, 3, 5)
+                    FechaRegistro = new DateTime(2025, 3, 5),
+                    EstadoId = 1
                 }
             );
 

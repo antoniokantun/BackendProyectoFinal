@@ -24,7 +24,7 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
         public DbSet<Perfil> Perfiles { get; set; }
         public DbSet<Evaluacion> Evaluaciones { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
-
+        public DbSet<Estado> Estados { get; set; }
         public DbSet<Reporte> Reportes { get; set; }
         public DbSet<UsuarioReporte> UsuarioReportes { get; set; }
         public DbSet<ProductoReporte> ProductoReportes { get; set; }
@@ -68,6 +68,12 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                 .HasOne(i => i.UsuarioOfertante)
                 .WithMany()
                 .HasForeignKey(i => i.UsuarioOfertanteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Intercambio>()
+                .HasOne(i => i.Estado)
+                .WithMany(e => e.Intercambios)
+                .HasForeignKey(i => i.EstadoId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Configurar relación para productos

@@ -246,6 +246,43 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Estado", b =>
+                {
+                    b.Property<int>("IdEstado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id_estado");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IdEstado"));
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("nombre");
+
+                    b.HasKey("IdEstado");
+
+                    b.ToTable("estados");
+
+                    b.HasData(
+                        new
+                        {
+                            IdEstado = 1,
+                            Nombre = "Pendiente"
+                        },
+                        new
+                        {
+                            IdEstado = 2,
+                            Nombre = "Completado"
+                        },
+                        new
+                        {
+                            IdEstado = 3,
+                            Nombre = "Cancelado"
+                        });
+                });
+
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Evaluacion", b =>
                 {
                     b.Property<int>("IdEvaluacion")
@@ -301,7 +338,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         {
                             IdEvaluacion = 1,
                             Comentario = "Buen producto",
-                            FechaCreacion = new DateTime(2025, 3, 29, 19, 17, 12, 43, DateTimeKind.Local).AddTicks(2788),
+                            FechaCreacion = new DateTime(2025, 3, 30, 0, 2, 52, 148, DateTimeKind.Local).AddTicks(3330),
                             ProductoId = 1,
                             Puntuacion = 5,
                             TituloEvaluacion = "Evaluación del producto 1",
@@ -435,6 +472,10 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IdIntercambio"));
 
+                    b.Property<int?>("EstadoId")
+                        .HasColumnType("int")
+                        .HasColumnName("estado_id");
+
                     b.Property<DateTime>("FechaRegistro")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("fecha_registro");
@@ -453,6 +494,8 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
                     b.HasKey("IdIntercambio");
 
+                    b.HasIndex("EstadoId");
+
                     b.HasIndex("ProductoId");
 
                     b.HasIndex("UsuarioOfertanteId");
@@ -465,6 +508,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         new
                         {
                             IdIntercambio = 1,
+                            EstadoId = 1,
                             FechaRegistro = new DateTime(2025, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ProductoId = 1,
                             UsuarioOfertanteId = 2,
@@ -473,6 +517,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         new
                         {
                             IdIntercambio = 2,
+                            EstadoId = 1,
                             FechaRegistro = new DateTime(2025, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ProductoId = 2,
                             UsuarioOfertanteId = 1,
@@ -1143,6 +1188,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Intercambio", b =>
                 {
+                    b.HasOne("BackendProyectoFinal.Domain.Entities.Estado", "Estado")
+                        .WithMany("Intercambios")
+                        .HasForeignKey("EstadoId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("BackendProyectoFinal.Domain.Entities.Producto", "Producto")
                         .WithMany()
                         .HasForeignKey("ProductoId")
@@ -1160,6 +1210,8 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .HasForeignKey("UsuarioSolicitanteId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Estado");
 
                     b.Navigation("Producto");
 
@@ -1262,6 +1314,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Comentario", b =>
                 {
                     b.Navigation("ComentariosHijos");
+                });
+
+            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Estado", b =>
+                {
+                    b.Navigation("Intercambios");
                 });
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Producto", b =>

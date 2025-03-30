@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace BackendProyectoFinal.Application.DTOs
 {
     public class IntercambioDTO
@@ -13,6 +8,7 @@ namespace BackendProyectoFinal.Application.DTOs
         public int UsuarioOfertanteId { get; set; }
         public int ProductoId { get; set; }
         public DateTime FechaRegistro { get; set; }
+        public int? EstadoId { get; set; }
     }
 
     public class CreateIntercambioDTO
@@ -20,6 +16,7 @@ namespace BackendProyectoFinal.Application.DTOs
         public int UsuarioSolicitanteId { get; set; }
         public int UsuarioOfertanteId { get; set; }
         public int ProductoId { get; set; }
+        public int? EstadoId { get; set; }
     }
 
     public class UpdateIntercambioDTO
@@ -27,5 +24,6 @@ namespace BackendProyectoFinal.Application.DTOs
         public int UsuarioSolicitanteId { get; set; }
         public int UsuarioOfertanteId { get; set; }
         public int ProductoId { get; set; }
+        public int? EstadoId { get; set; }
     }
 }

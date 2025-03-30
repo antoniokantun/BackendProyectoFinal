@@ -122,6 +122,7 @@ builder.Services.AddScoped<ICategoriaProductoRepository, CategoriaProductoReposi
 builder.Services.AddScoped<IReporteRepository, ReporteRepository>();
 builder.Services.AddScoped<IProductoReporteRepository, ProductoReporteRepository>();
 builder.Services.AddScoped<IUsuarioReporteRepository, UsuarioReporteRepository>();
+builder.Services.AddScoped<IEstadoRepository, EstadoRepository>();
 builder.Services.AddScoped<ILogErrorRepository, LogErrorRepository>();
 
 
@@ -136,7 +137,7 @@ builder.Services.AddScoped<IEvaluacionService, EvaluacionService>();
 builder.Services.AddScoped<IRolService, RolService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IReporteService, ReporteService>();
-
+builder.Services.AddScoped<IEstadoService, EstadoService>();
 
 builder.Services.AddScoped<IGenericRepository<RefreshToken>, GenericRepository<RefreshToken>>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -200,7 +201,6 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 logger.LogInformation($"Configurando Static Files para servir desde: {uploadsPath} bajo la ruta: /images");
-
 
 
 app.UseCors("AllowSpecificOrigin");

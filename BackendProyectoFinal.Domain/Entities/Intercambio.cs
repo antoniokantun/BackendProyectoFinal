@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Domain.Entities
 {
@@ -36,5 +32,10 @@ namespace BackendProyectoFinal.Domain.Entities
         [Required]
         [Column("fecha_registro")]
         public DateTime FechaRegistro { get; set; }
+
+        [ForeignKey("Estado")]
+        [Column("estado_id")]
+        public int? EstadoId { get; set; }
+        public Estado Estado { get; set; } = null!;
     }
 }

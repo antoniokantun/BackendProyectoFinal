@@ -2,12 +2,6 @@
 using BackendProyectoFinal.Application.Interfaces;
 using BackendProyectoFinal.Domain.Entities;
 using BackendProyectoFinal.Domain.Interfaces;
-using BackendProyectoFinal.Domain.Interfaces.IServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Application.Services
 {
@@ -43,7 +37,8 @@ namespace BackendProyectoFinal.Application.Services
                 UsuarioSolicitanteId = createDto.UsuarioSolicitanteId,
                 UsuarioOfertanteId = createDto.UsuarioOfertanteId,
                 ProductoId = createDto.ProductoId,
-                FechaRegistro = DateTime.Now
+                FechaRegistro = DateTime.Now,
+                EstadoId = createDto.EstadoId
             };
 
             var createdIntercambio = await _intercambioRepository.AddAsync(intercambio);
@@ -61,6 +56,7 @@ namespace BackendProyectoFinal.Application.Services
             existingIntercambio.UsuarioSolicitanteId = updateDto.UsuarioSolicitanteId;
             existingIntercambio.UsuarioOfertanteId = updateDto.UsuarioOfertanteId;
             existingIntercambio.ProductoId = updateDto.ProductoId;
+            existingIntercambio.EstadoId = updateDto.EstadoId;
 
             await _intercambioRepository.UpdateAsync(existingIntercambio);
         }
@@ -102,7 +98,8 @@ namespace BackendProyectoFinal.Application.Services
                 UsuarioSolicitanteId = intercambio.UsuarioSolicitanteId,
                 UsuarioOfertanteId = intercambio.UsuarioOfertanteId,
                 ProductoId = intercambio.ProductoId,
-                FechaRegistro = intercambio.FechaRegistro
+                FechaRegistro = intercambio.FechaRegistro,
+                EstadoId = intercambio.EstadoId
             };
         }
     }

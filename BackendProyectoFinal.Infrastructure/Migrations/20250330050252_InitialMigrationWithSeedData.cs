@@ -35,6 +35,21 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "estados",
+                columns: table => new
+                {
+                    id_estado = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    nombre = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_estados", x => x.id_estado);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "imagenes",
                 columns: table => new
                 {
@@ -394,11 +409,18 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     usuario_solicitante_id = table.Column<int>(type: "int", nullable: false),
                     usuario_ofertante_id = table.Column<int>(type: "int", nullable: false),
                     producto_id = table.Column<int>(type: "int", nullable: false),
-                    fecha_registro = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    fecha_registro = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    estado_id = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_intercambios", x => x.id_intercambio);
+                    table.ForeignKey(
+                        name: "FK_intercambios_estados_estado_id",
+                        column: x => x.estado_id,
+                        principalTable: "estados",
+                        principalColumn: "id_estado",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_intercambios_productos_producto_id",
                         column: x => x.producto_id,
@@ -460,6 +482,16 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     { 6, "https://images.unsplash.com/photo-1587654780291-39c9404d746b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Juguetes" },
                     { 7, "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Muebles" },
                     { 8, "https://images.unsplash.com/photo-1581783898377-1c85bf937427?q=80&w=1015&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "Herramientas" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "estados",
+                columns: new[] { "id_estado", "nombre" },
+                values: new object[,]
+                {
+                    { 1, "Pendiente" },
+                    { 2, "Completado" },
+                    { 3, "Cancelado" }
                 });
 
             migrationBuilder.InsertData(
@@ -573,7 +605,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 columns: new[] { "id_evaluacion", "comentario", "fecha_creacion", "producto_id", "puntacion", "titulo_evaluacion", "usuario_evaluador_id", "usuario_id" },
                 values: new object[,]
                 {
-                    { 1, "Buen producto", new DateTime(2025, 3, 29, 19, 17, 12, 43, DateTimeKind.Local).AddTicks(2788), 1, 5, "Evaluación del producto 1", 2, 1 },
+                    { 1, "Buen producto", new DateTime(2025, 3, 30, 0, 2, 52, 148, DateTimeKind.Local).AddTicks(3330), 1, 5, "Evaluación del producto 1", 2, 1 },
                     { 2, "Buena calidad", new DateTime(2025, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 4, "Evaluación del producto 2", 1, 2 }
                 });
 
@@ -591,11 +623,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "intercambios",
-                columns: new[] { "id_intercambio", "fecha_registro", "producto_id", "usuario_ofertante_id", "usuario_solicitante_id" },
+                columns: new[] { "id_intercambio", "estado_id", "fecha_registro", "producto_id", "usuario_ofertante_id", "usuario_solicitante_id" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 2, 1 },
-                    { 2, new DateTime(2025, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 1, 2 }
+                    { 1, 1, new DateTime(2025, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 2, 1 },
+                    { 2, 1, new DateTime(2025, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 1, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -666,6 +698,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 name: "IX_imagenes_producto_producto_id",
                 table: "imagenes_producto",
                 column: "producto_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_intercambios_estado_id",
+                table: "intercambios",
+                column: "estado_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_intercambios_producto_id",
@@ -773,6 +810,9 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "imagenes");
+
+            migrationBuilder.DropTable(
+                name: "estados");
 
             migrationBuilder.DropTable(
                 name: "productos");
