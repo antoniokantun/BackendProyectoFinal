@@ -550,5 +550,87 @@ namespace BackendProyectoFinal.Application.Services
 
         }
 
+        public async Task UpdateProductoParcialAsync(ProductPatchDTO productoUpdateDto)
+        {
+            // 1. Verificar si el producto existe
+            var existingProducto = await _productoRepository.GetByIdAsync(productoUpdateDto.IdProducto);
+            if (existingProducto == null)
+                throw new KeyNotFoundException($"Producto con ID {productoUpdateDto.IdProducto} no encontrado.");
+
+            // 2. Actualizar campos básicos del producto (si se proporcionan)
+            if (productoUpdateDto.Nombre != null)
+                existingProducto.Nombre = productoUpdateDto.Nombre;
+            if (productoUpdateDto.Descripcion != null)
+                existingProducto.Descripcion = productoUpdateDto.Descripcion;
+            if (productoUpdateDto.Intercambio.HasValue)
+                existingProducto.Intercambio = productoUpdateDto.Intercambio.Value;
+
+            await _productoRepository.UpdateAsync(existingProducto);
+
+            // 3. Actualizar imágenes (si se proporcionan)
+            if (productoUpdateDto.Imagenes != null)
+            {
+                // 3.1 Obtener las relaciones de imágenes actuales
+                var imagenesProductoActuales = await _imagenProductoRepository.GetByProductoIdAsync(productoUpdateDto.IdProducto);
+
+                // 3.2 Eliminar las relaciones y las imágenes actuales
+                foreach (var imagenProducto in imagenesProductoActuales)
+                {
+                    await _imagenProductoRepository.DeleteAsync(imagenProducto.IdImagenProducto);
+                    await _imagenRepository.DeleteAsync(await _imagenRepository.GetByIdAsync(imagenProducto.ImagenId));
+                }
+
+                // 3.3 Agregar las nuevas imágenes
+                foreach (var imagenDto in productoUpdateDto.Imagenes)
+                {
+                    // Crear la imagen
+                    var imagen = new Imagen
+                    {
+                        UrlImagen = imagenDto.UrlImagen
+                    };
+                    var createdImagen = await _imagenRepository.AddAsync(imagen);
+
+                    // Crear la relación entre producto e imagen
+                    var imagenProducto = new ImagenProducto
+                    {
+                        ProductoId = productoUpdateDto.IdProducto,
+                        ImagenId = createdImagen.IdImagen
+                    };
+                    await _imagenProductoRepository.AddAsync(imagenProducto);
+                }
+            }
+
+            if (productoUpdateDto.CategoriasIds != null)
+            {
+                // 4.1 Obtener las relaciones de categorías actuales
+                var categoriasProductoActuales = await _categoriaProductoRepository.GetByProductoIdAsync(productoUpdateDto.IdProducto);
+
+                // 4.2 Eliminar las relaciones actuales
+                foreach (var categoriaProducto in categoriasProductoActuales)
+                {
+                    await _categoriaProductoRepository.DeleteAsync(categoriaProducto.IdCategoriaProducto);
+                }
+
+                // 4.3 Agregar las nuevas categorías
+                foreach (var categoriaId in productoUpdateDto.CategoriasIds) // Cambiamos a categoriaId
+                {
+                    // Verificar si la categoría existe
+                    var categoria = await _categoriaRepository.GetByIdAsync(categoriaId);
+                    if (categoria == null)
+                        continue;
+
+                    // Crear la relación entre producto y categoría
+                    var categoriaProducto = new CategoriaProducto
+                    {
+                        ProductoId = productoUpdateDto.IdProducto,
+                        CategoriaId = categoriaId // Usamos categoriaId directamente
+                    };
+                    await _categoriaProductoRepository.AddAsync(categoriaProducto);
+                }
+            }
+        }
+
+
+
     }
 }

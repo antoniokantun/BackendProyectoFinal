@@ -9,5 +9,6 @@ namespace BackendProyectoFinal.Domain.Interfaces
 {
     public interface IImagenRepository : IGenericRepository<Imagen>
     {
+        Task DeleteAsync(Imagen imagen);
     }
 }

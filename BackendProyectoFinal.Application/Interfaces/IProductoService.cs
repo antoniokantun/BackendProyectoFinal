@@ -25,6 +25,9 @@ namespace BackendProyectoFinal.Application.Interfaces
 
         Task UpdateProductReport(ProductReportDTO productReportDTO);
 
-        
+        Task UpdateProductoParcialAsync(ProductPatchDTO productoUpdateDto);
+
+
+
     }
 }

@@ -9,6 +9,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
     [ApiController]
     public class ProductoController : ControllerBase
     {
+        private readonly ICategoriaService _categoriaService;
         private readonly IProductoService _productoService;
         private readonly IErrorHandlingService _errorHandlingService;
         private readonly ILogger<ProductoController> _logger;
@@ -296,6 +297,52 @@ namespace BackendProyectoFinal.Presentation.Controllers
             {
                 // Log the error
                 return StatusCode(500, "Error interno del servidor.");
+            }
+        }
+
+        [HttpPatch("producto-update-parcial/{id}")]
+        public async Task<ActionResult> UpdateProductoParcial(int id, [FromForm] ProductoUpdateForm productoForm)
+        {
+            if (id != productoForm.IdProducto)
+            {
+                return BadRequest("El ID del producto en la ruta no coincide con el ID en el cuerpo de la solicitud.");
+            }
+
+            try
+            {
+                // Procesar imágenes
+                var imagenesDto = new List<ImagenDTO>();
+                if (productoForm.Imagenes != null)
+                {
+                    foreach (var imagen in productoForm.Imagenes)
+                    {
+                        var url = await _fileStorageService.SaveFileAsync(imagen, "productos");
+                        imagenesDto.Add(new ImagenDTO { UrlImagen = url });
+                    }
+                }
+
+                // Crear ProductPatchDTO
+                var productoUpdateDto = new ProductPatchDTO
+                {
+                    IdProducto = productoForm.IdProducto,
+                    Nombre = productoForm.Nombre,
+                    Descripcion = productoForm.Descripcion,
+                    Intercambio = productoForm.Intercambio,
+                    CategoriasIds = productoForm.CategoriasIds, // Usamos directamente CategoriasIds
+                    Imagenes = imagenesDto
+                };
+
+                await _productoService.UpdateProductoParcialAsync(productoUpdateDto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                await _errorHandlingService.LogErrorAsync(ex, nameof(UpdateProductoParcial));
+                return StatusCode(500, "Ocurrió un error interno al actualizar el producto.");
             }
         }
 
