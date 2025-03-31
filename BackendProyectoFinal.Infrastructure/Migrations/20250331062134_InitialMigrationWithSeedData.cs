@@ -605,7 +605,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 columns: new[] { "id_evaluacion", "comentario", "fecha_creacion", "producto_id", "puntacion", "titulo_evaluacion", "usuario_evaluador_id", "usuario_id" },
                 values: new object[,]
                 {
-                    { 1, "Buen producto", new DateTime(2025, 3, 30, 0, 2, 52, 148, DateTimeKind.Local).AddTicks(3330), 1, 5, "Evaluación del producto 1", 2, 1 },
+                    { 1, "Buen producto", new DateTime(2025, 3, 31, 1, 21, 34, 496, DateTimeKind.Local).AddTicks(2892), 1, 5, "Evaluación del producto 1", 2, 1 },
                     { 2, "Buena calidad", new DateTime(2025, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 4, "Evaluación del producto 2", 1, 2 }
                 });
 

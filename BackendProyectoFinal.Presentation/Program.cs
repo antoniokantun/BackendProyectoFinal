@@ -109,7 +109,6 @@ builder.Services.AddAuthorization();
 
 // Register repositories
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
-builder.Services.AddScoped<IComentarioRepository, ComentarioRepository>();
 builder.Services.AddScoped<IIntercambioRepository, IntercambioRepository>();
 builder.Services.AddScoped<IPerfilRepository, PerfilRepository>();
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
@@ -129,7 +128,6 @@ builder.Services.AddScoped<ILogErrorRepository, LogErrorRepository>();
 
 // Register application services
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
-builder.Services.AddScoped<IComentarioService, ComentarioService>();
 builder.Services.AddScoped<IIntercambioService, IntercambioService>();
 builder.Services.AddScoped<IPerfilService, PerfilService>();
 builder.Services.AddScoped<IProductoService, ProductoService>();

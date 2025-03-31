@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackendProyectoFinal.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250330050252_InitialMigrationWithSeedData")]
+    [Migration("20250331062134_InitialMigrationWithSeedData")]
     partial class InitialMigrationWithSeedData
     {
         /// <inheritdoc />
@@ -341,7 +341,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         {
                             IdEvaluacion = 1,
                             Comentario = "Buen producto",
-                            FechaCreacion = new DateTime(2025, 3, 30, 0, 2, 52, 148, DateTimeKind.Local).AddTicks(3330),
+                            FechaCreacion = new DateTime(2025, 3, 31, 1, 21, 34, 496, DateTimeKind.Local).AddTicks(2892),
                             ProductoId = 1,
                             Puntuacion = 5,
                             TituloEvaluacion = "Evaluación del producto 1",

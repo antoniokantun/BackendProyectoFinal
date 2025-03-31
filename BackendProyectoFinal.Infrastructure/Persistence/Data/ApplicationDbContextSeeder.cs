@@ -318,27 +318,7 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                                  
             );
 
-            // Seed Comentarios
-            modelBuilder.Entity<Comentario>().HasData(
-                new Comentario
-                {
-                    IdComentario = 1,
-                    Contenido = "¿Está disponible para intercambio?",
-                    UsuarioId = 1,
-                    ProductoId = 1,
-                    FechaCreacion = new DateTime(2025, 2, 16),
-                    ComentarioPadreId = null
-                },
-                new Comentario
-                {
-                    IdComentario = 2,
-                    Contenido = "Sí, disponible para intercambio",
-                    UsuarioId = 2,
-                    ProductoId = 1,
-                    FechaCreacion = new DateTime(2025, 2, 17),
-                    ComentarioPadreId = 1
-                }
-            );
+            
 
             // Seed Evaluaciones
             modelBuilder.Entity<Evaluacion>().HasData(
