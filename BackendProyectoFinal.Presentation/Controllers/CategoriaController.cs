@@ -34,7 +34,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
             return userIdClaim != null ? int.Parse(userIdClaim) : null;
         }
 
-        // Endpoints existentes...
         // GET: api/Categoria
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategorias()
@@ -46,18 +45,9 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                // Registrar el error en la base de datos
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(GetCategorias),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al obtener las categorías"
-                );
+                // Usar el nuevo servicio simplificado de logs
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener las categorías");
             }
         }
 
@@ -72,33 +62,18 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                // Registrar error de no encontrado con severidad de Advertencia
-                await _errorHandlingService.LogErrorAsync(
-                    ex.Message,
-                    nameof(GetCategoria),
-                    "Advertencia",
-                    GetCurrentUserId()
-                );
+                // Registrar error de no encontrado
+                await _errorHandlingService.LogCustomErrorAsync(ex.Message, "Backend");
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                // Registrar otros errores en la base de datos
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(GetCategoria),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al obtener la categoría"
-                );
+                // Registrar otros errores
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener la categoría");
             }
         }
 
-        // Nuevo endpoint para crear categoría con imagen
         // POST: api/Categoria/con-imagen
         [HttpPost("con-imagen")]
         public async Task<ActionResult<CategoriaDTO>> PostCategoriaConImagen([FromForm] CategoriaCreateForm categoriaForm)
@@ -107,12 +82,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    await _errorHandlingService.LogErrorAsync(
-                        "Modelo de creación de categoría inválido",
-                        nameof(PostCategoriaConImagen),
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
+                    await _errorHandlingService.LogCustomErrorAsync("Modelo de creación de categoría inválido", "Backend");
                     return BadRequest(ModelState);
                 }
 
@@ -124,12 +94,14 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
                     if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
                     {
+                        await _errorHandlingService.LogCustomErrorAsync("Formato de imagen no válido", "Backend");
                         return BadRequest("El archivo debe ser una imagen (jpg, jpeg, png o gif).");
                     }
 
                     // Verificar tamaño máximo (por ejemplo, 5MB)
                     if (categoriaForm.Imagen.Length > 5 * 1024 * 1024)
                     {
+                        await _errorHandlingService.LogCustomErrorAsync("Imagen demasiado grande", "Backend");
                         return BadRequest("La imagen no puede exceder los 5MB.");
                     }
                 }
@@ -139,21 +111,11 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(PostCategoriaConImagen),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al crear la categoría con imagen"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al crear la categoría con imagen");
             }
         }
 
-        // Nuevo endpoint para actualizar categoría con imagen
         // PUT: api/Categoria/con-imagen/5
         [HttpPut("con-imagen/{id}")]
         public async Task<ActionResult<CategoriaDTO>> PutCategoriaConImagen([FromForm] CategoriaEditForm categoriaForm)
@@ -162,12 +124,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    await _errorHandlingService.LogErrorAsync(
-                        "Modelo de actualización de categoría inválido",
-                        nameof(PutCategoriaConImagen),
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
+                    await _errorHandlingService.LogCustomErrorAsync("Modelo de actualización de categoría inválido", "Backend");
                     return BadRequest(ModelState);
                 }
 
@@ -179,12 +136,14 @@ namespace BackendProyectoFinal.Presentation.Controllers
 
                     if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
                     {
+                        await _errorHandlingService.LogCustomErrorAsync("Formato de imagen no válido", "Backend");
                         return BadRequest("El archivo debe ser una imagen (jpg, jpeg, png o gif).");
                     }
 
                     // Verificar tamaño máximo (por ejemplo, 5MB)
                     if (categoriaForm.NuevaImagen.Length > 5 * 1024 * 1024)
                     {
+                        await _errorHandlingService.LogCustomErrorAsync("Imagen demasiado grande", "Backend");
                         return BadRequest("La imagen no puede exceder los 5MB.");
                     }
                 }
@@ -194,27 +153,13 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                await _errorHandlingService.LogErrorAsync(
-                    ex.Message,
-                    nameof(PutCategoriaConImagen),
-                    "Advertencia",
-                    GetCurrentUserId()
-                );
+                await _errorHandlingService.LogCustomErrorAsync(ex.Message, "Backend");
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(PutCategoriaConImagen),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al actualizar la categoría con imagen"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar la categoría con imagen");
             }
         }
     }

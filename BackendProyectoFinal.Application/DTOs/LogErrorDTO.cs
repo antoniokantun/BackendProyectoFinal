@@ -12,8 +12,11 @@ namespace BackendProyectoFinal.Application.DTOs
         public string Mensaje { get; set; } = string.Empty;
         public DateTime FechaOcurrencia { get; set; }
         public string Origen { get; set; } = string.Empty;
-        public string Severidad { get; set; } = string.Empty;
-        public string? StackTrace { get; set; }
-        public int? UsuarioId { get; set; }
+    }
+
+    public class CreateLogErrorDTO
+    {
+        public string Mensaje { get; set; } = string.Empty;
+        public string Origen { get; set; } = string.Empty;
     }
 }

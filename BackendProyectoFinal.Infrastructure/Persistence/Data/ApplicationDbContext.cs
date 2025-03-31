@@ -18,7 +18,6 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
         public DbSet<CategoriaProducto> CategoriasProducto { get; set; }
         public DbSet<Imagen> Imagenes { get; set; }
         public DbSet<ImagenProducto> ImagenesProducto { get; set; }
-        public DbSet<Comentario> Comentarios { get; set; }
         public DbSet<Intercambio> Intercambios { get; set; }
         public DbSet<LogError> LogErrores { get; set; }
         public DbSet<Perfil> Perfiles { get; set; }
@@ -50,12 +49,6 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                 .HasForeignKey(rt => rt.UsuarioId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Configurar relación autoreferencial para comentarios
-            modelBuilder.Entity<Comentario>()
-                .HasOne(c => c.ComentarioPadre)
-                .WithMany()
-                .HasForeignKey(c => c.ComentarioPadreId)
-                .OnDelete(DeleteBehavior.Restrict); // Evita borrados en cascada circular
 
             // Configurar relaciones para intercambios
             modelBuilder.Entity<Intercambio>()
@@ -122,31 +115,12 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                 .HasForeignKey(e => e.ProductoId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Configurar LogError para que la relación sea opcional
-            modelBuilder.Entity<LogError>()
-                .HasOne(l => l.Usuario)
-                .WithMany()
-                .HasForeignKey(l => l.UsuarioId)
-                .IsRequired(false);
 
             // Configurar relación para perfiles
             modelBuilder.Entity<Perfil>()
                 .HasOne(p => p.Usuario)
                 .WithOne()
                 .HasForeignKey<Perfil>(p => p.UsuarioId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Configurar relación para comentarios
-            modelBuilder.Entity<Comentario>()
-                .HasOne(c => c.Usuario)
-                .WithMany()
-                .HasForeignKey(c => c.UsuarioId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Comentario>()
-                .HasOne(c => c.Producto)
-                .WithMany()
-                .HasForeignKey(c => c.ProductoId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Configuración de Reporte

@@ -6,7 +6,6 @@ using BackendProyectoFinal.Infrastructure.Persistence.Data;
 using Microsoft.Extensions.Logging;
 using BackendProyectoFinal.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
-using BackendProyectoFinal.Presentation.Middleware;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -109,7 +108,6 @@ builder.Services.AddAuthorization();
 
 // Register repositories
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
-builder.Services.AddScoped<IComentarioRepository, ComentarioRepository>();
 builder.Services.AddScoped<IIntercambioRepository, IntercambioRepository>();
 builder.Services.AddScoped<IPerfilRepository, PerfilRepository>();
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
@@ -129,7 +127,6 @@ builder.Services.AddScoped<ILogErrorRepository, LogErrorRepository>();
 
 // Register application services
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
-builder.Services.AddScoped<IComentarioService, ComentarioService>();
 builder.Services.AddScoped<IIntercambioService, IntercambioService>();
 builder.Services.AddScoped<IPerfilService, PerfilService>();
 builder.Services.AddScoped<IProductoService, ProductoService>();
@@ -143,7 +140,6 @@ builder.Services.AddScoped<IGenericRepository<RefreshToken>, GenericRepository<R
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 //builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ILogErrorService, LogErrorService>();
 builder.Services.AddScoped<IErrorHandlingService, ErrorHandlingService>();
 
 builder.Services.AddScoped<JwtService>();
@@ -180,11 +176,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BackendProyectoFinal API v1"));
 }
-else
-{
-    // En producci�n, usar el middleware personalizado para capturar errores globales
-    app.UseMiddleware<ErrorHandlingMiddleware>();
-}
+
 
 //Habilitando para manejo de archivos estáticos a falta de servidor dedicado.
 // En Program.cs o Startup.cs

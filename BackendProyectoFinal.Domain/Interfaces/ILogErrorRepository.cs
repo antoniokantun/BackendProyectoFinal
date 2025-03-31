@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Domain.Interfaces
 {
-    public interface ILogErrorRepository
+    public interface ILogErrorRepository : IGenericRepository<LogError>
     {
-        Task<LogError> CreateAsync(LogError logError);
-        Task<IEnumerable<LogError>> GetAllAsync();
-        Task<LogError> GetByIdAsync(int id);
-        Task<IEnumerable<LogError>> GetByUserIdAsync(int userId);
+        // Métodos específicos si se necesitan
     }
 }

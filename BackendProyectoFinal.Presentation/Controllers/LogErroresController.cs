@@ -7,66 +7,51 @@ namespace BackendProyectoFinal.Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LogErroresController : ControllerBase
+    public class ErrorLogController : ControllerBase
     {
-        private readonly ILogErrorService _logErrorService;
         private readonly IErrorHandlingService _errorHandlingService;
+        private readonly ILogger<ErrorLogController> _logger;
 
-        public LogErroresController(ILogErrorService logErrorService, IErrorHandlingService errorHandlingService)
+        public ErrorLogController(
+            IErrorHandlingService errorHandlingService,
+            ILogger<ErrorLogController> logger)
         {
-            _logErrorService = logErrorService;
             _errorHandlingService = errorHandlingService;
+            _logger = logger;
         }
 
-        // GET: api/LogErrores
+        // GET: api/ErrorLog
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LogErrorDTO>>> GetLogErrores()
+        public async Task<ActionResult<IEnumerable<LogErrorDTO>>> GetAllLogs()
         {
             try
             {
-                var logs = await _logErrorService.GetAllAsync();
+                var logs = await _errorHandlingService.GetAllLogsAsync();
                 return Ok(logs);
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetLogErrores));
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los logs de errores");
+                _logger.LogError(ex, "Error al obtener logs de errores");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los logs");
             }
         }
 
-        // GET: api/LogErrores/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<LogErrorDTO>> GetLogError(int id)
+        // POST: api/ErrorLog
+        [HttpPost]
+        public async Task<ActionResult<LogErrorDTO>> LogError(CreateLogErrorDTO createDto)
         {
             try
             {
-                var log = await _logErrorService.GetByIdAsync(id);
-                return Ok(log);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetLogError));
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener el log de error");
-            }
-        }
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
 
-        // GET: api/LogErrores/usuario/5
-        [HttpGet("usuario/{userId}")]
-        public async Task<ActionResult<IEnumerable<LogErrorDTO>>> GetLogErroresByUsuario(int userId)
-        {
-            try
-            {
-                var logs = await _logErrorService.GetByUserIdAsync(userId);
-                return Ok(logs);
+                var loggedError = await _errorHandlingService.LogCustomErrorAsync(createDto.Mensaje, createDto.Origen);
+                return CreatedAtAction(nameof(GetAllLogs), new { id = loggedError.IdLogError }, loggedError);
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(ex, nameof(GetLogErroresByUsuario));
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los logs de errores por usuario");
+                _logger.LogError(ex, "Error al registrar log de error");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al registrar el error");
             }
         }
     }
