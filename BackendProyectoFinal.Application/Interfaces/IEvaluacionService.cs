@@ -1,9 +1,4 @@
 ﻿using BackendProyectoFinal.Application.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Application.Interfaces
 {
@@ -16,5 +11,7 @@ namespace BackendProyectoFinal.Application.Interfaces
         Task<EvaluacionDTO> CreateAsync(CreateEvaluacionDTO createEvaluacionDto);
         Task UpdateAsync(int id, UpdateEvaluacionDTO updateEvaluacionDto);
         Task DeleteAsync(int id);
+
+        Task<EvaluacionDTO> PatchAsync(int id, PatchEvaluacionDTO patchEvaluacionDto);
     }
 }

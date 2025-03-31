@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BackendProyectoFinal.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class migracion1 : Migration
+    public partial class InitialMigrationWithSeedData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -294,7 +294,8 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     fecha_creacion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     comentario = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    puntacion = table.Column<int>(type: "int", nullable: false)
+                    puntacion = table.Column<int>(type: "int", nullable: false),
+                    completado = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -534,11 +535,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "evaluaciones",
-                columns: new[] { "id_evaluacion", "comentario", "fecha_creacion", "producto_id", "puntacion", "titulo_evaluacion", "usuario_evaluador_id", "usuario_id" },
+                columns: new[] { "id_evaluacion", "comentario", "completado", "fecha_creacion", "producto_id", "puntacion", "titulo_evaluacion", "usuario_evaluador_id", "usuario_id" },
                 values: new object[,]
                 {
-                    { 1, "Buen producto", new DateTime(2025, 3, 31, 5, 12, 29, 902, DateTimeKind.Local).AddTicks(4100), 1, 5, "Evaluación del producto 1", 2, 1 },
-                    { 2, "Buena calidad", new DateTime(2025, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 4, "Evaluación del producto 2", 1, 2 }
+                    { 1, "Buen producto", false, new DateTime(2025, 3, 31, 13, 44, 11, 407, DateTimeKind.Local).AddTicks(7365), 1, 5, "Evaluación del producto 1", 2, 1 },
+                    { 2, "Buena calidad", false, new DateTime(2025, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 4, "Evaluación del producto 2", 1, 2 }
                 });
 
             migrationBuilder.InsertData(

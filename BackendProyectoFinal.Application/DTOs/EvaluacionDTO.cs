@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BackendProyectoFinal.Application.DTOs
 {
@@ -17,6 +14,7 @@ namespace BackendProyectoFinal.Application.DTOs
         public DateTime FechaCreacion { get; set; }
         public string? Comentario { get; set; }
         public int Puntuacion { get; set; }
+        public bool Completado { get; set; }
 
         // Propiedades adicionales para mostrar información relacionada
         public string? NombreUsuario { get; set; }
@@ -45,6 +43,7 @@ namespace BackendProyectoFinal.Application.DTOs
         [Required]
         [Range(1, 5)]
         public int Puntuacion { get; set; }
+
     }
 
     public class UpdateEvaluacionDTO
@@ -59,5 +58,17 @@ namespace BackendProyectoFinal.Application.DTOs
         [Required]
         [Range(1, 5)]
         public int Puntuacion { get; set; }
+    }
+
+    public class PatchEvaluacionDTO
+    {
+        [MaxLength(100)]
+        public string? TituloEvaluacion { get; set; }
+
+        [MaxLength(150)]
+        public string? Comentario { get; set; }
+
+        [Range(1, 5)]
+        public int? Puntuacion { get; set; }
     }
 }

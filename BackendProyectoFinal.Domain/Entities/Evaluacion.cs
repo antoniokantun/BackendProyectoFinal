@@ -49,6 +49,6 @@ namespace BackendProyectoFinal.Domain.Entities
         public int Puntuacion { get; set; }
 
         [Column("completado")]
-        public bool Completado { get; set; }
+        public bool Completado { get; set; } = false;
     }
 }

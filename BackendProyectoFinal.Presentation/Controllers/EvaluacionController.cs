@@ -149,5 +149,26 @@ namespace BackendProyectoFinal.Presentation.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al eliminar la evaluación");
             }
         }
+
+
+        // PATCH: api/Evaluacion/5
+        [HttpPatch("{id}")]
+        public async Task<ActionResult<EvaluacionDTO>> PatchEvaluacion(int id, PatchEvaluacionDTO patchEvaluacionDto)
+        {
+            try
+            {
+                var evaluacion = await _evaluacionService.PatchAsync(id, patchEvaluacionDto);
+                return Ok(evaluacion);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                await _errorHandlingService.LogErrorAsync(ex, nameof(PatchEvaluacion));
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar parcialmente la evaluación");
+            }
+        }
     }
 }

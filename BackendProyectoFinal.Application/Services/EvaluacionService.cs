@@ -2,12 +2,6 @@
 using BackendProyectoFinal.Application.Interfaces;
 using BackendProyectoFinal.Domain.Entities;
 using BackendProyectoFinal.Domain.Interfaces;
-using BackendProyectoFinal.Domain.Interfaces.IServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BackendProyectoFinal.Application.Services
 {
@@ -94,6 +88,33 @@ namespace BackendProyectoFinal.Application.Services
             await _evaluacionRepository.DeleteAsync(id);
         }
 
+        public async Task<EvaluacionDTO> PatchAsync(int id, PatchEvaluacionDTO patchEvaluacionDto)
+        {
+            var existingEvaluacion = await _evaluacionRepository.GetByIdAsync(id);
+
+            if (existingEvaluacion == null)
+                throw new KeyNotFoundException($"Evaluación con ID {id} no encontrada.");
+
+            // Actualizar solo los campos proporcionados
+            if (patchEvaluacionDto.TituloEvaluacion != null)
+                existingEvaluacion.TituloEvaluacion = patchEvaluacionDto.TituloEvaluacion;
+
+            if (patchEvaluacionDto.Comentario != null)
+                existingEvaluacion.Comentario = patchEvaluacionDto.Comentario;
+
+            if (patchEvaluacionDto.Puntuacion.HasValue)
+                existingEvaluacion.Puntuacion = patchEvaluacionDto.Puntuacion.Value;
+
+            // Siempre marcar como completado cuando se usa PATCH
+            existingEvaluacion.Completado = true;
+
+            await _evaluacionRepository.UpdateAsync(existingEvaluacion);
+
+            // Recargar la entidad para obtener datos actualizados con relaciones
+            var evaluacionActualizada = await _evaluacionRepository.GetByIdAsync(id);
+            return MapToDto(evaluacionActualizada!);
+        }
+
         // Método auxiliar para mapear la entidad a DTO
         private EvaluacionDTO MapToDto(Evaluacion evaluacion)
         {
@@ -107,6 +128,7 @@ namespace BackendProyectoFinal.Application.Services
                 FechaCreacion = evaluacion.FechaCreacion,
                 Comentario = evaluacion.Comentario,
                 Puntuacion = evaluacion.Puntuacion,
+                Completado = evaluacion.Completado,
                 NombreUsuario = evaluacion.Usuario?.Nombre,
                 NombreUsuarioEvaluador = evaluacion.UsuarioEvaluador?.Nombre,
                 NombreProducto = evaluacion.Producto?.Nombre

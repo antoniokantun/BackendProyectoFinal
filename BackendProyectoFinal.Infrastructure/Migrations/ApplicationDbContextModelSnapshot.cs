@@ -231,6 +231,10 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         .HasColumnType("varchar(150)")
                         .HasColumnName("comentario");
 
+                    b.Property<bool>("Completado")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("completado");
+
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("fecha_creacion");
@@ -272,7 +276,8 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         {
                             IdEvaluacion = 1,
                             Comentario = "Buen producto",
-                            FechaCreacion = new DateTime(2025, 3, 31, 5, 12, 29, 902, DateTimeKind.Local).AddTicks(4100),
+                            Completado = false,
+                            FechaCreacion = new DateTime(2025, 3, 31, 13, 44, 11, 407, DateTimeKind.Local).AddTicks(7365),
                             ProductoId = 1,
                             Puntuacion = 5,
                             TituloEvaluacion = "Evaluación del producto 1",
@@ -283,6 +288,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         {
                             IdEvaluacion = 2,
                             Comentario = "Buena calidad",
+                            Completado = false,
                             FechaCreacion = new DateTime(2025, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ProductoId = 1,
                             Puntuacion = 4,
