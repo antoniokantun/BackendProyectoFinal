@@ -6,7 +6,6 @@ using BackendProyectoFinal.Infrastructure.Persistence.Data;
 using Microsoft.Extensions.Logging;
 using BackendProyectoFinal.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
-using BackendProyectoFinal.Presentation.Middleware;
 using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -141,7 +140,6 @@ builder.Services.AddScoped<IGenericRepository<RefreshToken>, GenericRepository<R
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 //builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ILogErrorService, LogErrorService>();
 builder.Services.AddScoped<IErrorHandlingService, ErrorHandlingService>();
 
 builder.Services.AddScoped<JwtService>();
@@ -178,11 +176,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BackendProyectoFinal API v1"));
 }
-else
-{
-    // En producci�n, usar el middleware personalizado para capturar errores globales
-    app.UseMiddleware<ErrorHandlingMiddleware>();
-}
+
 
 //Habilitando para manejo de archivos estáticos a falta de servidor dedicado.
 // En Program.cs o Startup.cs

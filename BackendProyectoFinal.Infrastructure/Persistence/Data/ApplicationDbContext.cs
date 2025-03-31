@@ -115,12 +115,6 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                 .HasForeignKey(e => e.ProductoId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Configurar LogError para que la relación sea opcional
-            modelBuilder.Entity<LogError>()
-                .HasOne(l => l.Usuario)
-                .WithMany()
-                .HasForeignKey(l => l.UsuarioId)
-                .IsRequired(false);
 
             // Configurar relación para perfiles
             modelBuilder.Entity<Perfil>()

@@ -25,13 +25,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
             _logger = logger;
         }
 
-        // Método privado para obtener el ID del usuario actual
-        private int? GetCurrentUserId()
-        {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return userIdClaim != null ? int.Parse(userIdClaim) : null;
-        }
-
         // GET: api/Reporte
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ReporteDTO>>> GetReportes()
@@ -43,18 +36,9 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                // Registrar el error en la base de datos
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(GetReportes),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al obtener los reportes"
-                );
+                // Registrar el error con el nuevo servicio simplificado
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los reportes");
             }
         }
 
@@ -69,18 +53,8 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                // Registrar el error en la base de datos
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(GetReportesUsuario),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al obtener los reportes de usuarios"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los reportes de usuarios");
             }
         }
 
@@ -95,18 +69,8 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                // Registrar el error en la base de datos
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(GetReportesProducto),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al obtener los reportes de productos"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los reportes de productos");
             }
         }
 
@@ -118,12 +82,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    await _errorHandlingService.LogErrorAsync(
-                        "Modelo de reporte de usuario inválido",
-                        nameof(ReportarUsuario),
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
+                    await _errorHandlingService.LogCustomErrorAsync("Modelo de reporte de usuario inválido", "Backend");
                     return BadRequest(ModelState);
                 }
 
@@ -132,27 +91,13 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                await _errorHandlingService.LogErrorAsync(
-                    ex.Message,
-                    nameof(ReportarUsuario),
-                    "Advertencia",
-                    GetCurrentUserId()
-                );
+                await _errorHandlingService.LogCustomErrorAsync(ex.Message, "Backend");
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(ReportarUsuario),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al crear el reporte de usuario"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al crear el reporte de usuario");
             }
         }
 
@@ -164,12 +109,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    await _errorHandlingService.LogErrorAsync(
-                        "Modelo de reporte de producto inválido",
-                        nameof(ReportarProducto),
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
+                    await _errorHandlingService.LogCustomErrorAsync("Modelo de reporte de producto inválido", "Backend");
                     return BadRequest(ModelState);
                 }
 
@@ -178,27 +118,13 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                await _errorHandlingService.LogErrorAsync(
-                    ex.Message,
-                    nameof(ReportarProducto),
-                    "Advertencia",
-                    GetCurrentUserId()
-                );
+                await _errorHandlingService.LogCustomErrorAsync(ex.Message, "Backend");
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(ReportarProducto),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al crear el reporte de producto"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al crear el reporte de producto");
             }
         }
     }

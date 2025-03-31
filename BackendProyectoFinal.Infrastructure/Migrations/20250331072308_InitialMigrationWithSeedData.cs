@@ -65,6 +65,24 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "log_errores",
+                columns: table => new
+                {
+                    id_log_error = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    mensaje_error = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    fecha_ocurrencia = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    origen = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_log_errores", x => x.id_log_error);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "reportes",
                 columns: table => new
                 {
@@ -125,34 +143,6 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         principalTable: "roles",
                         principalColumn: "id_rol",
                         onDelete: ReferentialAction.Restrict);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "log_errores",
-                columns: table => new
-                {
-                    id_log_error = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    mensaje_error = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    fecha_ocurrencia = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    origen_error = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    severidad = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    stack_trace = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    usuario_id = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_log_errores", x => x.id_log_error);
-                    table.ForeignKey(
-                        name: "FK_log_errores_usuarios_usuario_id",
-                        column: x => x.usuario_id,
-                        principalTable: "usuarios",
-                        principalColumn: "id_usuario");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -287,49 +277,6 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         principalTable: "productos",
                         principalColumn: "id_producto",
                         onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "comentarios",
-                columns: table => new
-                {
-                    id_comentario = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    contenido_comentario = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    usuario_id = table.Column<int>(type: "int", nullable: false),
-                    producto_id = table.Column<int>(type: "int", nullable: false),
-                    fecha_creacion = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    comentario_padre_id = table.Column<int>(type: "int", nullable: true),
-                    ComentarioIdComentario = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_comentarios", x => x.id_comentario);
-                    table.ForeignKey(
-                        name: "FK_comentarios_comentarios_ComentarioIdComentario",
-                        column: x => x.ComentarioIdComentario,
-                        principalTable: "comentarios",
-                        principalColumn: "id_comentario");
-                    table.ForeignKey(
-                        name: "FK_comentarios_comentarios_comentario_padre_id",
-                        column: x => x.comentario_padre_id,
-                        principalTable: "comentarios",
-                        principalColumn: "id_comentario",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_comentarios_productos_producto_id",
-                        column: x => x.producto_id,
-                        principalTable: "productos",
-                        principalColumn: "id_producto",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_comentarios_usuarios_usuario_id",
-                        column: x => x.usuario_id,
-                        principalTable: "usuarios",
-                        principalColumn: "id_usuario",
-                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -507,11 +454,6 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "log_errores",
-                columns: new[] { "id_log_error", "fecha_ocurrencia", "mensaje_error", "origen_error", "severidad", "stack_trace", "usuario_id" },
-                values: new object[] { 2, new DateTime(2025, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "Error de autenticación", "AuthService.Authenticate", "Advertencia", "System.UnauthorizedAccessException: Error de autenticación...", null });
-
-            migrationBuilder.InsertData(
                 table: "reportes",
                 columns: new[] { "id_reporte", "fecha_reporte", "motivo_reporte" },
                 values: new object[,]
@@ -541,11 +483,6 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     { 3, "Gómez", false, "AQAAAAEAACcQAAAAEFCxR9j/L3Wd7nC0p/W4aLgYg1zMv8zKjEaXbZ9pQoR/sT2uBvC7wYnZqN8u9yFAA==", "maria@example.com", new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "María", false, 2, "5551234567" },
                     { 4, "López", false, "AQAAAAEAACcQAAAAEL+0iJ9pS/RkYvX/Z8bTqU2wN1oPz7uIe/jKdLsMvX9bZcRjWnFvQxUeYvA2b7AAA==", "carlos@example.com", new DateTime(2025, 1, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Carlos", false, 2, "1119876543" }
                 });
-
-            migrationBuilder.InsertData(
-                table: "log_errores",
-                columns: new[] { "id_log_error", "fecha_ocurrencia", "mensaje_error", "origen_error", "severidad", "stack_trace", "usuario_id" },
-                values: new object[] { 1, new DateTime(2025, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), "Error al procesar imagen", "ImagenService.ProcessImage", "Error", "System.IO.IOException: Error al procesar imagen...", 2 });
 
             migrationBuilder.InsertData(
                 table: "perfiles",
@@ -596,16 +533,11 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "comentarios",
-                columns: new[] { "id_comentario", "ComentarioIdComentario", "comentario_padre_id", "contenido_comentario", "fecha_creacion", "producto_id", "usuario_id" },
-                values: new object[] { 1, null, null, "¿Está disponible para intercambio?", new DateTime(2025, 2, 16, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 1 });
-
-            migrationBuilder.InsertData(
                 table: "evaluaciones",
                 columns: new[] { "id_evaluacion", "comentario", "fecha_creacion", "producto_id", "puntacion", "titulo_evaluacion", "usuario_evaluador_id", "usuario_id" },
                 values: new object[,]
                 {
-                    { 1, "Buen producto", new DateTime(2025, 3, 31, 1, 21, 34, 496, DateTimeKind.Local).AddTicks(2892), 1, 5, "Evaluación del producto 1", 2, 1 },
+                    { 1, "Buen producto", new DateTime(2025, 3, 31, 2, 23, 8, 276, DateTimeKind.Local).AddTicks(4395), 1, 5, "Evaluación del producto 1", 2, 1 },
                     { 2, "Buena calidad", new DateTime(2025, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 4, "Evaluación del producto 2", 1, 2 }
                 });
 
@@ -639,11 +571,6 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     { 2, 3, 4 }
                 });
 
-            migrationBuilder.InsertData(
-                table: "comentarios",
-                columns: new[] { "id_comentario", "ComentarioIdComentario", "comentario_padre_id", "contenido_comentario", "fecha_creacion", "producto_id", "usuario_id" },
-                values: new object[] { 2, null, 1, "Sí, disponible para intercambio", new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 2 });
-
             migrationBuilder.CreateIndex(
                 name: "IX_categorias_producto_categoria_id",
                 table: "categorias_producto",
@@ -653,26 +580,6 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 name: "IX_categorias_producto_producto_id",
                 table: "categorias_producto",
                 column: "producto_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_comentarios_comentario_padre_id",
-                table: "comentarios",
-                column: "comentario_padre_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_comentarios_ComentarioIdComentario",
-                table: "comentarios",
-                column: "ComentarioIdComentario");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_comentarios_producto_id",
-                table: "comentarios",
-                column: "producto_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_comentarios_usuario_id",
-                table: "comentarios",
-                column: "usuario_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_evaluaciones_producto_id",
@@ -718,11 +625,6 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                 name: "IX_intercambios_usuario_solicitante_id",
                 table: "intercambios",
                 column: "usuario_solicitante_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_log_errores_usuario_id",
-                table: "log_errores",
-                column: "usuario_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_perfiles_usuario_id",
@@ -777,9 +679,6 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "categorias_producto");
-
-            migrationBuilder.DropTable(
-                name: "comentarios");
 
             migrationBuilder.DropTable(
                 name: "evaluaciones");

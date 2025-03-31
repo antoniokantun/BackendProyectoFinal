@@ -15,8 +15,8 @@ namespace BackendProyectoFinal.Presentation.Controllers
         private readonly ILogger<UsuarioController> _logger;
 
         public UsuarioController(
-            IUsuarioService usuarioService, 
-            IErrorHandlingService errorHandlingService, 
+            IUsuarioService usuarioService,
+            IErrorHandlingService errorHandlingService,
             ILogger<UsuarioController> logger)
         {
             _usuarioService = usuarioService;
@@ -24,7 +24,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
             _logger = logger;
         }
 
-        // Método privado para obtener el ID del usuario actual
+        // Método privado para obtener el ID del usuario actual (mantenido para la funcionalidad de autoeliminación)
         private int? GetCurrentUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -42,18 +42,8 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                // Registrar el error en la base de datos
-                await _errorHandlingService.LogErrorAsync(
-                    ex, 
-                    nameof(GetUsuarios), 
-                    "Error", 
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError, 
-                    "Error al obtener los usuarios"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los usuarios");
             }
         }
 
@@ -68,29 +58,13 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                // Registrar error de no encontrado con severidad de Advertencia
-                await _errorHandlingService.LogErrorAsync(
-                    ex.Message, 
-                    nameof(GetUsuario), 
-                    "Advertencia", 
-                    GetCurrentUserId()
-                );
+                await _errorHandlingService.LogCustomErrorAsync(ex.Message, "Backend");
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                // Registrar otros errores en la base de datos
-                await _errorHandlingService.LogErrorAsync(
-                    ex, 
-                    nameof(GetUsuario), 
-                    "Error", 
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError, 
-                    "Error al obtener el usuario"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener el usuario");
             }
         }
 
@@ -102,13 +76,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    // Registrar modelo inválido con severidad de Advertencia
-                    await _errorHandlingService.LogErrorAsync(
-                        "Modelo de creación de usuario inválido", 
-                        nameof(PostUsuario), 
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
+                    await _errorHandlingService.LogCustomErrorAsync("Modelo de creación de usuario inválido", "Backend");
                     return BadRequest(ModelState);
                 }
 
@@ -117,29 +85,13 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                // Registrar error de operación con severidad de Advertencia
-                await _errorHandlingService.LogErrorAsync(
-                    ex, 
-                    nameof(PostUsuario), 
-                    "Advertencia",
-                    GetCurrentUserId()
-                );
+                await _errorHandlingService.LogCustomErrorAsync(ex.Message, "Backend");
                 return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                // Registrar otros errores en la base de datos
-                await _errorHandlingService.LogErrorAsync(
-                    ex, 
-                    nameof(PostUsuario), 
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError, 
-                    "Error al crear el usuario"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al crear el usuario");
             }
         }
 
@@ -151,13 +103,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    // Registrar modelo inválido con severidad de Advertencia
-                    await _errorHandlingService.LogErrorAsync(
-                        "Modelo de actualización de usuario inválido", 
-                        nameof(PutUsuario), 
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
+                    await _errorHandlingService.LogCustomErrorAsync("Modelo de actualización de usuario inválido", "Backend");
                     return BadRequest(ModelState);
                 }
 
@@ -166,40 +112,18 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                // Registrar error de no encontrado con severidad de Advertencia
-                await _errorHandlingService.LogErrorAsync(
-                    ex.Message, 
-                    nameof(PutUsuario), 
-                    "Advertencia", 
-                    GetCurrentUserId()
-                );
+                await _errorHandlingService.LogCustomErrorAsync(ex.Message, "Backend");
                 return NotFound(ex.Message);
             }
             catch (InvalidOperationException ex)
             {
-                // Registrar error de operación con severidad de Advertencia
-                await _errorHandlingService.LogErrorAsync(
-                    ex, 
-                    nameof(PutUsuario), 
-                    "Advertencia",
-                    GetCurrentUserId()
-                );
+                await _errorHandlingService.LogCustomErrorAsync(ex.Message, "Backend");
                 return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                // Registrar otros errores en la base de datos
-                await _errorHandlingService.LogErrorAsync(
-                    ex, 
-                    nameof(PutUsuario), 
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError, 
-                    "Error al actualizar el usuario"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar el usuario");
             }
         }
 
@@ -213,13 +137,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
                 var currentUserId = GetCurrentUserId();
                 if (id == currentUserId)
                 {
-                    // Registrar intento de autoeliminación
-                    await _errorHandlingService.LogErrorAsync(
-                        "Intento de eliminar cuenta propia", 
-                        nameof(DeleteUsuario), 
-                        "Advertencia",
-                        currentUserId
-                    );
+                    await _errorHandlingService.LogCustomErrorAsync("Intento de eliminar cuenta propia", "Backend");
                     return BadRequest("No puedes eliminar tu propia cuenta");
                 }
 
@@ -228,29 +146,13 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                // Registrar error de no encontrado con severidad de Advertencia
-                await _errorHandlingService.LogErrorAsync(
-                    ex.Message, 
-                    nameof(DeleteUsuario), 
-                    "Advertencia", 
-                    GetCurrentUserId()
-                );
+                await _errorHandlingService.LogCustomErrorAsync(ex.Message, "Backend");
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                // Registrar otros errores en la base de datos
-                await _errorHandlingService.LogErrorAsync(
-                    ex, 
-                    nameof(DeleteUsuario), 
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError, 
-                    "Error al eliminar el usuario"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al eliminar el usuario");
             }
         }
 
@@ -262,13 +164,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    // Registrar modelo inválido con severidad de Advertencia
-                    await _errorHandlingService.LogErrorAsync(
-                        "Modelo de actualización de baneo inválido", 
-                        nameof(UpdateUserBanStatus), 
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
+                    await _errorHandlingService.LogCustomErrorAsync("Modelo de actualización de baneo inválido", "Backend");
                     return BadRequest(ModelState);
                 }
 
@@ -277,47 +173,24 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                // Registrar error de no encontrado con severidad de Advertencia
-                await _errorHandlingService.LogErrorAsync(
-                    ex.Message, 
-                    nameof(UpdateUserBanStatus), 
-                    "Advertencia", 
-                    GetCurrentUserId()
-                );
+                await _errorHandlingService.LogCustomErrorAsync(ex.Message, "Backend");
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                // Registrar otros errores en la base de datos
-                await _errorHandlingService.LogErrorAsync(
-                    ex, 
-                    nameof(UpdateUserBanStatus), 
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError, 
-                    "Error al actualizar el estado de baneo del usuario"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar el estado de baneo del usuario");
             }
         }
 
         [HttpPatch("user-report")]
-
         public async Task<IActionResult> UpdateUserReport(UpdateUserReportDTO updateReportDTO)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    // Registrar modelo inválido con severidad de Advertencia
-                    await _errorHandlingService.LogErrorAsync(
-                        "Modelo de actualización de reporte inválido",
-                        nameof(UpdateUserBanStatus),
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
+                    await _errorHandlingService.LogCustomErrorAsync("Modelo de actualización de reporte inválido", "Backend");
                     return BadRequest(ModelState);
                 }
 
@@ -326,29 +199,13 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                // Registrar error de no encontrado con severidad de Advertencia
-                await _errorHandlingService.LogErrorAsync(
-                    ex.Message,
-                    nameof(UpdateUserReport),
-                    "Advertencia",
-                    GetCurrentUserId()
-                );
+                await _errorHandlingService.LogCustomErrorAsync(ex.Message, "Backend");
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                // Registrar otros errores en la base de datos
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(UpdateUserReport),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al actualizar el estado de reporte del usuario"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar el estado de reporte del usuario");
             }
         }
     }

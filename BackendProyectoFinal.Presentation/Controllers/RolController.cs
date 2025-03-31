@@ -25,13 +25,6 @@ namespace BackendProyectoFinal.Presentation.Controllers
             _logger = logger;
         }
 
-        // Método privado para obtener el ID del usuario actual
-        private int? GetCurrentUserId()
-        {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return userIdClaim != null ? int.Parse(userIdClaim) : null;
-        }
-
         // Método privado para formatear errores de validación
         private string FormatValidationErrors()
         {
@@ -60,17 +53,8 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(GetRoles),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al obtener los roles"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener los roles");
             }
         }
 
@@ -83,13 +67,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
                 // Validación manual para demostrar registro de errores
                 if (id <= 0)
                 {
-                    // Registrar error de validación con severidad "Advertencia"
-                    await _errorHandlingService.LogErrorAsync(
-                        "ID de rol inválido. Debe ser mayor que cero.",
-                        nameof(GetRol),
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
+                    await _errorHandlingService.LogCustomErrorAsync("ID de rol inválido. Debe ser mayor que cero.", "Backend");
                     return BadRequest("El ID del rol debe ser mayor que cero.");
                 }
 
@@ -98,27 +76,13 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                await _errorHandlingService.LogErrorAsync(
-                    ex.Message,
-                    nameof(GetRol),
-                    "Advertencia",
-                    GetCurrentUserId()
-                );
+                await _errorHandlingService.LogCustomErrorAsync(ex.Message, "Backend");
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(GetRol),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al obtener el rol"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al obtener el rol");
             }
         }
 
@@ -131,12 +95,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
                 // Validación manual antes de verificar ModelState
                 if (rolDto == null)
                 {
-                    await _errorHandlingService.LogErrorAsync(
-                        "RolDTO es nulo",
-                        nameof(PostRol),
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
+                    await _errorHandlingService.LogCustomErrorAsync("RolDTO es nulo", "Backend");
                     return BadRequest("El rol no puede ser nulo");
                 }
 
@@ -145,14 +104,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
                 {
                     // Formatear y registrar errores de validación
                     var validationErrorMessage = FormatValidationErrors();
-
-                    await _errorHandlingService.LogErrorAsync(
-                        validationErrorMessage,
-                        nameof(PostRol),
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
-
+                    await _errorHandlingService.LogCustomErrorAsync(validationErrorMessage, "Backend");
                     return BadRequest(ModelState);
                 }
 
@@ -161,17 +113,8 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(PostRol),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al crear el rol"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al crear el rol");
             }
         }
 
@@ -184,24 +127,14 @@ namespace BackendProyectoFinal.Presentation.Controllers
                 // Validación de ID
                 if (id <= 0)
                 {
-                    await _errorHandlingService.LogErrorAsync(
-                        "ID de rol inválido. Debe ser mayor que cero.",
-                        nameof(PutRol),
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
+                    await _errorHandlingService.LogCustomErrorAsync("ID de rol inválido. Debe ser mayor que cero.", "Backend");
                     return BadRequest("El ID del rol debe ser mayor que cero");
                 }
 
                 // Validación de coincidencia de ID
                 if (id != rolDto.IdRol)
                 {
-                    await _errorHandlingService.LogErrorAsync(
-                        "El ID no coincide con el ID del rol proporcionado",
-                        nameof(PutRol),
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
+                    await _errorHandlingService.LogCustomErrorAsync("El ID no coincide con el ID del rol proporcionado", "Backend");
                     return BadRequest("El ID no coincide con el ID del rol proporcionado");
                 }
 
@@ -210,14 +143,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
                 {
                     // Formatear y registrar errores de validación
                     var validationErrorMessage = FormatValidationErrors();
-
-                    await _errorHandlingService.LogErrorAsync(
-                        validationErrorMessage,
-                        nameof(PutRol),
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
-
+                    await _errorHandlingService.LogCustomErrorAsync(validationErrorMessage, "Backend");
                     return BadRequest(ModelState);
                 }
 
@@ -226,27 +152,13 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                await _errorHandlingService.LogErrorAsync(
-                    ex.Message,
-                    nameof(PutRol),
-                    "Advertencia",
-                    GetCurrentUserId()
-                );
+                await _errorHandlingService.LogCustomErrorAsync(ex.Message, "Backend");
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(PutRol),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al actualizar el rol"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al actualizar el rol");
             }
         }
 
@@ -259,12 +171,7 @@ namespace BackendProyectoFinal.Presentation.Controllers
                 // Validación manual de ID
                 if (id <= 0)
                 {
-                    await _errorHandlingService.LogErrorAsync(
-                        "ID de rol inválido. Debe ser mayor que cero.",
-                        nameof(DeleteRol),
-                        "Advertencia",
-                        GetCurrentUserId()
-                    );
+                    await _errorHandlingService.LogCustomErrorAsync("ID de rol inválido. Debe ser mayor que cero.", "Backend");
                     return BadRequest("El ID del rol debe ser mayor que cero");
                 }
 
@@ -273,27 +180,13 @@ namespace BackendProyectoFinal.Presentation.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                await _errorHandlingService.LogErrorAsync(
-                    ex.Message,
-                    nameof(DeleteRol),
-                    "Advertencia",
-                    GetCurrentUserId()
-                );
+                await _errorHandlingService.LogCustomErrorAsync(ex.Message, "Backend");
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                await _errorHandlingService.LogErrorAsync(
-                    ex,
-                    nameof(DeleteRol),
-                    "Error",
-                    GetCurrentUserId()
-                );
-
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Error al eliminar el rol"
-                );
+                await _errorHandlingService.LogErrorAsync(ex, "Backend");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al eliminar el rol");
             }
         }
     }

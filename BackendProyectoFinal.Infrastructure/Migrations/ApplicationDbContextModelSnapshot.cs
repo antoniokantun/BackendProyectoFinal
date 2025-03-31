@@ -180,72 +180,6 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Comentario", b =>
-                {
-                    b.Property<int>("IdComentario")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id_comentario");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("IdComentario"));
-
-                    b.Property<int?>("ComentarioIdComentario")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ComentarioPadreId")
-                        .HasColumnType("int")
-                        .HasColumnName("comentario_padre_id");
-
-                    b.Property<string>("Contenido")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("contenido_comentario");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("fecha_creacion");
-
-                    b.Property<int>("ProductoId")
-                        .HasColumnType("int")
-                        .HasColumnName("producto_id");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int")
-                        .HasColumnName("usuario_id");
-
-                    b.HasKey("IdComentario");
-
-                    b.HasIndex("ComentarioIdComentario");
-
-                    b.HasIndex("ComentarioPadreId");
-
-                    b.HasIndex("ProductoId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("comentarios");
-
-                    b.HasData(
-                        new
-                        {
-                            IdComentario = 1,
-                            Contenido = "¿Está disponible para intercambio?",
-                            FechaCreacion = new DateTime(2025, 2, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductoId = 1,
-                            UsuarioId = 1
-                        },
-                        new
-                        {
-                            IdComentario = 2,
-                            ComentarioPadreId = 1,
-                            Contenido = "Sí, disponible para intercambio",
-                            FechaCreacion = new DateTime(2025, 2, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductoId = 1,
-                            UsuarioId = 2
-                        });
-                });
-
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Estado", b =>
                 {
                     b.Property<int>("IdEstado")
@@ -338,7 +272,7 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                         {
                             IdEvaluacion = 1,
                             Comentario = "Buen producto",
-                            FechaCreacion = new DateTime(2025, 3, 31, 1, 21, 34, 496, DateTimeKind.Local).AddTicks(2892),
+                            FechaCreacion = new DateTime(2025, 3, 31, 2, 23, 8, 276, DateTimeKind.Local).AddTicks(4395),
                             ProductoId = 1,
                             Puntuacion = 5,
                             TituloEvaluacion = "Evaluación del producto 1",
@@ -546,50 +480,13 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
 
                     b.Property<string>("Origen")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)")
-                        .HasColumnName("origen_error");
-
-                    b.Property<string>("Severidad")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
-                        .HasColumnName("severidad");
-
-                    b.Property<string>("StackTrace")
-                        .HasColumnType("longtext")
-                        .HasColumnName("stack_trace");
-
-                    b.Property<int?>("UsuarioId")
-                        .HasColumnType("int")
-                        .HasColumnName("usuario_id");
+                        .HasColumnName("origen");
 
                     b.HasKey("IdLogError");
 
-                    b.HasIndex("UsuarioId");
-
                     b.ToTable("log_errores");
-
-                    b.HasData(
-                        new
-                        {
-                            IdLogError = 1,
-                            FechaOcurrencia = new DateTime(2025, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Mensaje = "Error al procesar imagen",
-                            Origen = "ImagenService.ProcessImage",
-                            Severidad = "Error",
-                            StackTrace = "System.IO.IOException: Error al procesar imagen...",
-                            UsuarioId = 2
-                        },
-                        new
-                        {
-                            IdLogError = 2,
-                            FechaOcurrencia = new DateTime(2025, 3, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Mensaje = "Error de autenticación",
-                            Origen = "AuthService.Authenticate",
-                            Severidad = "Advertencia",
-                            StackTrace = "System.UnauthorizedAccessException: Error de autenticación..."
-                        });
                 });
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Perfil", b =>
@@ -1110,36 +1007,6 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.Navigation("Producto");
                 });
 
-            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Comentario", b =>
-                {
-                    b.HasOne("BackendProyectoFinal.Domain.Entities.Comentario", null)
-                        .WithMany("ComentariosHijos")
-                        .HasForeignKey("ComentarioIdComentario");
-
-                    b.HasOne("BackendProyectoFinal.Domain.Entities.Comentario", "ComentarioPadre")
-                        .WithMany()
-                        .HasForeignKey("ComentarioPadreId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("BackendProyectoFinal.Domain.Entities.Producto", "Producto")
-                        .WithMany()
-                        .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BackendProyectoFinal.Domain.Entities.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ComentarioPadre");
-
-                    b.Navigation("Producto");
-
-                    b.Navigation("Usuario");
-                });
-
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Evaluacion", b =>
                 {
                     b.HasOne("BackendProyectoFinal.Domain.Entities.Producto", "Producto")
@@ -1218,15 +1085,6 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.Navigation("UsuarioOfertante");
 
                     b.Navigation("UsuarioSolicitante");
-                });
-
-            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.LogError", b =>
-                {
-                    b.HasOne("BackendProyectoFinal.Domain.Entities.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId");
-
-                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Perfil", b =>
@@ -1309,11 +1167,6 @@ namespace BackendProyectoFinal.Infrastructure.Migrations
                     b.Navigation("Reporte");
 
                     b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Comentario", b =>
-                {
-                    b.Navigation("ComentariosHijos");
                 });
 
             modelBuilder.Entity("BackendProyectoFinal.Domain.Entities.Estado", b =>

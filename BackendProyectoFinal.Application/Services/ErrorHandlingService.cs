@@ -1,11 +1,8 @@
-﻿using BackendProyectoFinal.Domain.Entities;
+﻿using BackendProyectoFinal.Application.DTOs;
+using BackendProyectoFinal.Domain.Entities;
 using BackendProyectoFinal.Domain.Interfaces;
 using BackendProyectoFinal.Domain.Interfaces.IServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BackendProyectoFinal.Application.Services
 {
@@ -18,33 +15,47 @@ namespace BackendProyectoFinal.Application.Services
             _logErrorRepository = logErrorRepository;
         }
 
-        public async Task LogErrorAsync(Exception ex, string origen, string severidad = "Error", int? usuarioId = null)
+        public async Task<LogErrorDTO> LogErrorAsync(Exception ex, string origen)
         {
             var logError = new LogError
             {
                 Mensaje = ex.Message,
                 FechaOcurrencia = DateTime.UtcNow,
-                Origen = origen,
-                Severidad = severidad,
-                StackTrace = ex.StackTrace,
-                UsuarioId = usuarioId
+                Origen = origen
             };
 
-            await _logErrorRepository.CreateAsync(logError);
+            var createdLog = await _logErrorRepository.AddAsync(logError);
+            return MapToDto(createdLog);
         }
 
-        public async Task LogErrorAsync(string mensaje, string origen, string severidad = "Error", int? usuarioId = null)
+        public async Task<LogErrorDTO> LogCustomErrorAsync(string mensaje, string origen)
         {
             var logError = new LogError
             {
                 Mensaje = mensaje,
                 FechaOcurrencia = DateTime.UtcNow,
-                Origen = origen,
-                Severidad = severidad,
-                UsuarioId = usuarioId
+                Origen = origen
             };
 
-            await _logErrorRepository.CreateAsync(logError);
+            var createdLog = await _logErrorRepository.AddAsync(logError);
+            return MapToDto(createdLog);
+        }
+
+        public async Task<IEnumerable<LogErrorDTO>> GetAllLogsAsync()
+        {
+            var logs = await _logErrorRepository.GetAllAsync();
+            return logs.Select(MapToDto);
+        }
+
+        private LogErrorDTO MapToDto(LogError logError)
+        {
+            return new LogErrorDTO
+            {
+                IdLogError = logError.IdLogError,
+                Mensaje = logError.Mensaje,
+                FechaOcurrencia = logError.FechaOcurrencia,
+                Origen = logError.Origen
+            };
         }
     }
 }

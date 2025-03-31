@@ -428,29 +428,7 @@ namespace BackendProyectoFinal.Infrastructure.Persistence.Data
                 }
             );
 
-            // Seed LogErrores
-            modelBuilder.Entity<LogError>().HasData(
-                new LogError
-                {
-                    IdLogError = 1,
-                    Mensaje = "Error al procesar imagen",
-                    FechaOcurrencia = new DateTime(2025, 3, 10),
-                    Origen = "ImagenService.ProcessImage",
-                    Severidad = "Error",
-                    StackTrace = "System.IO.IOException: Error al procesar imagen...",
-                    UsuarioId = 2
-                },
-                new LogError
-                {
-                    IdLogError = 2,
-                    Mensaje = "Error de autenticación",
-                    FechaOcurrencia = new DateTime(2025, 3, 11),
-                    Origen = "AuthService.Authenticate",
-                    Severidad = "Advertencia",
-                    StackTrace = "System.UnauthorizedAccessException: Error de autenticación...",
-                    UsuarioId = null
-                }
-            );
+           
         }
     }
 }
