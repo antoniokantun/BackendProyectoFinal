@@ -47,5 +47,8 @@ namespace BackendProyectoFinal.Domain.Entities
         [Column("puntacion")]
         [Range(1, 5)]
         public int Puntuacion { get; set; }
+
+        [Column("completado")]
+        public bool Completado { get; set; }
     }
 }
